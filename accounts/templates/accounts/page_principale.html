@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page Principale - Echop</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="{% static 'accounts/page_principale.css' %}" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-red-600 text-white p-4 shadow-lg">
+        <div class="container mx-auto text-center">
+            <h1 class="text-2xl font-bold">Echop</h1>
+        </div>
+    </header>
+
+    <!-- Navbar -->
+    <nav class="bg-red-500 p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Catégorie Produit (Liste déroulante) à gauche -->
+            <div class="relative dropdown">
+                <button class="nav-item px-3 py-2 rounded text-white focus:outline-none">Catégorie Produit</button>
+                <div class="dropdown-content">
+                    <a href="{% url 'accounts:category_cake' %}">Boulangerie</a>
+                    <a href="{% url 'accounts:category_clothing' %}">Vêtements</a>
+                    <a href="{% url 'accounts:category_alimentaire' %}">Aliments</a>
+                </div>
+            </div>
+
+            <!-- Barre de recherche au centre -->
+            <div class="w-1/3">
+                <input type="text" placeholder="Rechercher..." class="w-full p-2 rounded-lg focus:outline-none search-input">
+            </div>
+
+            <!-- Contact, Panier, Produits les plus vendus à droite -->
+            <div class="space-x-4">
+                <a href="{% url 'accounts:contact' %}" class="nav-item px-3 py-2 rounded">Contact</a>
+                <a href="{% url 'accounts:products' %}" class="nav-item px-3 py-2 rounded">
+                    Panier <span class="bg-white text-red-600 rounded-full px-2 cart-count">{{ cart_item_count }}</span>
+                </a>
+                <a href="{% url 'accounts:sold_products' %}" class="nav-item px-3 py-2 rounded">Produits les plus vendus</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Page Principale</h1>
+        <p class="text-center text-gray-600 mb-6">Bienvenue sur Echop ! Découvrez nos produits en avant-première.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for product in products %}
+                <div class="product-card bg-white p-4 rounded-lg shadow-lg text-center">
+                    <img src="{% static 'accounts/images/placeholder.jpg' %}" alt="{{ product.name }}" class="w-full h-48 object-cover rounded-t-lg">
+                    <h2 class="text-xl font-semibold mt-2">{{ product.name }}</h2>
+                    <p class="text-gray-600 mt-2">{{ product.description|truncatewords:10 }}</p>
+                    <p class="text-red-600 font-bold mt-2">${{ product.price }}</p>
+                    <a href="{% url 'accounts:products' %}" class="btn bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 mt-2 inline-block">Voir plus</a>
+                </div>
+            {% empty %}
+                <p class="text-center text-gray-600">Aucun produit disponible pour le moment.</p>
+            {% endfor %}
+        </div>
+        <div class="mt-6 text-center">
+            <a href="{% url 'accounts:products' %}" class="btn bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700">
+                Voir tous les produits
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-red-600 text-white py-6 mt-12">
+        <div class="container mx-auto text-center">
+            <div class="mb-4">
+                <h2 class="text-xl font-semibold">Echop</h2>
+                <p class="mt-2">© 2025 Echop. Tous droits réservés.</p>
+            </div>
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="{% url 'accounts:contact' %}" class="hover:text-red-300 transition-colors duration-200">Contact</a>
+                <a href="{% url 'accounts:about' %}" class="hover:text-red-300 transition-colors duration-200">À propos</a>
+                <a href="{% url 'accounts:terms' %}" class="hover:text-red-300 transition-colors duration-200">Conditions</a>
+            </div>
+            <div>
+                <p>Email : support@echop.com | Téléphone : +237 677 24 69 00</p>
+                <p class="mt-2">Suivez-nous : 
+                    <a href="#" class="text-red-300 hover:text-white">Facebook</a> | 
+                    <a href="#" class="text-red-300 hover:text-white">Twitter</a> | 
+                    <a href="#" class="text-red-300 hover:text-white">Instagram</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

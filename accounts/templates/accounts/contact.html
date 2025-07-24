@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Echop</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/contact.css' %}">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <!-- Header -->
+    <header class="bg-red-600 text-white p-6 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold">Echop - Contact</h1>
+                <p class="mt-2 text-lg">Vous avez une question ? Contactez-nous !</p>
+            </div>
+           
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-10">
+        <h2 class="text-3xl font-semibold text-center mb-10 text-red-700">Nous contacter</h2>
+        <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
+            Vous avez une question ou un souci avec un produit ? Remplissez le formulaire ci-dessous, et notre équipe vous répondra dans les plus brefs délais.
+        </p>
+        
+        <form method="POST" class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg">
+            {% csrf_token %}
+            <div class="mb-6">
+                <label for="name" class="block text-red-600 font-semibold mb-2">Nom</label>
+                <input type="text" id="name" name="name" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Votre nom" required>
+            </div>
+            <div class="mb-6">
+                <label for="email" class="block text-red-600 font-semibold mb-2">Adresse email</label>
+                <input type="email" id="email" name="email" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="votre.email@exemple.com" required>
+            </div>
+            <div class="mb-6">
+                <label for="subject" class="block text-red-600 font-semibold mb-2">Sujet</label>
+                <input type="text" id="subject" name="subject" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Objet de votre message" required>
+            </div>
+            <div class="mb-6">
+                <label for="message" class="block text-red-600 font-semibold mb-2">Message</label>
+                <textarea id="message" name="message" rows="5" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Votre message ici..." required></textarea>
+            </div>
+            <button type="submit" class="btn-submit bg-yellow-400 text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-yellow-500 transition-colors w-full" aria-label="Envoyer le formulaire de contact">Envoyer</button>
+        </form>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-red-600 text-white text-center py-6 mt-10">
+        <p>© 2025 Echop. Tous droits réservés.</p>
+        <div class="mt-2">
+            <a href="#" class="text-yellow-300 hover:underline mx-2">À propos</a>
+            <a href="#" class="text-yellow-300 hover:underline mx-2">Contact</a>
+            <a href="#" class="text-yellow-300 hover:underline mx-2">Conditions d'utilisation</a>
+        </div>
+        <p class="mt-1">Contact : <a href="mailto:support@echop.com" class="text-yellow-300 hover:underline">support@echop.com</a> | Téléphone : +237 6 77 24 69 00</p>
+    </footer>
+
+</body>
+</html>

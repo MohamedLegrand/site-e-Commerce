@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produits Alimentaires - Echop</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-green-50 text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-green-700 text-white p-6 text-center shadow-lg">
+        <h1 class="text-3xl font-bold">Echop - Produits Alimentaires</h1>
+        <p class="mt-2 text-lg">Retrouvez des produits frais, secs, surgelés et des boissons pour toute la famille.</p>
+    </header>
+
+    <main class="container mx-auto px-4 py-10">
+
+        <!-- Produits Frais -->
+        <h2 class="text-2xl font-semibold text-center mb-6">🥦 Produits Frais</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div class="bg-white p-4 shadow rounded text-center">
+                <img src="{% static 'images/alimentaire/frais/legumes.jpg' %}" alt="Légumes frais" class="w-full h-40 object-cover mb-2 rounded">
+                <p>Légumes frais</p>
+            </div>
+            <div class="bg-white p-4 shadow rounded text-center">
+                <img src="{% static 'images/alimentaire/frais/fruits.jpg' %}" alt="Fruits" class="w-full h-40 object-cover mb-2 rounded">
+                <p>Fruits de saison</p>
+            </div>
+            <div class="bg-white p-4 shadow rounded text-center">
+                <img src="{% static 'images/alimentaire/frais/viande.jpg' %}" alt="Viande" class="w-full h-40 object-cover mb-2 rounded">
+                <p>Viandes fraîches</p>
+            </div>
+        </div>
+
+        <!-- Produits Secs -->
+        <h2 class="text-2xl font-semibold text-center mt-12 mb-6">🥫 Produits Secs</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div class="bg-white p-4 shadow rounded text-center">
+                <img src="{% static 'images/riz/riz1.webp' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/riz/riz2.webp' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/riz/riz3.webp' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/riz/riz4.webp' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/riz/riz5.webp' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/riz/riz6.webp' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/riz/riz7.webp' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/riz/riz8.webp' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/riz/riz9.jpg' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/riz/riz10.webp' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
+                <p>Riz parfumé</p>
+            </div>
+            <div class="bg-white p-4 shadow rounded text-center">
+                <img src="{% static 'images/spaghetti/sp1.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/spaghetti/sp2.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/spaghetti/sp3.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/spaghetti/sp4.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/spaghetti/sp5.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/spaghetti/sp6.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/spaghetti/sp7.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/spaghetti/sp8.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/spaghetti/sp9.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/spaghetti/sp10.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
+                <p>Pâtes alimentaires</p>
+            </div>
+            <div class="bg-white p-4 shadow rounded text-center">
+                <img src="{% static 'images/alimentaire/secs/conserve.jpg' %}" alt="Conserves" class="w-full h-40 object-cover mb-2 rounded">
+                <p>Conserves variées</p>
+            </div>
+        </div>
+
+        <!-- Produits Surgelés -->
+        <h2 class="text-2xl font-semibold text-center mt-12 mb-6">❄️ Produits Surgelés</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div class="bg-white p-4 shadow rounded text-center">
+                <img src="{% static 'images/alimentaire/surgeles/frites.jpg' %}" alt="Frites surgelées" class="w-full h-40 object-cover mb-2 rounded">
+                <p>Frites surgelées</p>
+            </div>
+            <div class="bg-white p-4 shadow rounded text-center">
+                <img src="{% static 'images/alimentaire/surgeles/poisson.jpg' %}" alt="Poissons" class="w-full h-40 object-cover mb-2 rounded">
+                <p>Poissons surgelés</p>
+            </div>
+            <div class="bg-white p-4 shadow rounded text-center">
+                <img src="{% static 'images/alimentaire/surgeles/legumes.jpg' %}" alt="Légumes surgelés" class="w-full h-40 object-cover mb-2 rounded">
+                <p>Légumes prêts à cuire</p>
+            </div>
+        </div>
+
+        <!-- Boissons -->
+        <h2 class="text-2xl font-semibold text-center mt-12 mb-6">🥤 Boissons</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div class="bg-white p-4 shadow rounded text-center">
+                <img src="{% static 'images/boissons/top ananas.webp' %}" alt="Jus de fruits" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/boissons/top cocacola.webp' %}" alt="Jus de fruits" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/boissons/top djino.webp' %}" alt="Jus de fruits" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/boissons/top fanta.webp' %}" alt="Jus de fruits" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/boissons/top grenadine.webp' %}" alt="Jus de fruits" class="w-full h-40 object-cover mb-2 rounded">
+                <p>Jus naturels</p>
+            </div>
+            <div class="bg-white p-4 shadow rounded text-center">
+                <img src="{% static 'images/eaux minerale/eau kirene.webp' %}" alt="Eau" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/eaux minerale/eau supermont.jpg' %}" alt="Eau" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/eaux minerale/eau tangui.webp' %}" alt="Eau" class="w-full h-40 object-cover mb-2 rounded">
+                <p>Eau minérale</p>
+            </div>
+            <div class="bg-white p-4 shadow rounded text-center">
+                <img src="{% static 'images/boissons/canette cocacola.webp' %}" alt="Sodas" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/boissons/cannette1.webp' %}" alt="Sodas" class="w-full h-40 object-cover mb-2 rounded">
+                <img src="{% static 'images/boissons/cannette2.webp' %}" alt="Sodas" class="w-full h-40 object-cover mb-2 rounded">
+                <p>Sodas variés</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-green-700 text-white text-center py-6 mt-10">
+        <p>&copy; 2025 Echop. Tous droits réservés.</p>
+        <p class="mt-1">Contact : support@echop.com | Téléphone : +237 6 77 24 69 00</p>
+    </footer>
+
+</body>
+</html>

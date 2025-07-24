@@ -1,0 +1,66 @@
+/* Custom styles pour contact.html */
+
+/* Réinitialisation de base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Animation pour le bouton "Envoyer" */
+.btn-submit {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    background-color: #facc15; /* yellow-400 en hover */
+}
+
+.btn-submit:active {
+    animation: pulse 0.2s;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+/* Style pour les champs de formulaire */
+input, textarea {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus, textarea:focus {
+    border-color: #c8102e;
+    box-shadow: 0 0 5px rgba(200, 16, 46, 0.5);
+}
+
+/* Style pour la barre de navigation */
+header nav ul li a {
+    transition: color 0.3s ease;
+}
+
+/* Style pour le footer */
+footer a {
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    header nav ul {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    form {
+        padding: 1rem;
+    }
+}
