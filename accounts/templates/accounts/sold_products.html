@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produits en Solde - Echop</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/sold_products.css' %}">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <!-- Header -->
+    <header class="bg-red-600 text-white p-6 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold">Echop - Produits en Solde</h1>
+                <p class="mt-2 text-lg">Découvrez nos meilleures offres sur les vêtements, chaussures et plus encore.</p>
+            </div>
+            <nav>
+                <ul class="flex">
+                    <li><a href="#" class="hover:text-yellow-300 transition-colors">Panier</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Section Produits en Solde -->
+    <main class="container mx-auto px-4 py-10">
+        <h2 class="text-3xl font-semibold text-center mb-10 text-red-700">Nos Produits en Solde</h2>
+        <div class="content-box">
+            <p class="text-lg text-gray-600 mb-4">Bienvenue sur la page des produits en solde
+            chez Echop ! Découvrez ici une sélection exclusive d'articles à prix réduits. 
+            Profitez de ces offres limitées à des 
+            tarifs exceptionnels. Restez à l'affût, car nos stocks sont mis à jour régulièrement !</p>
+            <p class="text-lg text-gray-600 mb-4">Nos soldes incluent des produits divers et varies, 
+            avec des réductions allant jusqu'à 50% 
+            sur certains articles. Vérifiez régulièrement pour ne pas manquer vos articles préférés.
+            Ajoutez-les rapidement à votre panier avant qu'ils ne soient épuisés !</p>
+            <p class="text-lg text-gray-600">Pour plus d'informations ou pour passer commande, 
+            n'hésitez pas à nous contacter via support@echop.com ou au +237 6 77 24 69 00. Bonne chasse aux bonnes affaires !</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-red-600 text-white text-center py-6 mt-10">
+        <p>© 2025 Echop. Tous droits réservés.</p>
+        <div class="mt-2">
+            <a href="#" class="text-yellow-300 hover:underline mx-2">À propos</a>
+            <a href="#" class="text-yellow-300 hover:underline mx-2">Contact</a>
+            <a href="#" class="text-yellow-300 hover:underline mx-2">Conditions d'utilisation</a>
+        </div>
+        <p class="mt-1">Contact : <a href="mailto:support@echop.com" class="text-yellow-300 hover:underline">support@echop.com</a> | Téléphone : +237 6 77 24 69 00</p>
+    </footer>
+
+</body>
+</html>

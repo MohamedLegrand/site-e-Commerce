@@ -6,117 +6,403 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Produits Alimentaires - Echop</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="{% static 'accounts/products.css' %}" rel="stylesheet">
+    <style>
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .carousel-container {
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            padding-bottom: 20px;
+        }
+        .carousel-container::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
 </head>
-<body class="bg-green-50 text-gray-800">
-
+<body class="bg-red-50 text-gray-800">
     <!-- Header -->
-    <header class="bg-green-700 text-white p-6 text-center shadow-lg">
-        <h1 class="text-3xl font-bold">Echop - Produits Alimentaires</h1>
+    <header class="bg-red-700 text-white p-6 text-center shadow-lg">
+        <h1 class="text-3xl font-bold"><a href="{% url 'accounts:page_principale' %}" class="text-white hover:text-red-300">Echop</a></h1>
         <p class="mt-2 text-lg">Retrouvez des produits frais, secs, surgelés et des boissons pour toute la famille.</p>
     </header>
 
-    <main class="container mx-auto px-4 py-10">
-
-        <!-- Produits Frais -->
-        <h2 class="text-2xl font-semibold text-center mb-6">🥦 Produits Frais</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <div class="bg-white p-4 shadow rounded text-center">
-                <img src="{% static 'images/alimentaire/frais/legumes.jpg' %}" alt="Légumes frais" class="w-full h-40 object-cover mb-2 rounded">
-                <p>Légumes frais</p>
-            </div>
-            <div class="bg-white p-4 shadow rounded text-center">
-                <img src="{% static 'images/alimentaire/frais/fruits.jpg' %}" alt="Fruits" class="w-full h-40 object-cover mb-2 rounded">
-                <p>Fruits de saison</p>
-            </div>
-            <div class="bg-white p-4 shadow rounded text-center">
-                <img src="{% static 'images/alimentaire/frais/viande.jpg' %}" alt="Viande" class="w-full h-40 object-cover mb-2 rounded">
-                <p>Viandes fraîches</p>
-            </div>
-        </div>
-
+    <main class="container mx-auto px-4 py-10 fade-in">
         <!-- Produits Secs -->
         <h2 class="text-2xl font-semibold text-center mt-12 mb-6">🥫 Produits Secs</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <div class="bg-white p-4 shadow rounded text-center">
-                <img src="{% static 'images/riz/riz1.webp' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/riz/riz2.webp' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/riz/riz3.webp' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/riz/riz4.webp' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/riz/riz5.webp' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/riz/riz6.webp' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/riz/riz7.webp' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/riz/riz8.webp' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/riz/riz9.jpg' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/riz/riz10.webp' %}" alt="Riz" class="w-full h-40 object-cover mb-2 rounded">
-                <p>Riz parfumé</p>
+        <div class="carousel-container flex space-x-4">
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/riz/riz1.webp' %}" alt="Riz parfumé 1" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Riz parfumé 1</h4>
+                <p class="text-gray-600 mb-4">Riz parfumé de haute qualité, idéal pour tous les plats.</p>
+                <p class="text-red-600 font-bold mb-4">5 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
             </div>
-            <div class="bg-white p-4 shadow rounded text-center">
-                <img src="{% static 'images/spaghetti/sp1.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/spaghetti/sp2.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/spaghetti/sp3.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/spaghetti/sp4.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/spaghetti/sp5.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/spaghetti/sp6.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/spaghetti/sp7.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/spaghetti/sp8.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/spaghetti/sp9.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/spaghetti/sp10.webp' %}" alt="Pâtes" class="w-full h-40 object-cover mb-2 rounded">
-                <p>Pâtes alimentaires</p>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/riz/riz2.webp' %}" alt="Riz parfumé 2" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Riz parfumé 2</h4>
+                <p class="text-gray-600 mb-4">Riz parfumé bio, récolte locale.</p>
+                <p class="text-red-600 font-bold mb-4">6 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
             </div>
-            <div class="bg-white p-4 shadow rounded text-center">
-                <img src="{% static 'images/alimentaire/secs/conserve.jpg' %}" alt="Conserves" class="w-full h-40 object-cover mb-2 rounded">
-                <p>Conserves variées</p>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/riz/riz3.webp' %}" alt="Riz parfumé 3" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Riz parfumé 3</h4>
+                <p class="text-gray-600 mb-4">Riz parfumé en sac familial.</p>
+                <p class="text-red-600 font-bold mb-4">8 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/riz/riz4.webp' %}" alt="Riz parfumé 4" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Riz parfumé 4</h4>
+                <p class="text-gray-600 mb-4">Riz parfumé premium.</p>
+                <p class="text-red-600 font-bold mb-4">7 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/riz/riz5.webp' %}" alt="Riz parfumé 5" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Riz parfumé 5</h4>
+                <p class="text-gray-600 mb-4">Riz parfumé longue durée.</p>
+                <p class="text-red-600 font-bold mb-4">5 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/riz/riz6.webp' %}" alt="Riz parfumé 6" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Riz parfumé 6</h4>
+                <p class="text-gray-600 mb-4">Riz parfumé spécial cuisine.</p>
+                <p class="text-red-600 font-bold mb-4">6 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/riz/riz7.webp' %}" alt="Riz parfumé 7" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Riz parfumé 7</h4>
+                <p class="text-gray-600 mb-4">Riz parfumé importé.</p>
+                <p class="text-red-600 font-bold mb-4">9 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/riz/riz8.webp' %}" alt="Riz parfumé 8" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Riz parfumé 8</h4>
+                <p class="text-gray-600 mb-4">Riz parfumé en vrac.</p>
+                <p class="text-red-600 font-bold mb-4">4 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/riz/riz9.jpg' %}" alt="Riz parfumé 9" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Riz parfumé 9</h4>
+                <p class="text-gray-600 mb-4">Riz parfumé économique.</p>
+                <p class="text-red-600 font-bold mb-4">4 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/riz/riz10.webp' %}" alt="Riz parfumé 10" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Riz parfumé 10</h4>
+                <p class="text-gray-600 mb-4">Riz parfumé de saison.</p>
+                <p class="text-red-600 font-bold mb-4">6 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/spaghetti/sp1.webp' %}" alt="Pâtes 1" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Pâtes 1</h4>
+                <p class="text-gray-600 mb-4">Pâtes complètes, riches en fibres.</p>
+                <p class="text-red-600 font-bold mb-4">3 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/spaghetti/sp2.webp' %}" alt="Pâtes 2" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Pâtes 2</h4>
+                <p class="text-gray-600 mb-4">Pâtes spaghetti traditionnelles.</p>
+                <p class="text-red-600 font-bold mb-4">2 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/spaghetti/sp3.webp' %}" alt="Pâtes 3" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Pâtes 3</h4>
+                <p class="text-gray-600 mb-4">Pâtes fines pour plats légers.</p>
+                <p class="text-red-600 font-bold mb-4">3 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-4 text-center min-w-[300px]">
+                <img src="{% static 'images/spaghetti/sp4.webp' %}" alt="Pâtes 4" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Pâtes 4</h4>
+                <p class="text-gray-600 mb-4">Pâtes enrichies en vitamines.</p>
+                <p class="text-red-600 font-bold mb-4">4 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/spaghetti/sp5.webp' %}" alt="Pâtes 5" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Pâtes 5</h4>
+                <p class="text-gray-600 mb-4">Pâtes bio, sans additifs.</p>
+                <p class="text-red-600 font-bold mb-4">4 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/spaghetti/sp6.webp' %}" alt="Pâtes 6" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Pâtes 6</h4>
+                <p class="text-gray-600 mb-4">Pâtes familiales en gros.</p>
+                <p class="text-red-600 font-bold mb-4">5 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/spaghetti/sp7.webp' %}" alt="Pâtes 7" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Pâtes 7</h4>
+                <p class="text-gray-600 mb-4">Pâtes rapides à cuire.</p>
+                <p class="text-red-600 font-bold mb-4">3 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/spaghetti/sp8.webp' %}" alt="Pâtes 8" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Pâtes 8</h4>
+                <p class="text-gray-600 mb-4">Pâtes importées de qualité.</p>
+                <p class="text-red-600 font-bold mb-4">4 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/spaghetti/sp9.webp' %}" alt="Pâtes 9" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Pâtes 9</h4>
+                <p class="text-gray-600 mb-4">Pâtes pour régimes spéciaux.</p>
+                <p class="text-red-600 font-bold mb-4">5 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/spaghetti/sp10.webp' %}" alt="Pâtes 10" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Pâtes 10</h4>
+                <p class="text-gray-600 mb-4">Pâtes artisanales locales.</p>
+                <p class="text-red-600 font-bold mb-4">3 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
             </div>
         </div>
 
-        <!-- Produits Surgelés -->
-        <h2 class="text-2xl font-semibold text-center mt-12 mb-6">❄️ Produits Surgelés</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <div class="bg-white p-4 shadow rounded text-center">
-                <img src="{% static 'images/alimentaire/surgeles/frites.jpg' %}" alt="Frites surgelées" class="w-full h-40 object-cover mb-2 rounded">
-                <p>Frites surgelées</p>
+        <!-- Produits Laitiers -->
+        <h2 class="text-2xl font-semibold text-center mt-12 mb-6">🥛 Produits Laitiers</h2>
+        <div class="carousel-container flex space-x-4">
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/laits/matinal1.webp' %}" alt="Lait Matinal" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Lait Matinal</h4>
+                <p class="text-gray-600 mb-4">Lait Matinal enrichi en calcium.</p>
+                <p class="text-red-600 font-bold mb-4">2 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
             </div>
-            <div class="bg-white p-4 shadow rounded text-center">
-                <img src="{% static 'images/alimentaire/surgeles/poisson.jpg' %}" alt="Poissons" class="w-full h-40 object-cover mb-2 rounded">
-                <p>Poissons surgelés</p>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/laits/nescafe1.webp' %}" alt="Nescafé 1" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Nescafé 1</h4>
+                <p class="text-gray-600 mb-4">Nescafé instantané classique.</p>
+                <p class="text-red-600 font-bold mb-4">3 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
             </div>
-            <div class="bg-white p-4 shadow rounded text-center">
-                <img src="{% static 'images/alimentaire/surgeles/legumes.jpg' %}" alt="Légumes surgelés" class="w-full h-40 object-cover mb-2 rounded">
-                <p>Légumes prêts à cuire</p>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/laits/nescafe2.webp' %}" alt="Nescafé 2" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Nescafé 2</h4>
+                <p class="text-gray-600 mb-4">Nescafé décaféiné.</p>
+                <p class="text-red-600 font-bold mb-4">4 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/laits/nido1.webp' %}" alt="Nido 1" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Nido 1</h4>
+                <p class="text-gray-600 mb-4">Nido pour enfants, riche en vitamines.</p>
+                <p class="text-red-600 font-bold mb-4">5 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/laits/nido2.webp' %}" alt="Nido 2" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Nido 2</h4>
+                <p class="text-gray-600 mb-4">Nido adulte, fortifiant.</p>
+                <p class="text-red-600 font-bold mb-4">6 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/laits/nido3.webp' %}" alt="Nido 3" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Nido 3</h4>
+                <p class="text-gray-600 mb-4">Nido en poudre économique.</p>
+                <p class="text-red-600 font-bold mb-4">4 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/laits/nido4.jpg' %}" alt="Nido 4" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Nido 4</h4>
+                <p class="text-gray-600 mb-4">Nido spécial croissance.</p>
+                <p class="text-red-600 font-bold mb-4">7 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/laits/ovaltine1.webp' %}" alt="Ovaltine 1" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Ovaltine 1</h4>
+                <p class="text-gray-600 mb-4">Ovaltine énergétique.</p>
+                <p class="text-red-600 font-bold mb-4">3 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/laits/ovaltine2.webp' %}" alt="Ovaltine 2" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Ovaltine 2</h4>
+                <p class="text-gray-600 mb-4">Ovaltine sans sucre.</p>
+                <p class="text-red-600 font-bold mb-4">3 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/laits/ovaltine3.jpg' %}" alt="Ovaltine 3" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Ovaltine 3</h4>
+                <p class="text-gray-600 mb-4">Ovaltine familial.</p>
+                <p class="text-red-600 font-bold mb-4">4 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
             </div>
         </div>
 
         <!-- Boissons -->
         <h2 class="text-2xl font-semibold text-center mt-12 mb-6">🥤 Boissons</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <div class="bg-white p-4 shadow rounded text-center">
-                <img src="{% static 'images/boissons/top ananas.webp' %}" alt="Jus de fruits" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/boissons/top cocacola.webp' %}" alt="Jus de fruits" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/boissons/top djino.webp' %}" alt="Jus de fruits" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/boissons/top fanta.webp' %}" alt="Jus de fruits" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/boissons/top grenadine.webp' %}" alt="Jus de fruits" class="w-full h-40 object-cover mb-2 rounded">
-                <p>Jus naturels</p>
+        <div class="carousel-container flex space-x-4">
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/boissons/top ananas.webp' %}" alt="Jus d'ananas" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Jus d'ananas</h4>
+                <p class="text-gray-600 mb-4">Jus d'ananas 100% naturel.</p>
+                <p class="text-red-600 font-bold mb-4">2 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
             </div>
-            <div class="bg-white p-4 shadow rounded text-center">
-                <img src="{% static 'images/eaux minerale/eau kirene.webp' %}" alt="Eau" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/eaux minerale/eau supermont.jpg' %}" alt="Eau" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/eaux minerale/eau tangui.webp' %}" alt="Eau" class="w-full h-40 object-cover mb-2 rounded">
-                <p>Eau minérale</p>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/boissons/top cocacola.webp' %}" alt="Coca-Cola" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Coca-Cola</h4>
+                <p class="text-gray-600 mb-4">Coca-Cola en bouteille.</p>
+                <p class="text-red-600 font-bold mb-4">1 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
             </div>
-            <div class="bg-white p-4 shadow rounded text-center">
-                <img src="{% static 'images/boissons/canette cocacola.webp' %}" alt="Sodas" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/boissons/cannette1.webp' %}" alt="Sodas" class="w-full h-40 object-cover mb-2 rounded">
-                <img src="{% static 'images/boissons/cannette2.webp' %}" alt="Sodas" class="w-full h-40 object-cover mb-2 rounded">
-                <p>Sodas variés</p>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/boissons/top djino.webp' %}" alt="Djino" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Djino</h4>
+                <p class="text-gray-600 mb-4">Djino, boisson fruitée locale.</p>
+                <p class="text-red-600 font-bold mb-4">2 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/boissons/top fanta.webp' %}" alt="Fanta" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Fanta</h4>
+                <p class="text-gray-600 mb-4">Fanta orange pétillante.</p>
+                <p class="text-red-600 font-bold mb-4">1 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/boissons/top grenadine.webp' %}" alt="Grenadine" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Grenadine</h4>
+                <p class="text-gray-600 mb-4">Sirop de grenadine artisanal.</p>
+                <p class="text-red-600 font-bold mb-4">2 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/eaux minerale/eau kirene.webp' %}" alt="Eau Kirène" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Eau Kirène</h4>
+                <p class="text-gray-600 mb-4">Eau minérale Kirène pure.</p>
+                <p class="text-red-600 font-bold mb-4">1 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/eaux minerale/eau supermont.jpg' %}" alt="Eau Supermont" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Eau Supermont</h4>
+                <p class="text-gray-600 mb-4">Eau Supermont, source naturelle.</p>
+                <p class="text-red-600 font-bold mb-4">1 200 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/eaux minerale/eau tangui.webp' %}" alt="Eau Tangui" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Eau Tangui</h4>
+                <p class="text-gray-600 mb-4">Eau Tangui, qualité garantie.</p>
+                <p class="text-red-600 font-bold mb-4">1 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/boissons/canette cocacola.webp' %}" alt="Canette Coca-Cola" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Canette Coca-Cola</h4>
+                <p class="text-gray-600 mb-4">Canette Coca-Cola fraîche.</p>
+                <p class="text-red-600 font-bold mb-4">1 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/boissons/cannette1.webp' %}" alt="Canette 1" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Canette 1</h4>
+                <p class="text-gray-600 mb-4">Canette Sprite pétillante.</p>
+                <p class="text-red-600 font-bold mb-4">1 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/boissons/cannette2.webp' %}" alt="Canette 2" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Canette 2</h4>
+                <p class="text-gray-600 mb-4">Canette Fanta citron.</p>
+                <p class="text-red-600 font-bold mb-4">1 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+        </div>
+
+        <!-- Vins -->
+        <h2 class="text-2xl font-semibold text-center mt-12 mb-6">🍷 Vins</h2>
+        <div class="carousel-container flex space-x-4">
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/vin/vin1.webp' %}" alt="Vin 1" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Vin 1</h4>
+                <p class="text-gray-600 mb-4">Vin rouge de qualité supérieure.</p>
+                <p class="text-red-600 font-bold mb-4">15 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/vin/vin2.webp' %}" alt="Vin 2" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Vin 2</h4>
+                <p class="text-gray-600 mb-4">Vin blanc doux importé.</p>
+                <p class="text-red-600 font-bold mb-4">18 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/vin/vin3.webp' %}" alt="Vin 3" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Vin 3</h4>
+                <p class="text-gray-600 mb-4">Vin rosé fruité.</p>
+                <p class="text-red-600 font-bold mb-4">16 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/vin/vin4.webp' %}" alt="Vin 4" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Vin 4</h4>
+                <p class="text-gray-600 mb-4">Vin rouge vieilli.</p>
+                <p class="text-red-600 font-bold mb-4">20 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/vin/vin5.jpg' %}" alt="Vin 5" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Vin 5</h4>
+                <p class="text-gray-600 mb-4">Vin sparkling local.</p>
+                <p class="text-red-600 font-bold mb-4">25 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/vin/vin6.jpg' %}" alt="Vin 6" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Vin 6</h4>
+                <p class="text-gray-600 mb-4">Vin rouge artisanal.</p>
+                <p class="text-red-600 font-bold mb-4">15 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/vin/vin7.jpg' %}" alt="Vin 7" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Vin 7</h4>
+                <p class="text-gray-600 mb-4">Vin blanc sec.</p>
+                <p class="text-red-600 font-bold mb-4">17 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/vin/vin8.jpg' %}" alt="Vin 8" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Vin 8</h4>
+                <p class="text-gray-600 mb-4">Vin rosé premium.</p>
+                <p class="text-red-600 font-bold mb-4">19 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
             </div>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-green-700 text-white text-center py-6 mt-10">
-        <p>&copy; 2025 Echop. Tous droits réservés.</p>
-        <p class="mt-1">Contact : support@echop.com | Téléphone : +237 6 77 24 69 00</p>
+    <footer class="bg-red-700 text-white text-center py-6 mt-10">
+        <p>© 2025 Echop. Tous droits réservés.</p>
+        <p class="mt-1">Contact : support@echop.cm | Téléphone : +237 6 77 24 69 00</p>
     </footer>
-
 </body>
 </html>

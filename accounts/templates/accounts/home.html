@@ -1,30 +1,30 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <title>Echop - Accueil</title>
-    {% load static %}
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="{% static 'accounts/home.css' %}" rel="stylesheet">
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="font-sans">
     <!-- Header -->
-    <header class="bg-red-600 text-white p-4 shadow-lg">
+    <header class="header">
         <div class="container mx-auto flex justify-between items-center">
-            <div class="text-2xl font-bold">Echop</div>
-            <div class="flex-1 mx-4">
-                <input type="text" placeholder="Rechercher un produit..." class="w-full p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 transition-all duration-200">
+            <div class="logo">Echop</div>
+            <div class="search-bar">
+                <input type="text" placeholder="Rechercher un produit..." class="search-input">
             </div>
-            <div>
-                <a href="{% url 'accounts:login' %}" class="text-white hover:text-red-200 transition-colors duration-200">Connexion</a>
+            <div class="login-link">
+                <a href="{% url 'accounts:login' %}">Connexion</a>
             </div>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="container mx-auto py-8">
-        <div class="text-center animate-fade-in">
-            <h2 class="text-4xl font-bold text-gray-800 mb-4">Bienvenue sur Echop</h2>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        <div class="welcome-section">
+            <h2 class="main-title">Bienvenue sur Echop</h2>
+            <p class="main-description">
                 Echop est votre plateforme e-commerce conçue pour les 
                 clients à la recherche d'une expérience d'achat fluide. Gérez vos produits, 
                 ventes, et stocks avec un tableau de bord intuitif, profitez d'un système 
@@ -39,20 +39,16 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-red-700 text-white py-6 mt-8">
+    <footer class="footer">
         <div class="container mx-auto text-center">
-            <div class="mb-4">
-                <h3 class="text-xl font-semibold">Echop</h3>
-                <p class="text-sm">© 2025 Echop. Tous droits réservés.</p>
+            <div class="footer-info">
+                <h3 class="footer-title">Echop</h3>
+                <p class="footer-copyright">© 2025 Echop. Tous droits réservés.</p>
             </div>
-            <div class="flex justify-center space-x-6">
-                <a href="#" class="hover:text-red-300 transition-colors duration-200">À propos</a>
-                <a href="#" class="hover:text-red-300 transition-colors duration-200">Contact</a>
-                <a href="#" class="hover:text-red-300 transition-colors duration-200">Politique de confidentialité</a>
-            </div>
-            <div class="mt-4 text-sm">
-                <p>Support : support@echop.com | Heures : 9h00 - 17h00 WAT</p>
-                <p>Mise à jour : 07:23 AM WAT, Jeudi 24 Juillet 2025</p> <!-- Date et heure actuelles -->
+            <div class="footer-links">
+                <a href="#" class="footer-link">À propos</a>
+                <a href="#" class="footer-link">Contact</a>
+                <a href="#" class="footer-link">Politique de confidentialité</a>
             </div>
         </div>
     </footer>

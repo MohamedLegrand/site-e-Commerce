@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>À propos - Echop</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="{% static 'accounts/about.css' %}" rel="stylesheet">
+    <style>
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-red-600 text-white p-4 shadow-lg">
+        <div class="container mx-auto text-center">
+            <h1 class="text-2xl font-bold"><a href="{% url 'accounts:page_principale' %}" class="text-white hover:text-red-300">Echop</a></h1>
+        </div>
+    </header>
+
+    <!-- Navbar -->
+    <nav class="bg-red-500 p-4 shadow-lg">
+        <div class="container mx-auto flex justify-center items-center">
+            <!-- Aucun texte statique supplémentaire -->
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="container mx-auto p-6 fade-in">
+        <h1 class="text-4xl font-bold text-center text-red-600 mb-6">À propos d'Echop</h1>
+        <p class="text-center text-gray-700 mb-8">Découvrez qui nous sommes et ce qui nous motive à offrir la meilleure expérience d'achat en ligne au Cameroun.</p>
+
+        <!-- Section Présentation -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-red-600 mb-4">Notre Histoire</h2>
+            <p class="text-gray-700 leading-relaxed">
+                Fondée en 2020, Echop est une plateforme e-commerce basée à Yaoundé, Cameroun, dédiée à rendre l'achat en ligne accessible et agréable pour tous. Depuis nos débuts, nous avons travaillé sans relâche pour connecter les commerçants locaux avec une clientèle nationale, en mettant l'accent sur la promotion de produits artisanaux et industriels de qualité à des prix compétitifs. Notre voyage a débuté avec une petite équipe passionnée par l'idée de transformer le commerce traditionnel en une expérience numérique fluide et fiable. Aujourd'hui, Echop s'est imposée comme une référence dans le secteur, grâce à notre engagement envers l'innovation et le soutien aux petites entreprises camerounaises. Nous continuons d'évoluer pour répondre aux besoins croissants de notre communauté, en intégrant des technologies modernes pour améliorer l'expérience utilisateur à chaque étape.
+            </p>
+        </section>
+
+        <!-- Section Mission -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-red-600 mb-4">Notre Mission</h2>
+            <p class="text-gray-700 leading-relaxed">
+                Chez Echop, notre mission est de révolutionner le commerce en ligne au Cameroun en intégrant un système de fidélisation intelligent qui récompense nos clients. Nous croyons fermement que chaque achat devrait offrir une valeur ajoutée, c'est pourquoi nous avons conçu un programme où les points cumulables permettent d'obtenir des réductions personnalisées et des offres exclusives. Au-delà du commerce, nous nous engageons à soutenir l'économie locale en collaborant avec des artisans et des entrepreneurs de Yaoundé et d'autres régions. Notre objectif est de créer une communauté fidèle et satisfaite, tout en promouvant des pratiques durables et équitables. Nous investissons également dans des initiatives éducatives pour former les commerçants à l'utilisation des outils numériques, renforçant ainsi notre impact positif dans la société camerounaise.
+            </p>
+        </section>
+
+        <!-- Section Fidélisation -->
+        <section>
+            <h2 class="text-2xl font-semibold text-red-600 mb-4">Notre Programme de Fidélité</h2>
+            <p class="text-gray-700 leading-relaxed">
+                Rejoignez notre programme de fidélité intelligent et profitez de nombreux avantages ! Avec Echop, vous gagnez 1 point par dollar dépensé, et une fois que vous atteignez 100 points, vous pouvez échanger ceux-ci contre une réduction de 10% sur votre prochain achat. Ce système est conçu pour récompenser votre fidélité et vous offrir une expérience d'achat personnalisée. Suivez vos points facilement via votre tableau de bord personnel, où vous trouverez également des offres spéciales adaptées à vos préférences. Nous organisons régulièrement des campagnes promotionnelles pour maximiser vos gains de points, notamment pendant les fêtes ou les événements locaux au Cameroun. Notre objectif est de rendre chaque transaction non seulement pratique, mais aussi gratifiante, tout en renforçant les liens avec notre clientèle à Yaoundé et au-delà.
+            </p>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-red-600 text-white py-6 mt-12">
+        <div class="container mx-auto text-center">
+            <div class="mb-4">
+                <h2 class="text-xl font-semibold">Echop</h2>
+                <p class="mt-2">© 2025 Echop. Tous droits réservés.</p>
+            </div>
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="{% url 'accounts:contact' %}" class="hover:text-red-300 transition-colors duration-200">Contact</a>
+                <a href="{% url 'accounts:about' %}" class="hover:text-red-300 transition-colors duration-200">À propos</a>
+                <a href="{% url 'accounts:terms' %}" class="hover:text-red-300 transition-colors duration-200">Conditions</a>
+            </div>
+            <div>
+                <p>Email : support@echop.cm | Téléphone : +237 6 77 24 69 00</p>
+                <p class="mt-2">Suivez-nous: 
+                    <a href="#" class="text-red-300 hover:text-white">Facebook</a> | 
+                    <a href="#" class="text-red-300 hover:text-white">Twitter</a> | 
+                    <a href="#" class="text-red-300 hover:text-white">Instagram</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

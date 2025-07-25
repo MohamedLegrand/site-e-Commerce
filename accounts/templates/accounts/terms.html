@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Conditions - Echop</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="{% static 'accounts/conditions.css' %}" rel="stylesheet">
+    <style>
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-red-600 text-white p-4 shadow-lg">
+        <div class="container mx-auto text-center">
+            <h1 class="text-2xl font-bold"><a href="{% url 'accounts:page_principale' %}" class="text-white hover:text-red-300">Echop</a></h1>
+        </div>
+    </header>
+
+    <!-- Navbar -->
+    <nav class="bg-red-500 p-4 shadow-lg">
+        <div class="container mx-auto flex justify-center items-center">
+            <!-- Aucun texte statique supplémentaire -->
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="container mx-auto p-6 fade-in">
+        <h1 class="text-4xl font-bold text-center text-red-600 mb-6">Conditions d'Utilisation - Echop</h1>
+        <p class="text-center text-gray-700 mb-8">Veuillez lire attentivement les conditions qui régissent l'utilisation de notre plateforme basée à Yaoundé, Cameroun.</p>
+
+        <!-- Section Conditions Générales -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-red-600 mb-4">Conditions Générales</h2>
+            <p class="text-gray-700 leading-relaxed">
+                Les présentes conditions d'utilisation régissent votre accès et votre utilisation de la plateforme Echop, basée à Yaoundé, Cameroun. En utilisant nos services, vous acceptez pleinement ces termes. Echop se réserve le droit de modifier ces conditions à tout moment, et les mises à jour seront publiées sur cette page. Tout utilisateur doit avoir au moins 18 ans ou être accompagné d'un tuteur légal pour effectuer des achats. Nous nous engageons à fournir un service fiable, mais ne pouvons garantir une disponibilité continue en raison de facteurs techniques ou externes. Toute violation de ces conditions peut entraîner la suspension ou la résiliation de votre compte.
+            </p>
+        </section>
+
+        <!-- Section Politiques de Retour -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-red-600 mb-4">Politiques de Retour</h2>
+            <p class="text-gray-700 leading-relaxed">
+                Echop offre une politique de retour généreuse pour assurer votre satisfaction. Vous disposez de 14 jours calendaires à partir de la date de réception pour retourner un produit, à condition qu'il soit dans son emballage d'origine et en bon état. Les frais de retour sont à la charge du client, sauf en cas d'erreur de notre part (ex. : produit défectueux ou incorrect). Pour initier un retour, contactez notre service client à support@echop.cm avec votre numéro de commande. Les remboursements seront traités dans un délai de 10 jours ouvrables après réception du produit retourné, via le même mode de paiement utilisé lors de l'achat.
+            </p>
+        </section>
+
+        <!-- Section Programme de Fidélité -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-red-600 mb-4">Programme de Fidélité</h2>
+            <p class="text-gray-700 leading-relaxed">
+                Notre programme de fidélité intelligent permet à chaque client de gagner 1 point par dollar dépensé. Ces points peuvent être échangés contre une réduction de 10% une fois 100 points accumulés. Les points sont crédités sur votre compte après chaque achat validé et peuvent être suivis via votre tableau de bord. Les points expirent après 12 mois d'inactivité. Toute tentative de fraude ou d'abus du programme (ex. : création de comptes multiples) entraînera la perte des points et une possible suspension du compte. Des promotions spéciales peuvent augmenter vos gains de points pendant les périodes festives au Cameroun.
+            </p>
+        </section>
+
+        <!-- Section Informations Légales -->
+        <section>
+            <h2 class="text-2xl font-semibold text-red-600 mb-4">Informations Légales</h2>
+            <p class="text-gray-700 leading-relaxed">
+                Echop est une marque déposée par Echop SARL, enregistrée au Cameroun sous le numéro RC/YDE/2020/1234. Notre siège social est situé à Yaoundé, quartier Bastos. Pour toute question juridique, contactez-nous à legal@echop.cm. Ces conditions sont régies par les lois de la République du Cameroun. En cas de litige, les parties s'engagent à tenter une résolution amiable avant de recourir aux tribunaux compétents de Yaoundé. Nous ne collectons ni ne partageons vos données personnelles sans votre consentement, conformément à la législation locale sur la protection des données.
+            </p>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-red-600 text-white py-6 mt-12">
+        <div class="container mx-auto text-center">
+            <div class="mb-4">
+                <h2 class="text-xl font-semibold">Echop</h2>
+                <p class="mt-2">© 2025 Echop. Tous droits réservés.</p>
+            </div>
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="{% url 'accounts:contact' %}" class="hover:text-red-300 transition-colors duration-200">Contact</a>
+                <a href="{% url 'accounts:about' %}" class="hover:text-red-300 transition-colors duration-200">À propos</a>
+                <a href="{% url 'accounts:terms' %}" class="hover:text-red-300 transition-colors duration-200">Conditions</a>
+            </div>
+            <div>
+                <p>Email : support@echop.cm | Téléphone : +237 6 77 24 69 00</p>
+                <p class="mt-2">Suivez-nous: 
+                    <a href="#" class="text-red-300 hover:text-white">Facebook</a> | 
+                    <a href="#" class="text-red-300 hover:text-white">Twitter</a> | 
+                    <a href="#" class="text-red-300 hover:text-white">Instagram</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

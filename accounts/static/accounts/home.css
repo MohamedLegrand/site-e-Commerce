@@ -1,69 +1,49 @@
-body {
-    font-family: 'Arial', sans-serif;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.animate-fade-in {
-    animation: fadeIn 0.5s ease-in;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-header {
-    background-color: #dc2626; /* Rouge principal */
-    color: #ffffff;
+/* Header Styles */
+.header {
+    background-color: #0c0c0c; /* Rouge clair */
+    color: white;
     padding: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 
-header input {
+.search-bar {
+    flex: 1;
+    margin: 0 1rem;
+}
+
+.search-input {
     width: 100%;
     padding: 0.5rem;
     border-radius: 0.375rem;
+    border: none;
     outline: none;
     transition: all 0.2s ease;
 }
 
-header input:focus {
-    ring-2 ring-red-400;
+.search-input:focus {
+    
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3);
 }
 
-header a {
-    color: #ffffff;
-    transition: color 0.2s ease;
+/* Main Content Styles */
+.welcome-section {
+    text-align: center;
+    animation: fadeIn 1s ease-in;
 }
 
-header a:hover {
-    color: #f87171; /* Rouge clair pour hover */
-}
-
-main {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-}
-
-main h2 {
+.main-title {
     font-size: 2.25rem;
-    font-weight: 700;
+    font-weight: bold;
     color: #1f2937;
     margin-bottom: 1rem;
 }
 
-main p {
+.main-description {
     font-size: 1.125rem;
     color: #4b5563;
     max-width: 48rem;
@@ -71,23 +51,48 @@ main p {
     margin-right: auto;
 }
 
-footer {
-    background-color: #b91c1c; /* Rouge plus foncé pour le footer */
-    color: #ffffff;
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+/* Footer Styles */
+.footer {
+    background-color: #ef4444; /* Rouge clair */
+    color: white;
+    padding: 1.5rem 0;
     margin-top: 2rem;
 }
 
-footer a {
-    color: #ffffff;
+.footer-info {
+    margin-bottom: 1rem;
+}
+
+.footer-title {
+    font-size: 1.25rem;
+    font-weight: semibold;
+}
+
+.footer-copyright {
+    font-size: 0.75rem;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.footer-link {
+    color: white;
     transition: color 0.2s ease;
 }
 
-footer a:hover {
-    color: #f87171; /* Rouge clair pour hover */
+.footer-link:hover {
+    color: #f87171; /* Rouge plus clair au survol */
 }
 
-footer .container {
-    text-align: center;
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }

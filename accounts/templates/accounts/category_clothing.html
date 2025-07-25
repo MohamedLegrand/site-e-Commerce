@@ -7,6 +7,36 @@
     <title>Vêtements - Echop</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/vetements.css' %}">
+    <style>
+        .carousel-container {
+            position: relative;
+            overflow-x: hidden;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            z-index: 10;
+            transition: background-color 0.3s ease;
+        }
+        .carousel-btn:hover {
+            background-color: rgba(255, 255, 255, 1);
+        }
+        .prev-btn {
+            left: 0;
+        }
+        .next-btn {
+            right: 0;
+        }
+    </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans">
 
@@ -31,302 +61,318 @@
         
         <!-- Vêtements Hommes -->
         <h3 class="text-2xl font-semibold mb-6 text-red-600">👔 Vêtements Hommes</h3>
-        <div class="carousel-container flex overflow-x-auto space-x-4 mb-12 snap-x snap-mandatory">
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/hommes/t1.jpg' %}" alt="T-shirt Coton Bleu" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">T-shirt Coton Bleu</h4>
-                <p class="text-gray-600 mb-4">Un t-shirt en coton doux, parfait pour un look décontracté.</p>
-                <p class="text-red-600 font-bold mb-4">5 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter T-shirt Coton Bleu au panier">Ajouter au panier</button>
+        <div class="carousel-container relative">
+            <button class="carousel-btn prev-btn" onclick="scrollCarousel('hommes', -1)">❮</button>
+            <div class="carousel-inner flex overflow-x-auto space-x-4 mb-12 snap-x snap-mandatory" id="hommes">
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/hommes/t1.jpg' %}" alt="T-shirt Coton Bleu" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">T-shirt Coton Bleu</h4>
+                    <p class="text-gray-600 mb-4">Un t-shirt en coton doux, parfait pour un look décontracté.</p>
+                    <p class="text-red-600 font-bold mb-4">5 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter T-shirt Coton Bleu au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/hommes/t2.jpg' %}" alt="T-shirt Slim Noir" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">T-shirt Slim Noir</h4>
+                    <p class="text-gray-600 mb-4">Un t-shirt ajusté en noir élégant, idéal pour toutes les occasions.</p>
+                    <p class="text-red-600 font-bold mb-4">6 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter T-shirt Slim Noir au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/hommes/t3.jpg' %}" alt="T-shirt à Rayures" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">T-shirt à Rayures</h4>
+                    <p class="text-gray-600 mb-4">Un t-shirt à rayures blanches et bleues, style marin tendance.</p>
+                    <p class="text-red-600 font-bold mb-4">5 500 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter T-shirt à Rayures au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/hommes/veste1.jpg' %}" alt="Veste en Cuir Noir" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Veste en Cuir Noir</h4>
+                    <p class="text-gray-600 mb-4">Une veste en cuir noir pour un style audacieux et moderne.</p>
+                    <p class="text-red-600 font-bold mb-4">25 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Veste en Cuir Noir au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/hommes/veste2.jpg' %}" alt="Veste en Jean Bleu" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Veste en Jean Bleu</h4>
+                    <p class="text-gray-600 mb-4">Une veste en jean délavé, parfaite pour un look casual.</p>
+                    <p class="text-red-600 font-bold mb-4">18 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Veste en Jean Bleu au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/hommes/jogin1.jpg' %}" alt="Jogging Gris Confort" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Jogging Gris Confort</h4>
+                    <p class="text-gray-600 mb-4">Un jogging gris en coton doux, idéal pour le sport ou la détente.</p>
+                    <p class="text-red-600 font-bold mb-4">8 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Jogging Gris Confort au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/hommes/jogin2.jpg' %}" alt="Jogging Noir Sportif" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Jogging Noir Sportif</h4>
+                    <p class="text-gray-600 mb-4">Un jogging noir ajusté, parfait pour les entraînements intensifs.</p>
+                    <p class="text-red-600 font-bold mb-4">9 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Jogging Noir Sportif au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/hommes/t4.jpg' %}" alt="T-shirt Polo Blanc" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">T-shirt Polo Blanc</h4>
+                    <p class="text-gray-600 mb-4">Un polo blanc élégant pour un style sophistiqué et décontracté.</p>
+                    <p class="text-red-600 font-bold mb-4">7 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter T-shirt Polo Blanc au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/hommes/veste3.jpg' %}" alt="Veste Bomber Verte" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Veste Bomber Verte</h4>
+                    <p class="text-gray-600 mb-4">Une veste bomber verte, idéale pour un look urbain tendance.</p>
+                    <p class="text-red-600 font-bold mb-4">20 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Veste Bomber Verte au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/hommes/jogin11.jpg' %}" alt="Jogging Bleu Marine" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Jogging Bleu Marine</h4>
+                    <p class="text-gray-600 mb-4">Un jogging bleu marine confortable avec poches pratiques.</p>
+                    <p class="text-red-600 font-bold mb-4">8 500 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Jogging Bleu Marine au panier">Ajouter au panier</button>
+                </div>
             </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/hommes/t2.jpg' %}" alt="T-shirt Slim Noir" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">T-shirt Slim Noir</h4>
-                <p class="text-gray-600 mb-4">Un t-shirt ajusté en noir élégant, idéal pour toutes les occasions.</p>
-                <p class="text-red-600 font-bold mb-4">6 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter T-shirt Slim Noir au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/hommes/t3.jpg' %}" alt="T-shirt à Rayures" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">T-shirt à Rayures</h4>
-                <p class="text-gray-600 mb-4">Un t-shirt à rayures blanches et bleues, style marin tendance.</p>
-                <p class="text-red-600 font-bold mb-4">5 500 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter T-shirt à Rayures au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/hommes/veste1.jpg' %}" alt="Veste en Cuir Noir" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Veste en Cuir Noir</h4>
-                <p class="text-gray-600 mb-4">Une veste en cuir noir pour un style audacieux et moderne.</p>
-                <p class="text-red-600 font-bold mb-4">25 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Veste en Cuir Noir au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/hommes/veste2.jpg' %}" alt="Veste en Jean Bleu" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Veste en Jean Bleu</h4>
-                <p class="text-gray-600 mb-4">Une veste en jean délavé, parfaite pour un look casual.</p>
-                <p class="text-red-600 font-bold mb-4">18 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Veste en Jean Bleu au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/hommes/jogin1.jpg' %}" alt="Jogging Gris Confort" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Jogging Gris Confort</h4>
-                <p class="text-gray-600 mb-4">Un jogging gris en coton doux, idéal pour le sport ou la détente.</p>
-                <p class="text-red-600 font-bold mb-4">8 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Jogging Gris Confort au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/hommes/jogin2.jpg' %}" alt="Jogging Noir Sportif" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Jogging Noir Sportif</h4>
-                <p class="text-gray-600 mb-4">Un jogging noir ajusté, parfait pour les entraînements intensifs.</p>
-                <p class="text-red-600 font-bold mb-4">9 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Jogging Noir Sportif au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/hommes/t4.jpg' %}" alt="T-shirt Polo Blanc" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">T-shirt Polo Blanc</h4>
-                <p class="text-gray-600 mb-4">Un polo blanc élégant pour un style sophistiqué et décontracté.</p>
-                <p class="text-red-600 font-bold mb-4">7 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter T-shirt Polo Blanc au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/hommes/veste3.jpg' %}" alt="Veste Bomber Verte" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Veste Bomber Verte</h4>
-                <p class="text-gray-600 mb-4">Une veste bomber verte, idéale pour un look urbain tendance.</p>
-                <p class="text-red-600 font-bold mb-4">20 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Veste Bomber Verte au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/hommes/jogin11.jpg' %}" alt="Jogging Bleu Marine" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Jogging Bleu Marine</h4>
-                <p class="text-gray-600 mb-4">Un jogging bleu marine confortable avec poches pratiques.</p>
-                <p class="text-red-600 font-bold mb-4">8 500 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Jogging Bleu Marine au panier">Ajouter au panier</button>
-            </div>
+            <button class="carousel-btn next-btn" onclick="scrollCarousel('hommes', 1)">❯</button>
         </div>
 
         <!-- Vêtements Femmes -->
         <h3 class="text-2xl font-semibold mb-6 text-red-600">👗 Vêtements Femmes</h3>
-        <div class="carousel-container flex overflow-x-auto space-x-4 mb-12 snap-x snap-mandatory">
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/femmes/robe1.jpg' %}" alt="Robe D'été Florale" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Robe D'été Florale</h4>
-                <p class="text-gray-600 mb-4">Une robe légère à motifs floraux, parfaite pour l’été.</p>
-                <p class="text-red-600 font-bold mb-4">12 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Robe D'été Florale au panier">Ajouter au panier</button>
+        <div class="carousel-container relative">
+            <button class="carousel-btn prev-btn" onclick="scrollCarousel('femmes', -1)">❮</button>
+            <div class="carousel-inner flex overflow-x-auto space-x-4 mb-12 snap-x snap-mandatory" id="femmes">
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/femmes/robe1.jpg' %}" alt="Robe D'été Florale" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Robe D'été Florale</h4>
+                    <p class="text-gray-600 mb-4">Une robe légère à motifs floraux, parfaite pour l’été.</p>
+                    <p class="text-red-600 font-bold mb-4">12 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Robe D'été Florale au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/femmes/robe2.jpg' %}" alt="Robe Noire Élégante" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Robe Noire Élégante</h4>
+                    <p class="text-gray-600 mb-4">Une robe noire chic pour les soirées ou événements spéciaux.</p>
+                    <p class="text-red-600 font-bold mb-4">15 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Robe Noire Élégante au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/femmes/mini1.jpg' %}" alt="Blouse Blanche Bohème" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Blouse Blanche Bohème</h4>
+                    <p class="text-gray-600 mb-4">Une blouse légère avec dentelle, style bohème chic.</p>
+                    <p class="text-red-600 font-bold mb-4">8 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Blouse Blanche Bohème au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/femmes/mini2.jpg' %}" alt="Blouse Rose Poudré" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Blouse Rose Poudré</h4>
+                    <p class="text-gray-600 mb-4">Une blouse rose douce, parfaite pour un look romantique.</p>
+                    <p class="text-red-600 font-bold mb-4">7 500 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Blouse Rose Poudré au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/femmes/jupe1.jpg' %}" alt="Jupe Plissée Beige" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Jupe Plissée Beige</h4>
+                    <p class="text-gray-600 mb-4">Une jupe plissée élégante, idéale pour un style professionnel.</p>
+                    <p class="text-red-600 font-bold mb-4">10 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Jupe Plissée Beige au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/femmes/jupe2.jpg' %}" alt="Jupe en Jean Courte" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Jupe en Jean Courte</h4>
+                    <p class="text-gray-600 mb-4">Une jupe en jean courte pour un look décontracté et moderne.</p>
+                    <p class="text-red-600 font-bold mb-4">9 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Jupe en Jean Courte au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/femmes/robe3.jpg' %}" alt="Robe Longue Boho" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Robe Longue Boho</h4>
+                    <p class="text-gray-600 mb-4">Une robe longue à motifs bohèmes, parfaite pour l’été.</p>
+                    <p class="text-red-600 font-bold mb-4">14 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Robe Longue Boho au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/femmes/mini3.jpg' %}" alt="Blouse à Volants" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Blouse à Volants</h4>
+                    <p class="text-gray-600 mb-4">Une blouse avec volants, pour un style féminin et élégant.</p>
+                    <p class="text-red-600 font-bold mb-4">8 500 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Blouse à Volants au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/femmes/jupe3.jpg' %}" alt="Jupe Midi Noire" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Jupe Midi Noire</h4>
+                    <p class="text-gray-600 mb-4">Une jupe midi noire, parfaite pour un look chic et polyvalent.</p>
+                    <p class="text-red-600 font-bold mb-4">11 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Jupe Midi Noire au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/femmes/robe4.jpg' %}" alt="Robe Cocktail Rouge" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Robe Cocktail Rouge</h4>
+                    <p class="text-gray-600 mb-4">Une robe rouge éclatante pour briller lors des soirées.</p>
+                    <p class="text-red-600 font-bold mb-4">16 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Robe Cocktail Rouge au panier">Ajouter au panier</button>
+                </div>
             </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/femmes/robe2.jpg' %}" alt="Robe Noire Élégante" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Robe Noire Élégante</h4>
-                <p class="text-gray-600 mb-4">Une robe noire chic pour les soirées ou événements spéciaux.</p>
-                <p class="text-red-600 font-bold mb-4">15 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Robe Noire Élégante au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/femmes/mini1.jpg' %}" alt="Blouse Blanche Bohème" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Blouse Blanche Bohème</h4>
-                <p class="text-gray-600 mb-4">Une blouse légère avec dentelle, style bohème chic.</p>
-                <p class="text-red-600 font-bold mb-4">8 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Blouse Blanche Bohème au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/femmes/mini2.jpg' %}" alt="Blouse Rose Poudré" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Blouse Rose Poudré</h4>
-                <p class="text-gray-600 mb-4">Une blouse rose douce, parfaite pour un look romantique.</p>
-                <p class="text-red-600 font-bold mb-4">7 500 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Blouse Rose Poudré au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/femmes/jupe1.jpg' %}" alt="Jupe Plissée Beige" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Jupe Plissée Beige</h4>
-                <p class="text-gray-600 mb-4">Une jupe plissée élégante, idéale pour un style professionnel.</p>
-                <p class="text-red-600 font-bold mb-4">10 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Jupe Plissée Beige au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/femmes/jupe2.jpg' %}" alt="Jupe en Jean Courte" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Jupe en Jean Courte</h4>
-                <p class="text-gray-600 mb-4">Une jupe en jean courte pour un look décontracté et moderne.</p>
-                <p class="text-red-600 font-bold mb-4">9 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Jupe en Jean Courte au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/femmes/robe3.jpg' %}" alt="Robe Longue Boho" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Robe Longue Boho</h4>
-                <p class="text-gray-600 mb-4">Une robe longue à motifs bohèmes, parfaite pour l’été.</p>
-                <p class="text-red-600 font-bold mb-4">14 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Robe Longue Boho au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/femmes/mini3.jpg' %}" alt="Blouse à Volants" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Blouse à Volants</h4>
-                <p class="text-gray-600 mb-4">Une blouse avec volants, pour un style féminin et élégant.</p>
-                <p class="text-red-600 font-bold mb-4">8 500 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Blouse à Volants au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/femmes/jupe3.jpg' %}" alt="Jupe Midi Noire" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Jupe Midi Noire</h4>
-                <p class="text-gray-600 mb-4">Une jupe midi noire, parfaite pour un look chic et polyvalent.</p>
-                <p class="text-red-600 font-bold mb-4">11 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Jupe Midi Noire au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/femmes/robe4.jpg' %}" alt="Robe Cocktail Rouge" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Robe Cocktail Rouge</h4>
-                <p class="text-gray-600 mb-4">Une robe rouge éclatante pour briller lors des soirées.</p>
-                <p class="text-red-600 font-bold mb-4">16 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Robe Cocktail Rouge au panier">Ajouter au panier</button>
-            </div>
+            <button class="carousel-btn next-btn" onclick="scrollCarousel('femmes', 1)">❯</button>
         </div>
 
         <!-- Vêtements Enfants -->
         <h3 class="text-2xl font-semibold mb-6 text-red-600">🧒 Vêtements Enfants</h3>
-        <div class="carousel-container flex overflow-x-auto space-x-4 mb-12 snap-x snap-mandatory">
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/enfants/enfant1.jpg' %}" alt="Jogging Enfant Gris" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Jogging Enfant Gris</h4>
-                <p class="text-gray-600 mb-4">Un jogging gris confortable pour les activités des enfants.</p>
-                <p class="text-red-600 font-bold mb-4">4 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Jogging Enfant Gris au panier">Ajouter au panier</button>
+        <div class="carousel-container relative">
+            <button class="carousel-btn prev-btn" onclick="scrollCarousel('enfants', -1)">❮</button>
+            <div class="carousel-inner flex overflow-x-auto space-x-4 mb-12 snap-x snap-mandatory" id="enfants">
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/enfants/enfant1.jpg' %}" alt="Jogging Enfant Gris" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Jogging Enfant Gris</h4>
+                    <p class="text-gray-600 mb-4">Un jogging gris confortable pour les activités des enfants.</p>
+                    <p class="text-red-600 font-bold mb-4">4 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Jogging Enfant Gris au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/enfants/enfant2.jpg' %}" alt="T-shirt Enfant Coloré" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">T-shirt Enfant Coloré</h4>
+                    <p class="text-gray-600 mb-4">Un t-shirt à motifs colorés, parfait pour les enfants actifs.</p>
+                    <p class="text-red-600 font-bold mb-4">3 500 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter T-shirt Enfant Coloré au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/enfants/p1.jpg' %}" alt="Pyjama Étoilé" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Pyjama Étoilé</h4>
+                    <p class="text-gray-600 mb-4">Un pyjama doux avec motifs d’étoiles pour des nuits confortables.</p>
+                    <p class="text-red-600 font-bold mb-4">5 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pyjama Étoilé au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/enfants/p2.jpg' %}" alt="Pyjama Dinosaure" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Pyjama Dinosaure</h4>
+                    <p class="text-gray-600 mb-4">Un pyjama amusant avec motifs de dinosaures pour les petits aventuriers.</p>
+                    <p class="text-red-600 font-bold mb-4">4 800 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pyjama Dinosaure au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/enfants/jupe1.jpg' %}" alt="Jupe Tutu Rose" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Jupe Tutu Rose</h4>
+                    <p class="text-gray-600 mb-4">Une jupe tutu rose pour un look de princesse adorable.</p>
+                    <p class="text-red-600 font-bold mb-4">6 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Jupe Tutu Rose au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/enfants/jupe2.jpg' %}" alt="Short Jean Enfant" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Short Jean Enfant</h4>
+                    <p class="text-gray-600 mb-4">Un short en jean robuste pour les jeux en extérieur.</p>
+                    <p class="text-red-600 font-bold mb-4">5 500 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Short Jean Enfant au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/enfants/enfant3.jpg' %}" alt="Ensemble Bébé Rayé" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Ensemble Bébé Rayé</h4>
+                    <p class="text-gray-600 mb-4">Un ensemble rayé confortable pour les tout-petits.</p>
+                    <p class="text-red-600 font-bold mb-4">6 500 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Ensemble Bébé Rayé au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/enfants/p3.jpg' %}" alt="Pyjama Coton Bleu" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Pyjama Coton Bleu</h4>
+                    <p class="text-gray-600 mb-4">Un pyjama bleu doux pour des nuits paisibles.</p>
+                    <p class="text-red-600 font-bold mb-4">4 700 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pyjama Coton Bleu au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/enfants/jupe3.jpg' %}" alt="Jupe Plissée Enfant" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Jupe Plissée Enfant</h4>
+                    <p class="text-gray-600 mb-4">Une jupe plissée élégante pour les petites filles.</p>
+                    <p class="text-red-600 font-bold mb-4">5 800 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Jupe Plissée Enfant au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/enfants/enfant4.jpg' %}" alt="T-shirt Enfant Animal" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">T-shirt Enfant Animal</h4>
+                    <p class="text-gray-600 mb-4">Un t-shirt avec motif animal amusant pour les enfants.</p>
+                    <p class="text-red-600 font-bold mb-4">3 800 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter T-shirt Enfant Animal au panier">Ajouter au panier</button>
+                </div>
             </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/enfants/enfant2.jpg' %}" alt="T-shirt Enfant Coloré" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">T-shirt Enfant Coloré</h4>
-                <p class="text-gray-600 mb-4">Un t-shirt à motifs colorés, parfait pour les enfants actifs.</p>
-                <p class="text-red-600 font-bold mb-4">3 500 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter T-shirt Enfant Coloré au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/enfants/p1.jpg' %}" alt="Pyjama Étoilé" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Pyjama Étoilé</h4>
-                <p class="text-gray-600 mb-4">Un pyjama doux avec motifs d’étoiles pour des nuits confortables.</p>
-                <p class="text-red-600 font-bold mb-4">5 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pyjama Étoilé au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/enfants/p2.jpg' %}" alt="Pyjama Dinosaure" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Pyjama Dinosaure</h4>
-                <p class="text-gray-600 mb-4">Un pyjama amusant avec motifs de dinosaures pour les petits aventuriers.</p>
-                <p class="text-red-600 font-bold mb-4">4 800 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pyjama Dinosaure au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/enfants/jupe1.jpg' %}" alt="Jupe Tutu Rose" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Jupe Tutu Rose</h4>
-                <p class="text-gray-600 mb-4">Une jupe tutu rose pour un look de princesse adorable.</p>
-                <p class="text-red-600 font-bold mb-4">6 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Jupe Tutu Rose au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/enfants/jupe2.jpg' %}" alt="Short Jean Enfant" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Short Jean Enfant</h4>
-                <p class="text-gray-600 mb-4">Un short en jean robuste pour les jeux en extérieur.</p>
-                <p class="text-red-600 font-bold mb-4">5 500 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Short Jean Enfant au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/enfants/enfant3.jpg' %}" alt="Ensemble Bébé Rayé" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Ensemble Bébé Rayé</h4>
-                <p class="text-gray-600 mb-4">Un ensemble rayé confortable pour les tout-petits.</p>
-                <p class="text-red-600 font-bold mb-4">6 500 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Ensemble Bébé Rayé au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/enfants/p3.jpg' %}" alt="Pyjama Coton Bleu" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Pyjama Coton Bleu</h4>
-                <p class="text-gray-600 mb-4">Un pyjama bleu doux pour des nuits paisibles.</p>
-                <p class="text-red-600 font-bold mb-4">4 700 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pyjama Coton Bleu au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/enfants/jupe3.jpg' %}" alt="Jupe Plissée Enfant" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Jupe Plissée Enfant</h4>
-                <p class="text-gray-600 mb-4">Une jupe plissée élégante pour les petites filles.</p>
-                <p class="text-red-600 font-bold mb-4">5 800 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Jupe Plissée Enfant au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/enfants/enfant4.jpg' %}" alt="T-shirt Enfant Animal" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">T-shirt Enfant Animal</h4>
-                <p class="text-gray-600 mb-4">Un t-shirt avec motif animal amusant pour les enfants.</p>
-                <p class="text-red-600 font-bold mb-4">3 800 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter T-shirt Enfant Animal au panier">Ajouter au panier</button>
-            </div>
+            <button class="carousel-btn next-btn" onclick="scrollCarousel('enfants', 1)">❯</button>
         </div>
 
         <!-- Chaussures -->
         <h3 class="text-2xl font-semibold mb-6 text-red-600">👟 Chaussures</h3>
-        <div class="carousel-container flex overflow-x-auto space-x-4 mb-12 snap-x snap-mandatory">
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/chaussures/ch1.jpg' %}" alt="Baskets Homme Blanches" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Baskets Homme Blanches</h4>
-                <p class="text-gray-600 mb-4">Des baskets blanches polyvalentes pour un style décontracté.</p>
-                <p class="text-red-600 font-bold mb-4">12 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Baskets Homme Blanches au panier">Ajouter au panier</button>
+        <div class="carousel-container relative">
+            <button class="carousel-btn prev-btn" onclick="scrollCarousel('chaussures', -1)">❮</button>
+            <div class="carousel-inner flex overflow-x-auto space-x-4 mb-12 snap-x snap-mandatory" id="chaussures">
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/chaussures/ch1.jpg' %}" alt="Baskets Homme Blanches" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Baskets Homme Blanches</h4>
+                    <p class="text-gray-600 mb-4">Des baskets blanches polyvalentes pour un style décontracté.</p>
+                    <p class="text-red-600 font-bold mb-4">12 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Baskets Homme Blanches au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/chaussures/ch2.jpg' %}" alt="Baskets Homme Noires" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Baskets Homme Noires</h4>
+                    <p class="text-gray-600 mb-4">Des baskets noires élégantes, parfaites pour toutes les tenues.</p>
+                    <p class="text-red-600 font-bold mb-4">13 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Baskets Homme Noires au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/chaussures/cf1.jpg' %}" alt="Talons Noirs Élégants" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Talons Noirs Élégants</h4>
+                    <p class="text-gray-600 mb-4">Des talons noirs chics pour un look sophistiqué.</p>
+                    <p class="text-red-600 font-bold mb-4">15 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Talons Noirs Élégants au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/chaussures/cf2.jpg' %}" alt="Sandales Femme Beiges" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Sandales Femme Beiges</h4>
+                    <p class="text-gray-600 mb-4">Des sandales beiges légères, idéales pour l’été.</p>
+                    <p class="text-red-600 font-bold mb-4">10 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Sandales Femme Beiges au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/chaussures/ce1.jpg' %}" alt="Baskets Enfant Colorées" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Baskets Enfant Colorées</h4>
+                    <p class="text-gray-600 mb-4">Des baskets colorées pour les enfants, confortables et fun.</p>
+                    <p class="text-red-600 font-bold mb-4">7 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Baskets Enfant Colorées au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/chaussures/ce2.jpg' %}" alt="Chaussures Enfant Velcro" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Chaussures Enfant Velcro</h4>
+                    <p class="text-gray-600 mb-4">Des chaussures avec velcro, faciles à enfiler pour les petits.</p>
+                    <p class="text-red-600 font-bold mb-4">6 500 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Chaussures Enfant Velcro au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/chaussures/ch3.jpg' %}" alt="Baskets Homme Grises" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Baskets Homme Grises</h4>
+                    <p class="text-gray-600 mb-4">Des baskets grises modernes pour un look sportif.</p>
+                    <p class="text-red-600 font-bold mb-4">12 500 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Baskets Homme Grises au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/chaussures/cf3.jpg' %}" alt="Talons Beiges Classiques" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Talons Beiges Classiques</h4>
+                    <p class="text-gray-600 mb-4">Des talons beiges pour un style élégant et intemporel.</p>
+                    <p class="text-red-600 font-bold mb-4">14 000 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Talons Beiges Classiques au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/chaussures/ce3.jpg' %}" alt="Baskets Enfant Blanches" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Baskets Enfant Blanches</h4>
+                    <p class="text-gray-600 mb-4">Des baskets blanches durables pour les enfants actifs.</p>
+                    <p class="text-red-600 font-bold mb-4">6 800 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Baskets Enfant Blanches au panier">Ajouter au panier</button>
+                </div>
+                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                    <img src="{% static 'images/vetements/chaussures/ch4.jpg' %}" alt="Mocassins Homme Noirs" class="rounded mb-4 w-full h-56 object-cover">
+                    <h4 class="text-xl font-semibold mb-2 text-red-600">Mocassins Homme Noirs</h4>
+                    <p class="text-gray-600 mb-4">Des mocassins noirs élégants pour un style formel.</p>
+                    <p class="text-red-600 font-bold mb-4">15 500 FCFA</p>
+                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Mocassins Homme Noirs au panier">Ajouter au panier</button>
+                </div>
             </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/chaussures/ch2.jpg' %}" alt="Baskets Homme Noires" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Baskets Homme Noires</h4>
-                <p class="text-gray-600 mb-4">Des baskets noires élégantes, parfaites pour toutes les tenues.</p>
-                <p class="text-red-600 font-bold mb-4">13 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Baskets Homme Noires au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/chaussures/cf1.jpg' %}" alt="Talons Noirs Élégants" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Talons Noirs Élégants</h4>
-                <p class="text-gray-600 mb-4">Des talons noirs chics pour un look sophistiqué.</p>
-                <p class="text-red-600 font-bold mb-4">15 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Talons Noirs Élégants au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/chaussures/cf2.jpg' %}" alt="Sandales Femme Beiges" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Sandales Femme Beiges</h4>
-                <p class="text-gray-600 mb-4">Des sandales beiges légères, idéales pour l’été.</p>
-                <p class="text-red-600 font-bold mb-4">10 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Sandales Femme Beiges au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/chaussures/ce1.jpg' %}" alt="Baskets Enfant Colorées" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Baskets Enfant Colorées</h4>
-                <p class="text-gray-600 mb-4">Des baskets colorées pour les enfants, confortables et fun.</p>
-                <p class="text-red-600 font-bold mb-4">7 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Baskets Enfant Colorées au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/chaussures/ce2.jpg' %}" alt="Chaussures Enfant Velcro" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Chaussures Enfant Velcro</h4>
-                <p class="text-gray-600 mb-4">Des chaussures avec velcro, faciles à enfiler pour les petits.</p>
-                <p class="text-red-600 font-bold mb-4">6 500 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Chaussures Enfant Velcro au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/chaussures/ch3.jpg' %}" alt="Baskets Homme Grises" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Baskets Homme Grises</h4>
-                <p class="text-gray-600 mb-4">Des baskets grises modernes pour un look sportif.</p>
-                <p class="text-red-600 font-bold mb-4">12 500 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Baskets Homme Grises au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/chaussures/cf3.jpg' %}" alt="Talons Beiges Classiques" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Talons Beiges Classiques</h4>
-                <p class="text-gray-600 mb-4">Des talons beiges pour un style élégant et intemporel.</p>
-                <p class="text-red-600 font-bold mb-4">14 000 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Talons Beiges Classiques au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/chaussures/ce3.jpg' %}" alt="Baskets Enfant Blanches" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Baskets Enfant Blanches</h4>
-                <p class="text-gray-600 mb-4">Des baskets blanches durables pour les enfants actifs.</p>
-                <p class="text-red-600 font-bold mb-4">6 800 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Baskets Enfant Blanches au panier">Ajouter au panier</button>
-            </div>
-            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                <img src="{% static 'images/vetements/chaussures/ch4.jpg' %}" alt="Mocassins Homme Noirs" class="rounded mb-4 w-full h-56 object-cover">
-                <h4 class="text-xl font-semibold mb-2 text-red-600">Mocassins Homme Noirs</h4>
-                <p class="text-gray-600 mb-4">Des mocassins noirs élégants pour un style formel.</p>
-                <p class="text-red-600 font-bold mb-4">15 500 FCFA</p>
-                <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Mocassins Homme Noirs au panier">Ajouter au panier</button>
-            </div>
+            <button class="carousel-btn next-btn" onclick="scrollCarousel('chaussures', 1)">❯</button>
         </div>
     </main>
 
@@ -341,5 +387,12 @@
         <p class="mt-1">Contact : <a href="mailto:support@echop.com" class="text-yellow-300 hover:underline">support@echop.com</a> | Téléphone : +237 6 77 24 69 00</p>
     </footer>
 
+    <script>
+        function scrollCarousel(sectionId, direction) {
+            const container = document.getElementById(sectionId);
+            const scrollAmount = 300; // Largeur approximative d'une carte
+            container.scrollLeft += direction * scrollAmount;
+        }
+    </script>
 </body>
 </html>

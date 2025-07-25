@@ -2,10 +2,11 @@ body {
     font-family: 'Arial', sans-serif;
 }
 
-.btn-add-to-cart {
+.nav-item {
+    color: white;
     transition: all 0.3s ease;
 }
 
-.btn-add-to-cart:hover {
-    transform: scale(1.05);
+.nav-item:hover {
+    color: #b91c1c;
 }
