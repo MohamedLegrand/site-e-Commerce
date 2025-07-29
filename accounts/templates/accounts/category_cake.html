@@ -49,7 +49,7 @@
             </div>
             <nav>
                 <ul class="flex">
-                    <li><a href="#" class="hover:text-yellow-300 transition-colors">Panier</a></li>
+                    <li><a href="{% url 'accounts:cart_detail' %}" class="hover:text-yellow-300 transition-colors">Panier</a></li>
                 </ul>
             </nav>
         </div>
@@ -57,6 +57,7 @@
 
     <!-- Section Produits -->
     <main class="container mx-auto px-4 py-10">
+        {% csrf_token %}
         <h2 class="text-3xl font-semibold text-center mb-10 text-red-700">Nos produits de boulangerie</h2>
         
         <!-- Pains -->
@@ -64,83 +65,121 @@
         <div class="carousel-container relative">
             <button class="carousel-btn prev-btn" onclick="scrollCarousel('pains', -1)">&#10094;</button>
             <div class="carousel-inner flex overflow-x-auto space-x-4 mb-12 snap-x snap-mandatory" id="pains">
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/pains/pain11.jpg' %}" alt="Pain au Levain" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Pain au Levain</h4>
-                    <p class="text-gray-600 mb-4">Un pain au levain naturel, avec une croûte croustillante et une mie aérée.</p>
-                    <p class="text-red-600 font-bold mb-4">250 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pain au Levain au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/pains/pain1.webp' %}" alt="Pain de Campagne" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Pain de Campagne</h4>
-                    <p class="text-gray-600 mb-4">Un pain rustique aux farines mélangées, parfait pour les plats en sauce.</p>
-                    <p class="text-red-600 font-bold mb-4">300 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pain de Campagne au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/pains/pain2.webp' %}" alt="Baguette Tradition" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Baguette Tradition</h4>
-                    <p class="text-gray-600 mb-4">Une baguette classique, dorée et croustillante, cuite chaque matin.</p>
-                    <p class="text-red-600 font-bold mb-4">200 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Baguette Tradition au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/pains/pain3.webp' %}" alt="Pain aux Céréales" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Pain aux Céréales</h4>
-                    <p class="text-gray-600 mb-4">Un pain riche en graines, parfait pour un petit-déjeuner nutritif.</p>
-                    <p class="text-red-600 font-bold mb-4">350 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pain aux Céréales au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/pains/pain4.webp' %}" alt="Pain Complet" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Pain Complet</h4>
-                    <p class="text-gray-600 mb-4">Un pain à la farine complète, idéal pour une alimentation saine.</p>
-                    <p class="text-red-600 font-bold mb-4">280 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pain Complet au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/pains/pain5.webp' %}" alt="Pain aux Noix" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Pain aux Noix</h4>
-                    <p class="text-gray-600 mb-4">Un pain enrichi de noix croquantes, parfait avec du fromage.</p>
-                    <p class="text-red-600 font-bold mb-4">400 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pain aux Noix au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/pains/pain6.webp' %}" alt="Pain aux Olives" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Pain aux Olives</h4>
-                    <p class="text-gray-600 mb-4">Un pain méditerranéen aux olives noires savoureuses.</p>
-                    <p class="text-red-600 font-bold mb-4">320 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pain aux Olives au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/pains/pain7.jpg' %}" alt="Pain de Seigle" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Pain de Seigle</h4>
-                    <p class="text-gray-600 mb-4">Un pain dense au seigle, parfait pour les plats nordiques.</p>
-                    <p class="text-red-600 font-bold mb-4">270 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pain de Seigle au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/pains/pain8.jpg' %}" alt="Pain aux Raisins" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Pain aux Raisins</h4>
-                    <p class="text-gray-600 mb-4">Un pain sucré aux raisins secs, idéal pour le goûter.</p>
-                    <p class="text-red-600 font-bold mb-4">290 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pain aux Raisins au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/pains/pain9.webp' %}" alt="Pain Brioché" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Pain Brioché</h4>
-                    <p class="text-gray-600 mb-4">Un pain doux et moelleux, parfait pour le petit-déjeuner.</p>
-                    <p class="text-red-600 font-bold mb-4">310 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pain Brioché au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/pains/pain10.webp' %}" alt="Pain aux Graines" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Pain aux Graines</h4>
-                    <p class="text-gray-600 mb-4">Un pain croquant avec un mélange de graines variées.</p>
-                    <p class="text-red-600 font-bold mb-4">330 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pain aux Graines au panier">Ajouter au panier</button>
-                </div>
+                {% for product in pains %}
+                    {% if product.name == 'Pain au Levain' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/pains/pain11.jpg' %}" alt="Pain au Levain" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Pain au Levain</h4>
+                            <p class="text-gray-600 mb-4">Un pain au levain naturel, avec une croûte croustillante et une mie aérée.</p>
+                            <p class="text-red-600 font-bold mb-4">250 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Pain au Levain au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Pain de Campagne' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/pains/pain1.webp' %}" alt="Pain de Campagne" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Pain de Campagne</h4>
+                            <p class="text-gray-600 mb-4">Un pain rustique aux farines mélangées, parfait pour les plats en sauce.</p>
+                            <p class="text-red-600 font-bold mb-4">300 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Pain de Campagne au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Baguette Tradition' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/pains/pain2.webp' %}" alt="Baguette Tradition" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Baguette Tradition</h4>
+                            <p class="text-gray-600 mb-4">Une baguette classique, dorée et croustillante, cuite chaque matin.</p>
+                            <p class="text-red-600 font-bold mb-4">200 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Baguette Tradition au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Pain aux Céréales' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/pains/pain3.webp' %}" alt="Pain aux Céréales" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Pain aux Céréales</h4>
+                            <p class="text-gray-600 mb-4">Un pain riche en graines, parfait pour un petit-déjeuner nutritif.</p>
+                            <p class="text-red-600 font-bold mb-4">350 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Pain aux Céréales au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Pain Complet' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/pains/pain4.webp' %}" alt="Pain Complet" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Pain Complet</h4>
+                            <p class="text-gray-600 mb-4">Un pain à la farine complète, idéal pour une alimentation saine.</p>
+                            <p class="text-red-600 font-bold mb-4">280 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Pain Complet au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Pain aux Noix' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/pains/pain5.webp' %}" alt="Pain aux Noix" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Pain aux Noix</h4>
+                            <p class="text-gray-600 mb-4">Un pain enrichi de noix croquantes, parfait avec du fromage.</p>
+                            <p class="text-red-600 font-bold mb-4">400 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Pain aux Noix au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Pain aux Olives' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/pains/pain6.webp' %}" alt="Pain aux Olives" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Pain aux Olives</h4>
+                            <p class="text-gray-600 mb-4">Un pain méditerranéen aux olives noires savoureuses.</p>
+                            <p class="text-red-600 font-bold mb-4">320 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Pain aux Olives au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Pain de Seigle' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/pains/pain7.jpg' %}" alt="Pain de Seigle" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Pain de Seigle</h4>
+                            <p class="text-gray-600 mb-4">Un pain dense au seigle, parfait pour les plats nordiques.</p>
+                            <p class="text-red-600 font-bold mb-4">270 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Pain de Seigle au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Pain aux Raisins' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/pains/pain8.jpg' %}" alt="Pain aux Raisins" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Pain aux Raisins</h4>
+                            <p class="text-gray-600 mb-4">Un pain sucré aux raisins secs, idéal pour le goûter.</p>
+                            <p class="text-red-600 font-bold mb-4">290 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Pain aux Raisins au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Pain Brioché' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/pains/pain9.webp' %}" alt="Pain Brioché" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Pain Brioché</h4>
+                            <p class="text-gray-600 mb-4">Un pain doux et moelleux, parfait pour le petit-déjeuner.</p>
+                            <p class="text-red-600 font-bold mb-4">310 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Pain Brioché au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Pain aux Graines' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/pains/pain10.webp' %}" alt="Pain aux Graines" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Pain aux Graines</h4>
+                            <p class="text-gray-600 mb-4">Un pain croquant avec un mélange de graines variées.</p>
+                            <p class="text-red-600 font-bold mb-4">330 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Pain aux Graines au panier">Ajouter au panier</button>
+                        </div>
+                    {% endif %}
+                {% empty %}
+                    <p class="text-center text-gray-600">Aucun pain disponible pour le moment.</p>
+                {% endfor %}
             </div>
             <button class="carousel-btn next-btn" onclick="scrollCarousel('pains', 1)">&#10095;</button>
         </div>
@@ -150,76 +189,111 @@
         <div class="carousel-container relative">
             <button class="carousel-btn prev-btn" onclick="scrollCarousel('cakes', -1)">&#10094;</button>
             <div class="carousel-inner flex overflow-x-auto space-x-4 mb-12 snap-x snap-mandatory" id="cakes">
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/cakes/cake1.jpg' %}" alt="Gâteau au Chocolat" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau au Chocolat</h4>
-                    <p class="text-gray-600 mb-4">Un gâteau moelleux au chocolat noir, recouvert d’une ganache onctueuse.</p>
-                    <p class="text-red-600 font-bold mb-4">15 000 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Gâteau au Chocolat au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/cakes/cake2.jpg' %}" alt="Gâteau aux Fruits" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau aux Fruits</h4>
-                    <p class="text-gray-600 mb-4">Un gâteau léger aux fruits frais de saison, idéal pour les fêtes.</p>
-                    <p class="text-red-600 font-bold mb-4">18 000 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Gâteau aux Fruits au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/cakes/cake3.jpg' %}" alt="Gâteau à la Vanille" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau à la Vanille</h4>
-                    <p class="text-gray-600 mb-4">Un gâteau moelleux à la vanille naturelle, décoré d’une crème légère.</p>
-                    <p class="text-red-600 font-bold mb-4">12 000 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Gâteau à la Vanille au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/cakes/cake4.jpg' %}" alt="Gâteau au Citron" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau au Citron</h4>
-                    <p class="text-gray-600 mb-4">Un gâteau acidulé au citron frais, avec un glaçage sucré.</p>
-                    <p class="text-red-600 font-bold mb-4">14 000 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Gâteau au Citron au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/cakes/cake5.jpg' %}" alt="Gâteau aux Amandes" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau aux Amandes</h4>
-                    <p class="text-gray-600 mb-4">Un gâteau riche aux amandes effilées, parfait pour les amateurs de noix.</p>
-                    <p class="text-red-600 font-bold mb-4">16 000 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Gâteau aux Amandes au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/cakes/cake6.jpg' %}" alt="Gâteau Red Velvet" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau Red Velvet</h4>
-                    <p class="text-gray-600 mb-4">Un gâteau rouge velours avec une crème au fromage onctueuse.</p>
-                    <p class="text-red-600 font-bold mb-4">17 000 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Gâteau Red Velvet au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/cakes/cake7.jpg' %}" alt="Gâteau à la Noix de Coco" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau à la Noix de Coco</h4>
-                    <p class="text-gray-600 mb-4">Un gâteau exotique à la noix de coco râpée, frais et savoureux.</p>
-                    <p class="text-red-600 font-bold mb-4">13 500 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Gâteau à la Noix de Coco au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/cakes/cake8.jpg' %}" alt="Gâteau aux Fraises" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau aux Fraises</h4>
-                    <p class="text-gray-600 mb-4">Un gâteau léger garni de fraises fraîches et de crème fouettée.</p>
-                    <p class="text-red-600 font-bold mb-4">16 500 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Gâteau aux Fraises au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/cakes/cake9.jpg' %}" alt="Gâteau au Caramel" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau au Caramel</h4>
-                    <p class="text-gray-600 mb-4">Un gâteau fondant avec une sauce caramel maison irrésistible.</p>
-                    <p class="text-red-600 font-bold mb-4">14 500 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Gâteau au Caramel au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/cakes/cake10.jpg' %}" alt="Gâteau aux Noisettes" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau aux Noisettes</h4>
-                    <p class="text-gray-600 mb-4">Un gâteau croquant aux noisettes grillées, un délice gourmand.</p>
-                    <p class="text-red-600 font-bold mb-4">15 500 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Gâteau aux Noisettes au panier">Ajouter au panier</button>
-                </div>
+                {% for product in gateaux %}
+                    {% if product.name == 'Gâteau au Chocolat' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/cakes/cake1.jpg' %}" alt="Gâteau au Chocolat" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau au Chocolat</h4>
+                            <p class="text-gray-600 mb-4">Un gâteau moelleux au chocolat noir, recouvert d’une ganache onctueuse.</p>
+                            <p class="text-red-600 font-bold mb-4">15000 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Gâteau au Chocolat au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Gâteau aux Fruits' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/cakes/cake2.jpg' %}" alt="Gâteau aux Fruits" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau aux Fruits</h4>
+                            <p class="text-gray-600 mb-4">Un gâteau léger aux fruits frais de saison, idéal pour les fêtes.</p>
+                            <p class="text-red-600 font-bold mb-4">18000 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Gâteau aux Fruits au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Gâteau à la Vanille' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/cakes/cake3.jpg' %}" alt="Gâteau à la Vanille" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau à la Vanille</h4>
+                            <p class="text-gray-600 mb-4">Un gâteau moelleux à la vanille naturelle, décoré d’une crème légère.</p>
+                            <p class="text-red-600 font-bold mb-4">12000 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Gâteau à la Vanille au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Gâteau au Citron' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/cakes/cake4.jpg' %}" alt="Gâteau au Citron" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau au Citron</h4>
+                            <p class="text-gray-600 mb-4">Un gâteau acidulé au citron frais, avec un glaçage sucré.</p>
+                            <p class="text-red-600 font-bold mb-4">14000 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Gâteau au Citron au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Gâteau aux Amandes' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/cakes/cake5.jpg' %}" alt="Gâteau aux Amandes" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau aux Amandes</h4>
+                            <p class="text-gray-600 mb-4">Un gâteau riche aux amandes effilées, parfait pour les amateurs de noix.</p>
+                            <p class="text-red-600 font-bold mb-4">16000 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Gâteau aux Amandes au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Gâteau Red Velvet' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/cakes/cake6.jpg' %}" alt="Gâteau Red Velvet" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau Red Velvet</h4>
+                            <p class="text-gray-600 mb-4">Un gâteau rouge velours avec une crème au fromage onctueuse.</p>
+                            <p class="text-red-600 font-bold mb-4">17000 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Gâteau Red Velvet au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Gâteau à la Noix de Coco' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/cakes/cake7.jpg' %}" alt="Gâteau à la Noix de Coco" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau à la Noix de Coco</h4>
+                            <p class="text-gray-600 mb-4">Un gâteau exotique à la noix de coco râpée, frais et savoureux.</p>
+                            <p class="text-red-600 font-bold mb-4">13500 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Gâteau à la Noix de Coco au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Gâteau aux Fraises' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/cakes/cake8.jpg' %}" alt="Gâteau aux Fraises" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau aux Fraises</h4>
+                            <p class="text-gray-600 mb-4">Un gâteau léger garni de fraises fraîches et de crème fouettée.</p>
+                            <p class="text-red-600 font-bold mb-4">16500 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Gâteau aux Fraises au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Gâteau au Caramel' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/cakes/cake9.jpg' %}" alt="Gâteau au Caramel" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau au Caramel</h4>
+                            <p class="text-gray-600 mb-4">Un gâteau fondant avec une sauce caramel maison irrésistible.</p>
+                            <p class="text-red-600 font-bold mb-4">14500 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Gâteau au Caramel au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Gâteau aux Noisettes' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/cakes/cake10.jpg' %}" alt="Gâteau aux Noisettes" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Gâteau aux Noisettes</h4>
+                            <p class="text-gray-600 mb-4">Un gâteau croquant aux noisettes grillées, un délice gourmand.</p>
+                            <p class="text-red-600 font-bold mb-4">15500 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Gâteau aux Noisettes au panier">Ajouter au panier</button>
+                        </div>
+                    {% endif %}
+                {% empty %}
+                    <p class="text-center text-gray-600">Aucun gâteau disponible pour le moment.</p>
+                {% endfor %}
             </div>
             <button class="carousel-btn next-btn" onclick="scrollCarousel('cakes', 1)">&#10095;</button>
         </div>
@@ -229,83 +303,121 @@
         <div class="carousel-container relative">
             <button class="carousel-btn prev-btn" onclick="scrollCarousel('viennoiseries', -1)">&#10094;</button>
             <div class="carousel-inner flex overflow-x-auto space-x-4 mb-12 snap-x snap-mandatory" id="viennoiseries">
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/viennoiserie/v1.webp' %}" alt="Pain au Chocolat" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Pain au Chocolat</h4>
-                    <p class="text-gray-600 mb-4">Un pain au chocolat feuilleté, garni de pépites de chocolat noir.</p>
-                    <p class="text-red-600 font-bold mb-4">1 800 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pain au Chocolat au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/viennoiserie/v2.webp' %}" alt="Croissant Beurre" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Croissant Beurre</h4>
-                    <p class="text-gray-600 mb-4">Un croissant doré et feuilleté, préparé avec du beurre frais.</p>
-                    <p class="text-red-600 font-bold mb-4">1 500 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Croissant Beurre au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/viennoiserie/v3.webp' %}" alt="Chausson aux Pommes" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Chausson aux Pommes</h4>
-                    <p class="text-gray-600 mb-4">Un chausson feuilleté garni de compote de pommes maison.</p>
-                    <p class="text-red-600 font-bold mb-4">2 000 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Chausson aux Pommes au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/viennoiserie/v4.webp' %}" alt="Pain aux Raisins" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Pain aux Raisins</h4>
-                    <p class="text-gray-600 mb-4">Un pain feuilleté sucré aux raisins secs et crème pâtissière.</p>
-                    <p class="text-red-600 font-bold mb-4">1 900 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pain aux Raisins au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/viennoiserie/v5.webp' %}" alt="Brioche Nature" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Brioche Nature</h4>
-                    <p class="text-gray-600 mb-4">Une brioche moelleuse, parfaite pour le petit-déjeuner.</p>
-                    <p class="text-red-600 font-bold mb-4">1 600 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Brioche Nature au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/viennoiserie/v6.webp' %}" alt="Pain Suisse" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Pain Suisse</h4>
-                    <p class="text-gray-600 mb-4">Un feuilleté riche en crème pâtissière et pépites de chocolat.</p>
-                    <p class="text-red-600 font-bold mb-4">2 100 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pain Suisse au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/viennoiserie/v7.webp' %}" alt="Croissant aux Amandes" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Croissant aux Amandes</h4>
-                    <p class="text-gray-600 mb-4">Un croissant garni d’une crème d’amandes et d’amandes effilées.</p>
-                    <p class="text-red-600 font-bold mb-4">2 200 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Croissant aux Amandes au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/viennoiserie/v8.jpg' %}" alt="Pain au Lait" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Pain au Lait</h4>
-                    <p class="text-gray-600 mb-4">Un pain au lait doux et moelleux, idéal pour les enfants.</p>
-                    <p class="text-red-600 font-bold mb-4">1 400 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pain au Lait au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/viennoiserie/v9.webp' %}" alt="Chou à la Crème" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Chou à la Crème</h4>
-                    <p class="text-gray-600 mb-4">Un chou léger rempli d’une crème vanillée onctueuse.</p>
-                    <p class="text-red-600 font-bold mb-4">1 700 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Chou à la Crème au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/viennoiserie/v10.webp' %}" alt="Brioche aux Pralines" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Brioche aux Pralines</h4>
-                    <p class="text-gray-600 mb-4">Une brioche rose aux pralines croquantes, un délice sucré.</p>
-                    <p class="text-red-600 font-bold mb-4">2 300 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Brioche aux Pralines au panier">Ajouter au panier</button>
-                </div>
-                <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
-                    <img src="{% static 'images/viennoiserie/v11.jpg' %}" alt="Pain aux Noix" class="rounded mb-4 w-full h-56 object-cover">
-                    <h4 class="text-xl font-semibold mb-2 text-red-600">Pain aux Noix</h4>
-                    <p class="text-gray-600 mb-4">Un pain feuilleté aux noix, parfait pour une pause gourmande.</p>
-                    <p class="text-red-600 font-bold mb-4">1 950 FCFA</p>
-                    <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors" aria-label="Ajouter Pain aux Noix au panier">Ajouter au panier</button>
-                </div>
+                {% for product in viennoiseries %}
+                    {% if product.name == 'Pain au Chocolat' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/viennoiserie/v1.webp' %}" alt="Pain au Chocolat" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Pain au Chocolat</h4>
+                            <p class="text-gray-600 mb-4">Un pain au chocolat feuilleté, garni de pépites de chocolat noir.</p>
+                            <p class="text-red-600 font-bold mb-4">1800 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Pain au Chocolat au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Croissant Beurre' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/viennoiserie/v2.webp' %}" alt="Croissant Beurre" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Croissant Beurre</h4>
+                            <p class="text-gray-600 mb-4">Un croissant doré et feuilleté, préparé avec du beurre frais.</p>
+                            <p class="text-red-600 font-bold mb-4">1500 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Croissant Beurre au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Chausson aux Pommes' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/viennoiserie/v3.webp' %}" alt="Chausson aux Pommes" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Chausson aux Pommes</h4>
+                            <p class="text-gray-600 mb-4">Un chausson feuilleté garni de compote de pommes maison.</p>
+                            <p class="text-red-600 font-bold mb-4">2000 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Chausson aux Pommes au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Pain aux Raisins' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/viennoiserie/v4.webp' %}" alt="Pain aux Raisins" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Pain aux Raisins</h4>
+                            <p class="text-gray-600 mb-4">Un pain feuilleté sucré aux raisins secs et crème pâtissière.</p>
+                            <p class="text-red-600 font-bold mb-4">1900 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Pain aux Raisins au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Brioche Nature' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/viennoiserie/v5.webp' %}" alt="Brioche Nature" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Brioche Nature</h4>
+                            <p class="text-gray-600 mb-4">Une brioche moelleuse, parfaite pour le petit-déjeuner.</p>
+                            <p class="text-red-600 font-bold mb-4">1600 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Brioche Nature au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Pain Suisse' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/viennoiserie/v6.webp' %}" alt="Pain Suisse" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Pain Suisse</h4>
+                            <p class="text-gray-600 mb-4">Un feuilleté riche en crème pâtissière et pépites de chocolat.</p>
+                            <p class="text-red-600 font-bold mb-4">2100 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Pain Suisse au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Croissant aux Amandes' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/viennoiserie/v7.webp' %}" alt="Croissant aux Amandes" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Croissant aux Amandes</h4>
+                            <p class="text-gray-600 mb-4">Un croissant garni d’une crème d’amandes et d’amandes effilées.</p>
+                            <p class="text-red-600 font-bold mb-4">2200 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Croissant aux Amandes au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Pain au Lait' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/viennoiserie/v8.jpg' %}" alt="Pain au Lait" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Pain au Lait</h4>
+                            <p class="text-gray-600 mb-4">Un pain au lait doux et moelleux, idéal pour les enfants.</p>
+                            <p class="text-red-600 font-bold mb-4">1400 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Pain au Lait au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Chou à la Crème' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/viennoiserie/v9.webp' %}" alt="Chou à la Crème" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Chou à la Crème</h4>
+                            <p class="text-gray-600 mb-4">Un chou léger rempli d’une crème vanillée onctueuse.</p>
+                            <p class="text-red-600 font-bold mb-4">1700 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Chou à la Crème au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Brioche aux Pralines' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/viennoiserie/v10.webp' %}" alt="Brioche aux Pralines" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Brioche aux Pralines</h4>
+                            <p class="text-gray-600 mb-4">Une brioche rose aux pralines croquantes, un délice sucré.</p>
+                            <p class="text-red-600 font-bold mb-4">2300 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Brioche aux Pralines au panier">Ajouter au panier</button>
+                        </div>
+                    {% elif product.name == 'Pain aux Noix' %}
+                        <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                            <img src="{% static 'images/viennoiserie/v11.jpg' %}" alt="Pain aux Noix" class="rounded mb-4 w-full h-56 object-cover">
+                            <h4 class="text-xl font-semibold mb-2 text-red-600">Pain aux Noix</h4>
+                            <p class="text-gray-600 mb-4">Un pain feuilleté aux noix, parfait pour une pause gourmande.</p>
+                            <p class="text-red-600 font-bold mb-4">1950 FCFA</p>
+                            <button class="btn-add-to-cart bg-yellow-400 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition-colors"
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Ajouter Pain aux Noix au panier">Ajouter au panier</button>
+                        </div>
+                    {% endif %}
+                {% empty %}
+                    <p class="text-center text-gray-600">Aucune viennoiserie disponible pour le moment.</p>
+                {% endfor %}
             </div>
             <button class="carousel-btn next-btn" onclick="scrollCarousel('viennoiseries', 1)">&#10095;</button>
         </div>
@@ -315,17 +427,18 @@
     <footer class="bg-red-600 text-white text-center py-6 mt-10">
         <p>© 2025 Echop. Tous droits réservés.</p>
         <div class="mt-2">
-            <a href="#" class="text-yellow-300 hover:underline mx-2">À propos</a>
-            <a href="#" class="text-yellow-300 hover:underline mx-2">Contact</a>
-            <a href="#" class="text-yellow-300 hover:underline mx-2">Conditions d'utilisation</a>
+            <a href="{% url 'accounts:about' %}" class="text-yellow-300 hover:underline mx-2">À propos</a>
+            <a href="{% url 'accounts:contact' %}" class="text-yellow-300 hover:underline mx-2">Contact</a>
+            <a href="{% url 'accounts:terms' %}" class="text-yellow-300 hover:underline mx-2">Conditions d'utilisation</a>
         </div>
         <p class="mt-1">Contact : <a href="mailto:support@echop.com" class="text-yellow-300 hover:underline">support@echop.com</a> | Téléphone : +237 6 77 24 69 00</p>
     </footer>
 
+    <script src="{% static 'js/cart.js' %}" defer></script>
     <script>
         function scrollCarousel(sectionId, direction) {
             const container = document.getElementById(sectionId);
-            const scrollAmount = 300; // Largeur approximative d'une carte
+            const scrollAmount = 300;
             container.scrollLeft += direction * scrollAmount;
         }
     </script>

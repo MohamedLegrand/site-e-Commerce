@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Panier - Echop</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="{% static 'css/cart.css' %}" rel="stylesheet">
+</head>
+<body class="font-sans bg-gray-100">
+    <header class="bg-red-600 text-white p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="text-2xl font-bold">Echop - Panier</div>
+            <a href="{% url 'accounts:page_principale' %}" class="text-white hover:text-red-200 transition-colors duration-200">Retour</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto py-8">
+        <h2 class="text-3xl font-semibold text-center mb-6 text-gray-800 animate-fade-in">Votre Panier</h2>
+        <div class="cart-items">
+            {% if cart_items %}
+                {% for item in cart_items %}
+                    <div class="cart-item flex justify-between items-center p-4 mb-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <span class="text-lg">{{ item.product.name }} - {{ item.quantity }} x {{ item.product.price }} FCFA</span>
+                        <span class="text-lg font-semibold">{{ item.product.price | mul:item.quantity }} FCFA</span>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-center text-gray-600 text-lg">Votre panier est vide.</p>
+            {% endif %}
+        </div>
+        <div class="cart-total text-right mt-6">
+            <h3 class="text-2xl font-bold text-gray-800">Total : {{ total }} FCFA</h3>
+            <a href="{% url 'accounts:checkout' %}" class="mt-4 inline-block bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors duration-200">Passer à la caisse</a>
+        </div>
+    </main>
+
+    <footer class="bg-red-600 text-white py-6 mt-8 text-center">
+        <p>© 2025 Echop. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>
