@@ -196,3 +196,13 @@ def profil_view(request):
         return redirect('accounts:profil')
 
     return render(request, 'accounts/profil.html')
+
+
+
+def product_autocomplete(request):
+    if 'term' in request.GET:
+        query = request.GET.get('term')
+        products = Product.objects.filter(name__icontains=query)[:10]  # Limite à 10 suggestions
+        suggestions = [product.name for product in products]
+        return JsonResponse(suggestions, safe=False)
+    return JsonResponse([], safe=False)

@@ -3,5 +3,5 @@ from django import template
 register = template.Library()
 
 @register.filter
-def multiply(value, arg):
+def mul(value, arg):
     return value * arg

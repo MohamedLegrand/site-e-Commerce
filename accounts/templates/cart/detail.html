@@ -1,20 +1,36 @@
 {% load static %}
+{% load cart_tags %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>Panier - Echop</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echop - Panier</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="{% static 'css/cart.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="{% static 'css/detail.css' %}" rel="stylesheet">
 </head>
-<body class="font-sans bg-gray-100">
-    <header class="bg-red-600 text-white p-4 shadow-lg">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="text-2xl font-bold">Echop - Panier</div>
+<body class="font-sans bg-gray-50 relative overflow-auto min-h-screen">
+    <!-- Conteneur pour les bulles animées -->
+    <div class="bubbles">
+        <span style="--i:11;"></span>
+        <span style="--i:12;"></span>
+        <span style="--i:24;"></span>
+        <span style="--i:10;"></span>
+        <span style="--i:14;"></span>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-red-500 text-white py-4 shadow-lg">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Echop - Panier</h1>
             <a href="{% url 'accounts:page_principale' %}" class="text-white hover:text-red-200 transition-colors duration-200">Retour</a>
         </div>
     </header>
 
-    <main class="container mx-auto py-8">
+    <!-- Contenu principal -->
+    <main class="container mx-auto py-8 pb-24">
         <h2 class="text-3xl font-semibold text-center mb-6 text-gray-800 animate-fade-in">Votre Panier</h2>
         <div class="cart-items">
             {% if cart_items %}
@@ -30,12 +46,31 @@
         </div>
         <div class="cart-total text-right mt-6">
             <h3 class="text-2xl font-bold text-gray-800">Total : {{ total }} FCFA</h3>
-            <a href="{% url 'accounts:checkout' %}" class="mt-4 inline-block bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors duration-200">Passer à la caisse</a>
+            <a href="{% url 'accounts:checkout' %}" class="mt-4 inline-block bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 hover:shadow-lg transform hover:translate-y-[-2px] transition duration-200">
+                <i class="fas fa-shopping-cart mr-2"></i> Passer à la caisse
+            </a>
         </div>
     </main>
 
-    <footer class="bg-red-600 text-white py-6 mt-8 text-center">
-        <p>© 2025 Echop. Tous droits réservés.</p>
+    <!-- Footer -->
+    <footer class="bg-red-500 text-gray-900 py-8">
+        <div class="container mx-auto px-4 text-center">
+            <h3 class="text-2xl font-semibold">Echop</h3>
+            <p class="mt-2">© 2025 Echop. Tous droits réservés.</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="{% url 'accounts:about' %}" class="hover:text-red-200 transition duration-200">À propos</a>
+                <a href="{% url 'accounts:contact' %}" class="hover:text-red-200 transition duration-200">Contact</a>
+                <a href="{% url 'accounts:terms' %}" class="hover:text-red-200 transition duration-200">Politique de confidentialité</a>
+            </div>
+            <p class="mt-4">Email : support@echop.com | Téléphone : +237 677 24 69 00</p>
+            <p class="mt-2">Suivez-nous : 
+                <a href="https://facebook.com/echop" class="text-gray-900 hover:text-red-200 transition duration-200"><i class="fab fa-facebook-f mr-1"></i> Facebook</a> | 
+                <a href="https://twitter.com/echop" class="text-gray-900 hover:text-red-200 transition duration-200"><i class="fab fa-twitter mr-1"></i> Twitter</a> | 
+                <a href="https://instagram.com/echop" class="text-gray-900 hover:text-red-200 transition duration-200"><i class="fab fa-instagram mr-1"></i> Instagram</a>
+            </p>
+        </div>
     </footer>
+
+    {% csrf_token %}
 </body>
 </html>

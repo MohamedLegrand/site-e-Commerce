@@ -36,6 +36,9 @@ urlpatterns = [
 
 
     path('profil/', views.profil_view, name='profil'),
+    path('detail/', views.cart_detail, name='detail'),
+
+    path('product-autocomplete/', views.product_autocomplete, name='product_autocomplete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
