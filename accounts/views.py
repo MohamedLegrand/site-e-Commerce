@@ -169,3 +169,30 @@ def cart_detail(request):
     cart_items = Cart.objects.filter(user=request.user)
     total = sum(item.product.price * item.quantity for item in cart_items)
     return render(request, 'cart/detail.html', {'cart_items': cart_items, 'total': total})
+
+
+
+@login_required
+def profil_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        password_confirm = request.POST.get('password_confirm')
+
+        user = request.user
+        if username:
+            user.username = username
+        if email:
+            user.email = email
+        if password and password == password_confirm:
+            user.set_password(password)
+        elif password and password != password_confirm:
+            messages.error(request, "Les mots de passe ne correspondent pas.")
+            return redirect('accounts:profil')
+
+        user.save()
+        messages.success(request, "Profil mis à jour avec succès.")
+        return redirect('accounts:profil')
+
+    return render(request, 'accounts/profil.html')
