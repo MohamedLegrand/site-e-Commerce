@@ -67,3 +67,11 @@ def generate_qr_code(data, model_instance, field_name):
     file_name = f'{field_name}_{model_instance.id}.png'
     model_instance.__setattr__(field_name, File(buffer, name=file_name))
     model_instance.save()
+
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name

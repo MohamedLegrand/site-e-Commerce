@@ -39,6 +39,13 @@ urlpatterns = [
     path('detail/', views.cart_detail, name='detail'),
 
     path('product-autocomplete/', views.product_autocomplete, name='product_autocomplete'),
+    path('category/cosmetics/', views.category_cosmetics, name='category_cosmetics'),
+
+
+    path('add_product/', views.add_product, name='add_product'),
+
+    path('search_product/', views.search_product, name='search_product'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

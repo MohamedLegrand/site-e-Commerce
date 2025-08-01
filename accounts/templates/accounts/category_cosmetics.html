@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produits Alimentaires - Echop</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="{% static 'accounts/products.css' %}" rel="stylesheet">
+    <style>
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .carousel-container {
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            padding-bottom: 20px;
+        }
+        .carousel-container::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-red-50 text-gray-800">
+    <!-- Header avec navigation -->
+    <header class="bg-red-700 text-white p-6 text-center shadow-lg">
+        <nav class="container mx-auto flex justify-between items-center mb-4">
+            <h1 class="text-3xl font-bold">
+                <a href="{% url 'accounts:page_principale' %}" class="text-white hover:text-red-300">Echop</a>
+            </h1>
+            <ul class="flex space-x-6">
+                <li><a href="{% url 'accounts:detail' %}" class="text-white hover:text-red-300">Panier</a></li>
+            </ul>
+        </nav>
+        <p class="mt-2 text-lg">Retrouvez des produits frais, secs, surgelés et des boissons pour toute la famille.</p>
+    </header>
+
+    <main class="container mx-auto px-4 py-10 fade-in">
+        <!-- parfums -->
+        <h2 class="text-2xl font-semibold text-center mt-12 mb-6">Parfums</h2>
+        <div class="carousel-container flex space-x-4">
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/parfumerie/parfum black.jpg' %}" alt="Riz parfumé 1" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Parfum de marque black</h4>
+                <p class="text-gray-600 mb-4">Parfum de haute qualite</p>
+                <p class="text-red-600 font-bold mb-4">50 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/parfumerie/parfum baldessarni.jpg' %}" alt="Riz parfumé 2" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">parfum baldessarni</h4>
+                <p class="text-gray-600 mb-4">Parfum de qualite superieur</p>
+                <p class="text-red-600 font-bold mb-4">60 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/parfumerie/parfum beautifullbelle.jpg' %}" alt="Riz parfumé 3" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">parfum beautifullbelle</h4>
+                <p class="text-gray-600 mb-4">Parfum d'elite avec une odeur parfaite</p>
+                <p class="text-red-600 font-bold mb-4">80 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/parfumerie/parfum blanc opium.jpg' %}" alt="Riz parfumé 4" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">parfum blanc opium</h4>
+                <p class="text-gray-600 mb-4">Un parfum sophistiqué qui incarne l'élégance et la sensualité.</p>
+                <p class="text-red-600 font-bold mb-4">75 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/parfumerie/parfum idole.jpg' %}" alt="Riz parfumé 5" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">parfum idole</h4>
+                <p class="text-gray-600 mb-4">Un mélange subtil de notes florales et boisées pour une allure irrésistible.</p>
+                <p class="text-red-600 font-bold mb-4">55 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/parfumerie/parfum l interdi.jpg' %}" alt="Riz parfumé 6" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">parfum l'interdi</h4>
+                <p class="text-gray-600 mb-4">Parfum raffiné pour femme/homme moderne, parfait pour toutes les occasions.</p>
+                <p class="text-red-600 font-bold mb-4">60 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/parfumerie/parfum louis vuitton.jpg' %}" alt="Riz parfumé 7" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">parfum louis vuitton</h4>
+                <p class="text-gray-600 mb-4">Un sillage délicat qui laisse une trace inoubliable partout où vous allez.</p>
+                <p class="text-red-600 font-bold mb-4">90 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/parfumerie/Parfum mugler.jpg' %}" alt="Riz parfumé 8" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Parfum mugler</h4>
+                <p class="text-gray-600 mb-4">La touche finale parfaite pour sublimer votre présence.</p>
+                <p class="text-red-600 font-bold mb-4">44 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/riz/riz9.jpg' %}" alt="Riz parfumé 9" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Riz parfumé 9</h4>
+                <p class="text-gray-600 mb-4">Riz parfumé économique.</p>
+                <p class="text-red-600 font-bold mb-4">4 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/parfumerie/Parfum prada.jpg' %}" alt="Riz parfumé 10" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">Parfum prada</h4>
+                <p class="text-gray-600 mb-4">Un concentré de charme et de fraîcheur dans chaque goutte.</p>
+                <p class="text-red-600 font-bold mb-4">60 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/parfumerie/parfum royal rose.jpg' %}" alt="Pâtes 1" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">parfum royal rose</h4>
+                <p class="text-gray-600 mb-4">Un parfum de caractère pour celles/ceux qui aiment se distinguer.</p>
+                <p class="text-red-600 font-bold mb-4">30 000 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+            <div class="product-card bg-white rounded-lg shadow-lg p-6 text-center min-w-[300px]">
+                <img src="{% static 'images/parfumerie/parfum tom ford eau de soleil blanc.jpg' %}" alt="Pâtes 2" class="rounded mb-4 w-full h-56 object-cover">
+                <h4 class="text-xl font-semibold mb-2 text-red-600">parfum tom ford eau de soleil blanc</h4>
+                <p class="text-gray-600 mb-4">Un vent de fraîcheur et de liberté avec ses notes citronnées et mentholées.</p>
+                <p class="text-red-600 font-bold mb-4">2 500 FCFA</p>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Ajouter au panier</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer avec réseaux sociaux -->
+    <footer class="bg-red-700 text-white text-center py-6 mt-10">
+        <p>© 2025 Echop. Tous droits réservés.</p>
+        <p class="mt-1">Contact : support@echop.cm | Téléphone : +237 6 77 24 69 00</p>
+        <div class="mt-2">
+            <p>Suivez-nous :</p>
+            <div class="flex justify-center space-x-4 mt-1">
+                <a href="https://www.facebook.com/echopstore" class="text-white hover:text-red-300">Facebook</a>
+                <a href="https://twitter.com/echopshop" class="text-white hover:text-red-300">Twitter</a>
+                <a href="https://www.instagram.com/echop_official" class="text-white hover:text-red-300">Instagram</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

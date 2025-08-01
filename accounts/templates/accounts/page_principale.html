@@ -23,13 +23,17 @@
                 <div class="dropdown-content">
                     <a href="{% url 'accounts:category_cake' %}">Boulangerie</a>
                     <a href="{% url 'accounts:category_clothing' %}">Vêtements</a>
-                    <a href="{% url 'accounts:category_alimentaire' %}">Aliments</a>
+                    <a href="{% url 'accounts:category_alimentaire' %}">Produits Alimentaires</a>
+                    <a href="{% url 'accounts:category_cosmetics' %}">Parfumerie et produits cosmétiques</a>
                 </div>
             </div>
 
             <!-- Barre de recherche au centre -->
             <div class="w-1/3">
-                <input type="text" id="search-input" placeholder="Rechercher..." class="w-full p-2 rounded-lg focus:outline-none search-input">
+                <form method="get" action="{% url 'accounts:search_product' %}" class="flex">
+                    <input type="text" id="search-input" name="query" placeholder="Recherchez..." class="w-full p-2 rounded-l-lg focus:outline-none border border-gray-300" required autofocus>
+                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-r-lg hover:bg-red-700">Rechercher</button>
+                </form>
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
                 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -37,11 +41,14 @@
                     $(function() {
                         $("#search-input").autocomplete({
                             source: "{% url 'accounts:product_autocomplete' %}",
-                            minLength: 1, // Suggestions après 1 caractère
+                            minLength: 1,
                             select: function(event, ui) {
-                                $("#search-input").val(ui.item.value); // Remplit le champ avec la sélection
-                                // Optionnel : soumettre automatiquement (décommente si besoin)
-                                // $(this).closest("form").submit();
+                                $("#search-input").val(ui.item.value);
+                                $(this).closest("form").submit();
+                            }
+                        }).keypress(function(e) {
+                            if (e.which == 13) { // 13 = touche "Entrée"
+                                $(this).closest("form").submit();
                             }
                         });
                     });

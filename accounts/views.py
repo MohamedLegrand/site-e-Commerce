@@ -8,6 +8,8 @@ from django.core.mail import send_mail
 from django.utils import timezone
 import json
 from django.views.decorators.http import require_POST
+from .models import Product, Category
+from django.core.exceptions import ObjectDoesNotExist
 
 def user_login(request):
     if request.method == 'POST':
@@ -206,3 +208,29 @@ def product_autocomplete(request):
         suggestions = [product.name for product in products]
         return JsonResponse(suggestions, safe=False)
     return JsonResponse([], safe=False)
+
+
+def category_cosmetics(request):
+    try:
+        category = Category.objects.get(name="Parfumerie et produits cosmétiques")
+        products = Product.objects.filter(category=category)
+    except ObjectDoesNotExist:
+        category = None
+        products = Product.objects.none()  # Aucun produit si la catégorie n’existe pas
+    return render(request, 'accounts/category_cosmetics.html', {'products': products, 'category_name': category.name if category else "Catégorie non trouvée"})
+
+
+def add_product(request):
+    product_name = request.POST.get('product_name', '')
+    if request.method == 'POST' and product_name:
+        if 'temp_products' not in request.session:
+            request.session['temp_products'] = []
+        request.session['temp_products'].append(product_name)
+        request.session.modified = True
+    return render(request, 'accounts/add_product.html', {'product_name': product_name, 'temp_products': request.session.get('temp_products', [])})
+
+
+def search_product(request):
+    query = request.GET.get('query', '')
+    products = Product.objects.filter(name__icontains=query) if query else []
+    return render(request, 'accounts/search_results.html', {'products': products, 'query': query})
