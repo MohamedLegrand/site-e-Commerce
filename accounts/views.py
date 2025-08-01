@@ -156,7 +156,7 @@ def add_to_cart(request, product_id):
             'status': 'success',
             'message': 'Produit ajouté au panier',
             'cart_items': list(cart_items),
-            'total': total,
+            'total': float(total),  # Assure que total est un float pour éviter des erreurs JSON
             'cart_item_count': cart_items.count()
         })
     except Product.DoesNotExist:
@@ -164,7 +164,7 @@ def add_to_cart(request, product_id):
     except json.JSONDecodeError:
         return JsonResponse({'status': 'error', 'message': 'Données JSON invalides'}, status=400)
     except Exception as e:
-        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+        return JsonResponse({'status': 'error', 'message': f'Erreur serveur : {str(e)}'}, status=500)
 
 @login_required
 def cart_detail(request):
