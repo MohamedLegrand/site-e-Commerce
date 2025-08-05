@@ -35,9 +35,16 @@
         <div class="cart-items">
             {% if cart_items %}
                 {% for item in cart_items %}
-                    <div class="cart-item flex justify-between items-center p-4 mb-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                        <span class="text-lg">{{ item.product.name }} - {{ item.quantity }} x {{ item.product.price }} FCFA</span>
-                        <span class="text-lg font-semibold">{{ item.product.price | mul:item.quantity }} FCFA</span>
+                    <div class="cart-item flex justify-between items-center p-4 mb-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300" data-product-id="{{ item.product.id }}">
+                        <div class="flex items-center">
+                            <span class="text-lg">{{ item.product.name }} - </span>
+                            <input type="number" class="quantity-input w-16 p-1 border rounded ml-2" value="{{ item.quantity }}" min="0">
+                        </div>
+                        <div class="flex items-center">
+                            <button class="update-btn bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 mr-2">Mettre à jour</button>
+                            <button class="remove-btn bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Retirer</button>
+                            <span class="text-lg font-semibold ml-4">{{ item.product.price|mul:item.quantity }} FCFA</span>
+                        </div>
                     </div>
                 {% endfor %}
             {% else %}
@@ -49,6 +56,7 @@
             <a href="{% url 'accounts:checkout' %}" class="mt-4 inline-block bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 hover:shadow-lg transform hover:translate-y-[-2px] transition duration-200">
                 <i class="fas fa-shopping-cart mr-2"></i> Passer à la caisse
             </a>
+            <button class="clear-cart-btn bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 hover:shadow-lg transform hover:translate-y-[-2px] transition duration-200 mt-4 ml-4">Vider le Panier</button>
         </div>
     </main>
 
@@ -72,5 +80,12 @@
     </footer>
 
     {% csrf_token %}
+    <script>
+        const urls = {
+            addToCart: "{% url 'accounts:add_to_cart' 0 %}".replace('0', ''),
+            clearCart: "{% url 'accounts:clear_cart' %}"
+        };
+    </script>
+    <script src="{% static 'js/cart.js' %}" defer></script>
 </body>
 </html>

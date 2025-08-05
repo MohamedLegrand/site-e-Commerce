@@ -142,21 +142,37 @@ def category_alimentaire(request):
 @require_POST
 def add_to_cart(request, product_id):
     try:
+        print(f"Utilisateur : {request.user}")
         product = get_object_or_404(Product, id=product_id)
+        print(f"Produit trouvé : {product}")
         data = json.loads(request.body) if request.body else {}
+        print(f"Données reçues : {data}")
+        action = data.get('action', 'add')  # 'add', 'update', ou 'remove'
         quantity = int(data.get('quantity', 1))
-        if quantity < 1:
+        
+        if quantity < 0:
             return JsonResponse({'status': 'error', 'message': 'Quantité invalide'}, status=400)
-        cart, created = Cart.objects.get_or_create(user=request.user, product=product)
-        cart.quantity += quantity
-        cart.save()
+        
+        if action == 'remove':
+            Cart.objects.filter(user=request.user, product=product).delete()
+            print(f"Produit {product.name} retiré du panier")
+        else:
+            cart, created = Cart.objects.get_or_create(user=request.user, product=product)
+            print(f"Panier créé/modifié : {cart}, Créé : {created}")
+            if action == 'update':
+                cart.quantity = max(0, quantity)  # Empêche une quantité négative
+            else:  # action == 'add'
+                cart.quantity += quantity
+            cart.save()
+            print(f"Panier sauvegardé : {cart.quantity}")
+        
         cart_items = Cart.objects.filter(user=request.user).values('product__name', 'quantity', 'product__price')
-        total = sum(item['product__price'] * item['quantity'] for item in cart_items)
+        total = sum(item['product__price'] * item['quantity'] for item in cart_items) if cart_items else 0
         return JsonResponse({
             'status': 'success',
-            'message': 'Produit ajouté au panier',
+            'message': f'Panier {("mis à jour" if action == "update" else "modifié") if action != "remove" else "vidé pour ce produit"}',
             'cart_items': list(cart_items),
-            'total': float(total),  # Assure que total est un float pour éviter des erreurs JSON
+            'total': float(total),
             'cart_item_count': cart_items.count()
         })
     except Product.DoesNotExist:
@@ -164,7 +180,27 @@ def add_to_cart(request, product_id):
     except json.JSONDecodeError:
         return JsonResponse({'status': 'error', 'message': 'Données JSON invalides'}, status=400)
     except Exception as e:
+        print(f"Exception capturée : {str(e)}")
         return JsonResponse({'status': 'error', 'message': f'Erreur serveur : {str(e)}'}, status=500)
+
+@login_required
+@require_POST
+def clear_cart(request):
+    try:
+        print(f"Utilisateur : {request.user}")
+        Cart.objects.filter(user=request.user).delete()
+        print("Panier vidé avec succès")
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Panier vidé avec succès',
+            'cart_items': [],
+            'total': 0.0,
+            'cart_item_count': 0
+        })
+    except Exception as e:
+        print(f"Exception capturée : {str(e)}")
+        return JsonResponse({'status': 'error', 'message': f'Erreur serveur : {str(e)}'}, status=500)
+
 
 @login_required
 def cart_detail(request):

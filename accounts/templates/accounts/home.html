@@ -8,6 +8,70 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="{% static 'accounts/home.css' %}" rel="stylesheet">
+    <style>
+        /* Animations des bulles */
+        .bubbles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .bubbles span {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: bubble 10s infinite;
+            filter: blur(2px);
+        }
+        .bubbles span:nth-child(even) {
+            background: rgba(255, 182, 193, 0.2); /* Rose clair */
+        }
+        @keyframes bubble {
+            0% { transform: translateY(100vh) scale(0); opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+        .bubbles span:nth-child(1) { --i: 11; left: 5%; animation-delay: 0s; }
+        .bubbles span:nth-child(2) { --i: 12; left: 15%; animation-delay: 1s; }
+        .bubbles span:nth-child(3) { --i: 24; left: 25%; animation-delay: 2s; }
+        .bubbles span:nth-child(4) { --i: 10; left: 35%; animation-delay: 3s; }
+        .bubbles span:nth-child(5) { --i: 14; left: 45%; animation-delay: 4s; }
+        .bubbles span:nth-child(6) { --i: 15; left: 55%; animation-delay: 5s; }
+        .bubbles span:nth-child(7) { --i: 17; left: 65%; animation-delay: 6s; }
+
+        /* Animation du titre et description */
+        .main-title {
+            animation: fadeInUp 1s ease-out;
+        }
+        .main-description {
+            animation: fadeInUp 1.5s ease-out;
+        }
+        .btn-animated {
+            animation: pulse 2s infinite;
+        }
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Style navbar avec rouge foncé */
+        .sticky-nav {
+            transition: all 0.3s ease;
+        }
+        .sticky-nav.scrolled {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body class="bg-gray-50 font-sans relative overflow-hidden">
     <!-- Conteneur pour les bulles animées -->
@@ -17,52 +81,51 @@
         <span style="--i:24;"></span>
         <span style="--i:10;"></span>
         <span style="--i:14;"></span>
-        <!-- Ajoute tes bulles ici, par exemple : -->
-        <!-- <span style="--i:15;"></span> -->
-        <!-- <span style="--i:17;"></span> -->
+        <span style="--i:15; left: 55%; animation-delay: 5s;"></span>
+        <span style="--i:17; left: 65%; animation-delay: 6s;"></span>
     </div>
 
     <!-- Header -->
-    <header class="bg-red-500 text-white py-4 shadow-lg">
+    <header class="bg-red-300 text-white py-4 shadow-lg">
         <div class="container mx-auto px-4 flex justify-between items-center">
             <h1 class="text-3xl font-bold">Echop</h1>
             <div class="flex items-center space-x-4">
                 {% if user.is_authenticated %}
                     <span class="text-sm">Bonjour, {{ user.username }}</span>
-                    <a href="{% url 'accounts:logout' %}" class="text-white hover:text-gray-200">Déconnexion</a>
+                    <a href="{% url 'accounts:logout' %}" class="text-white hover:text-yellow-200 transition duration-200">Déconnexion</a>
                 {% else %}
-                    <a href="{% url 'accounts:login' %}" class="text-white hover:text-gray-200">Connexion</a>
-                    <a href="{% url 'accounts:register' %}" class="text-white hover:text-gray-200">Inscription</a>
+                    <a href="{% url 'accounts:login' %}" class="text-white hover:text-yellow-200 transition duration-200">Connexion</a>
+                    <a href="{% url 'accounts:register' %}" class="text-white hover:text-yellow-200 transition duration-200">Inscription</a>
                 {% endif %}
             </div>
         </div>
     </header>
 
     <!-- Navbar -->
-    <nav class="bg-white text-gray-800 py-3 sticky top-0 z-10 shadow-md">
+    <nav class="bg-red-600 text-white py-3 sticky top-0 z-10 shadow-md sticky-nav" id="navbar">
         <div class="container mx-auto px-4 flex justify-between items-center">
             <!-- Dropdown Catégories -->
             <div class="relative group">
-                <button class="px-4 py-2 rounded-lg hover:bg-red-100 text-gray-800 transition duration-200">Catégories</button>
-                <div class="absolute hidden group-hover:block bg-white text-gray-800 shadow-lg rounded-lg mt-2">
-                    <a href="{% url 'accounts:category_cake' %}" class="block px-4 py-2 hover:bg-red-50">Boulangerie</a>
-                    <a href="{% url 'accounts:category_clothing' %}" class="block px-4 py-2 hover:bg-red-50">Vêtements</a>
-                    <a href="{% url 'accounts:category_alimentaire' %}" class="block px-4 py-2 hover:bg-red-50">Aliments</a>
+                <button class="px-4 py-2 rounded-lg hover:bg-red-500 text-white font-semibold transition duration-200">Catégories</button>
+                <div class="absolute hidden group-hover:block bg-red-600 text-white shadow-lg rounded-lg mt-2 w-48">
+                    <a href="{% url 'accounts:category_cake' %}" class="block px-4 py-2 hover:bg-red-500 transition duration-200">Boulangerie</a>
+                    <a href="{% url 'accounts:category_clothing' %}" class="block px-4 py-2 hover:bg-red-500 transition duration-200">Vêtements</a>
+                    <a href="{% url 'accounts:category_alimentaire' %}" class="block px-4 py-2 hover:bg-red-500 transition duration-200">Aliments</a>
                 </div>
             </div>
 
             <!-- Recherche -->
             <div class="w-1/3">
-                <input type="text" placeholder="Rechercher un produit..." class="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-400 transition duration-200">
+                <input type="text" placeholder="Rechercher un produit..." class="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-300 transition duration-200">
             </div>
 
             <!-- Liens -->
             <div class="flex space-x-4">
-                <a href="{% url 'accounts:contact' %}" class="px-4 py-2 hover:bg-red-100 rounded-lg transition duration-200">Contact</a>
-                <a href="{% url 'accounts:products' %}" class="px-4 py-2 hover:bg-red-100 rounded-lg transition duration-200 flex items-center">
-                    Panier <span class="ml-2 bg-red-500 text-white rounded-full px-2 py-1 text-sm cart-count">{{ cart_item_count|default:0 }}</span>
+                <a href="{% url 'accounts:contact' %}" class="px-4 py-2 hover:bg-red-500 rounded-lg transition duration-200">Contact</a>
+                <a href="{% url 'accounts:products' %}" class="px-4 py-2 hover:bg-red-500 rounded-lg transition duration-200 flex items-center">
+                    Panier <span class="ml-2 bg-red-300 text-white rounded-full px-2 py-1 text-sm cart-count">{{ cart_item_count|default:0 }}</span>
                 </a>
-                <a href="{% url 'accounts:sold_products' %}" class="px-4 py-2 hover:bg-red-100 rounded-lg transition duration-200">Top Ventes</a>
+                <a href="{% url 'accounts:sold_products' %}" class="px-4 py-2 hover:bg-red-500 rounded-lg transition duration-200">Top Ventes</a>
             </div>
         </div>
     </nav>
@@ -82,7 +145,7 @@
                         et des QR codes pour une traçabilité optimale. Rejoignez-nous dès aujourd'hui 
                         pour révolutionner votre commerce en ligne !
                     </p>
-                    <a href="{% url 'accounts:page_principale' %}" class="mt-6 inline-block bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 hover:shadow-lg transform hover:translate-y-[-2px] transition duration-200">
+                    <a href="{% url 'accounts:page_principale' %}" class="mt-6 inline-block bg-red-300 text-white px-6 py-3 rounded-lg btn-animated hover:bg-red-400 hover:shadow-lg transform hover:-translate-y-1 transition duration-200">
                         Découvrir nos produits
                     </a>
                 </div>
@@ -91,25 +154,36 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-red-500 text-white py-8">
+    <footer class="bg-red-300 text-white py-8">
         <div class="container mx-auto px-4 text-center">
             <h3 class="text-2xl font-semibold">Echop</h3>
             <p class="mt-2">© 2025 Echop. Tous droits réservés.</p>
             <div class="flex justify-center space-x-6 mt-4">
-                <a href="{% url 'accounts:about' %}" class="hover:text-red-200">À propos</a>
-                <a href="{% url 'accounts:contact' %}" class="hover:text-red-200">Contact</a>
-                <a href="{% url 'accounts:terms' %}" class="hover:text-red-200">Politique de confidentialité</a>
+                <a href="{% url 'accounts:about' %}" class="hover:text-yellow-200 transition duration-200">À propos</a>
+                <a href="{% url 'accounts:contact' %}" class="hover:text-yellow-200 transition duration-200">Contact</a>
+                <a href="{% url 'accounts:terms' %}" class="hover:text-yellow-200 transition duration-200">Politique de confidentialité</a>
             </div>
-            <p class="mt-4">Email : support@echop.com | Téléphone : +237 677 24 69 00</p>
+            <p class="mt-4">Email : <a href="mailto:support@echop.com" class="hover:text-yellow-200">support@echop.com</a> | Téléphone : +237 677 24 69 00</p>
             <p class="mt-2">Suivez-nous : 
-                <a href="#" class="text-white hover:text-red-200">Facebook</a> | 
-                <a href="#" class="text-white hover:text-red-200">Twitter</a> | 
-                <a href="#" class="text-white hover:text-red-200">Instagram</a>
+                <a href="https://facebook.com/echopstore" target="_blank" class="text-white hover:text-yellow-200 transition duration-200">Facebook</a> | 
+                <a href="https://twitter.com/echopstore" target="_blank" class="text-white hover:text-yellow-200 transition duration-200">Twitter</a> | 
+                <a href="https://instagram.com/echopstore" target="_blank" class="text-white hover:text-yellow-200 transition duration-200">Instagram</a>
             </p>
         </div>
     </footer>
 
     {% csrf_token %}
     <script src="{% static 'js/cart.js' %}"></script>
+    <script>
+        // Animation de la navbar au scroll
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
 </body>
 </html>
