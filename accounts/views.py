@@ -76,7 +76,7 @@ def products(request):
 
 @login_required
 def checkout(request):
-    cart_items = Cart.objects.filter(user=request.user)
+    cart_items = Cart.objects.filter(user=request.user)  
     if not cart_items.exists():
         messages.error(request, "Votre panier est vide.")
         return redirect('accounts:products')

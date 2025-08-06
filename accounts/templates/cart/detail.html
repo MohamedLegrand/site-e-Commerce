@@ -85,6 +85,7 @@
             addToCart: "{% url 'accounts:add_to_cart' 0 %}".replace('0', ''),
             clearCart: "{% url 'accounts:clear_cart' %}"
         };
+        console.log('URLs:', urls);
     </script>
     <script src="{% static 'js/cart.js' %}" defer></script>
 </body>
