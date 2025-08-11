@@ -17,9 +17,10 @@
         <div class="card bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto">
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Bienvenue, {{ user.username }}!</h2>
             <p class="text-gray-600 mb-4">Rôle: {{ user.role }}</p>
-            <p class="text-gray-600 mb-4">Points de fidélité: {{ user.loyalty_points }}</p>
-            {% if user.loyalty_points >= 100 %}
-                <p class="text-green-600 font-bold">Félicitations ! Vous avez droit à une réduction de 10%.</p>
+            <p class="text-gray-600 mb-4">Nombre d'achats: {{ user.purchase_count }}</p>
+            <p class="text-gray-600 mb-4">Total cumulé des ventes: {{ user.total_sales|floatformat:2 }} FCFA</p>
+            {% if user.purchase_count >= 5 %} <!-- Exemple de seuil pour une réduction -->
+                <p class="text-green-600 font-bold">Félicitations ! Vous avez droit à une réduction de 10% après 5 achats.</p>
             {% endif %}
             <a href="{% url 'accounts:logout' %}" class="btn bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200 mt-4 inline-block">
                 Déconnexion

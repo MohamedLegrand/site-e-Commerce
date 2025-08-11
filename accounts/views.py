@@ -10,6 +10,10 @@ import json
 from django.views.decorators.http import require_POST
 from .models import Product, Category
 from django.core.exceptions import ObjectDoesNotExist
+from decimal import Decimal
+import base64
+import qrcode
+from io import BytesIO
 
 def user_login(request):
     if request.method == 'POST':
@@ -44,10 +48,10 @@ def register(request):
 @login_required
 def dashboard(request):
     user = request.user
-    if user.loyalty_points >= 100:
+    if user.purchase_count >= 5:  # Ajusté pour utiliser purchase_count au lieu de loyalty_points
         send_mail(
             'Réduction disponible !',
-            'Vous avez atteint 100 points. Profitez de 10% de réduction !',
+            'Vous avez effectué 5 achats. Profitez de 10% de réduction !',
             'from@example.com',
             [user.email],
             fail_silently=True,
@@ -145,40 +149,51 @@ def add_to_cart(request, product_id):
         print(f"Utilisateur : {request.user}")
         product = get_object_or_404(Product, id=product_id)
         print(f"Produit trouvé : {product}")
-        data = json.loads(request.body) if request.body else {}
+        data = json.loads(request.body.decode('utf-8')) if request.body else {}
         print(f"Données reçues : {data}")
         action = data.get('action', 'add')  # 'add', 'update', ou 'remove'
         quantity = int(data.get('quantity', 1))
-        
+
         if quantity < 0:
             return JsonResponse({'status': 'error', 'message': 'Quantité invalide'}, status=400)
-        
+
         if action == 'remove':
             Cart.objects.filter(user=request.user, product=product).delete()
             print(f"Produit {product.name} retiré du panier")
+            message = 'Produit retiré du panier'
         else:
             cart, created = Cart.objects.get_or_create(user=request.user, product=product)
             print(f"Panier créé/modifié : {cart}, Créé : {created}")
             if action == 'update':
-                cart.quantity = max(0, quantity)  # Empêche une quantité négative
+                cart.quantity = max(0, quantity)
             else:  # action == 'add'
-                cart.quantity += quantity
+                if created:
+                    cart.quantity = quantity
+                else:
+                    cart.quantity += quantity
             cart.save()
             print(f"Panier sauvegardé : {cart.quantity}")
-        
+            message = 'Produit ajouté' if created else 'Quantité mise à jour'
+
         cart_items = Cart.objects.filter(user=request.user).values('product__name', 'quantity', 'product__price')
-        total = sum(item['product__price'] * item['quantity'] for item in cart_items) if cart_items else 0
+        total = sum(float(Decimal(str(item['product__price'])) * item['quantity']) for item in cart_items) if cart_items else 0
+
         return JsonResponse({
             'status': 'success',
-            'message': f'Panier {("mis à jour" if action == "update" else "modifié") if action != "remove" else "vidé pour ce produit"}',
+            'message': message,
             'cart_items': list(cart_items),
-            'total': float(total),
+            'total': total,
             'cart_item_count': cart_items.count()
         })
     except Product.DoesNotExist:
+        print("Produit non trouvé")
         return JsonResponse({'status': 'error', 'message': 'Produit non trouvé'}, status=404)
     except json.JSONDecodeError:
+        print("Données JSON invalides")
         return JsonResponse({'status': 'error', 'message': 'Données JSON invalides'}, status=400)
+    except ValueError as e:
+        print(f"Erreur de conversion : {str(e)}")
+        return JsonResponse({'status': 'error', 'message': 'Quantité invalide'}, status=400)
     except Exception as e:
         print(f"Exception capturée : {str(e)}")
         return JsonResponse({'status': 'error', 'message': f'Erreur serveur : {str(e)}'}, status=500)
@@ -201,14 +216,19 @@ def clear_cart(request):
         print(f"Exception capturée : {str(e)}")
         return JsonResponse({'status': 'error', 'message': f'Erreur serveur : {str(e)}'}, status=500)
 
-
 @login_required
 def cart_detail(request):
     cart_items = Cart.objects.filter(user=request.user)
-    total = sum(item.product.price * item.quantity for item in cart_items)
+    total = sum(float(item.product.price) * item.quantity for item in cart_items) if cart_items.exists() else 0
+
+    if request.method == 'POST' and request.POST.get('action') == 'proceed_to_payment':
+        if not cart_items.exists():
+            messages.error(request, "Votre panier est vide.")
+            return redirect('accounts:cart_detail')
+        request.session['panier_total'] = total  # Stocker le total converti en float
+        return redirect('accounts:payment_page')
+
     return render(request, 'cart/detail.html', {'cart_items': cart_items, 'total': total})
-
-
 
 @login_required
 def profil_view(request):
@@ -235,16 +255,20 @@ def profil_view(request):
 
     return render(request, 'accounts/profil.html')
 
-
-
 def product_autocomplete(request):
     if 'term' in request.GET:
-        query = request.GET.get('term')
+        query = request.GET.get('term', '').strip()
         products = Product.objects.filter(name__icontains=query)[:10]  # Limite à 10 suggestions
-        suggestions = [product.name for product in products]
+        suggestions = [
+            {
+                'label': product.name,
+                'value': product.name,
+                'price': str(product.price),
+                'image': product.image.url if product.image else ''
+            } for product in products
+        ]
         return JsonResponse(suggestions, safe=False)
     return JsonResponse([], safe=False)
-
 
 def category_cosmetics(request):
     try:
@@ -252,9 +276,8 @@ def category_cosmetics(request):
         products = Product.objects.filter(category=category)
     except ObjectDoesNotExist:
         category = None
-        products = Product.objects.none()  # Aucun produit si la catégorie n’existe pas
+        products = Product.objects.none()
     return render(request, 'accounts/category_cosmetics.html', {'products': products, 'category_name': category.name if category else "Catégorie non trouvée"})
-
 
 def add_product(request):
     product_name = request.POST.get('product_name', '')
@@ -265,8 +288,111 @@ def add_product(request):
         request.session.modified = True
     return render(request, 'accounts/add_product.html', {'product_name': product_name, 'temp_products': request.session.get('temp_products', [])})
 
-
 def search_product(request):
     query = request.GET.get('query', '')
     products = Product.objects.filter(name__icontains=query) if query else []
     return render(request, 'accounts/search_results.html', {'products': products, 'query': query})
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.http import HttpResponseBadRequest
+
+
+@login_required
+def payment_page(request):
+    total = request.session.get('panier_total', 0)
+    user = request.user
+    initial_data = {'nom': user.username, 'email': user.email, 'telephone': ''}
+
+    if request.method == 'POST':
+        nom = request.POST.get('nom')
+        email = request.POST.get('email')
+        type_paiement = request.POST.get('type_paiement')
+        numero = request.POST.get('numero')
+
+        if not all([nom, email, type_paiement, numero]):
+            messages.error(request, "Tous les champs sont requis.")
+            return render(request, 'accounts/payment_page.html', {'montant': total, 'initial_data': initial_data})
+
+        if not numero.isdigit() or len(numero) < 9:
+            messages.error(request, "Numéro de paiement invalide. Utilisez un numéro de 9 chiffres minimum.")
+            return render(request, 'accounts/payment_page.html', {'montant': total, 'initial_data': initial_data})
+
+        # Récupérer les items du panier avant de les vider
+        cart_items = Cart.objects.filter(user=request.user).values('product__name', 'quantity', 'product__price')
+        products = [{"name": item['product__name'], "quantity": item['quantity'], "price": float(item['product__price'])} for item in cart_items]
+
+        user.purchase_count += 1
+        user.total_sales += Decimal(str(total))
+        user.save()
+
+        print(f"Paiement simulé pour {nom}, Email: {email}, Type: {type_paiement}, Numéro: {numero}")
+        messages.success(request, "Paiement simulé avec succès.")
+        request.session['dernier_montant'] = total
+
+        # Préparer les données pour la facture
+        current_time = timezone.now()
+        invoice_data = {
+            'date': current_time.strftime('%Y-%m-%d'),
+            'time': current_time.strftime('%H:%M:%S'),
+            'products': products,
+            'total': total,
+            'user': user.username
+        }
+
+        # Générer le QR code
+        qr_data = f"User: {user.username}, Total: {total} FCFA, Date: {invoice_data['date']}, Time: {invoice_data['time']}"
+        qr = qrcode.QRCode(version=1, box_size=10, border=5)
+        qr.add_data(qr_data)
+        qr.make(fit=True)
+        img = qr.make_image(fill='black', back_color='white')
+        buffer = BytesIO()
+        img.save(buffer, format='PNG')
+        qr_code_image = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        buffer.close()
+
+        # Stocker les données dans la session et vider le panier
+        request.session['invoice_data'] = invoice_data
+        request.session['qr_code_image'] = qr_code_image
+        Cart.objects.filter(user=request.user).delete()
+
+        print(f"Invoice data: {request.session.get('invoice_data')}")
+        print(f"QR code image: {request.session.get('qr_code_image')}")
+
+        return redirect('accounts:invoice_view')
+
+    return render(request, 'accounts/payment_page.html', {'montant': total, 'initial_data': initial_data})
+
+@login_required
+def invoice_view(request):
+    invoice_data = request.session.get('invoice_data', {})
+    qr_code_image = request.session.get('qr_code_image', '')
+    if not invoice_data or not qr_code_image:
+        messages.error(request, "Aucune donnée de facture disponible.")
+        return redirect('accounts:dashboard')
+
+    context = {
+        'invoice_data': invoice_data,
+        'qr_code_image': qr_code_image
+    }
+    del request.session['invoice_data']
+    del request.session['qr_code_image']
+    return render(request, 'accounts/invoice.html', context)
+
+def payment_confirmation(request):
+    dernier_montant = request.session.get('dernier_montant', 0)
+    return render(request, 'accounts/payment_confirmation.html', {'montant': dernier_montant})
+
+
+
+def milk(request):
+    return render(request, 'accounts/milk.html')
+
+def vin(request):
+    return render(request, 'accounts/vin.html')
+
+def parfum(request):
+    return render(request, 'accounts/parfum.html')
+
+def menage(request):
+    return render(request, 'accounts/menage.html')

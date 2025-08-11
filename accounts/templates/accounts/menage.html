@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Milk - Echop</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Produits menagers</h1>
+        <p class="text-center text-gray-600 mb-6">Découvrez nos prduits menagers.</p>
+
+        <!-- Section des produits laitiers -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Produit 1: Exemple de lait -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/aspirateur.webp' %}" alt="Lait Nido" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">aspirateur</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            </div>
+
+            <!-- Produit 2: Exemple de lait (à compléter) -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/bidon persil.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2"> à venir pour ce produit laitier savoureux.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            </div>
+
+            <!-- Produit 3: Exemple de lait (à compléter) -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/brosse.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+
+                
+            </div>
+
+
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/ensemble menager.jpeg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+
+                
+            </div>
+
+
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/liquide pour vaiselle.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+
+                
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/produits wc.jpeg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Description à venuit laitier savoureux.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+
+                
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/sau pour ordure.jpeg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+
+                
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/savon azur.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+
+                
+            </div>
+
+
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/savon de marseille.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+
+                
+            </div>
+
+
+            
+
+            
+
+            
+        </div>
+    </div>
+</body>
+</html>

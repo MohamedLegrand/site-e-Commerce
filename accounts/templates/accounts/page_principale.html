@@ -58,7 +58,7 @@
             <!-- Contact, Panier, Produits les plus vendus à droite -->
             <div class="space-x-4">
                 <a href="{% url 'accounts:contact' %}" class="nav-item px-3 py-2 rounded">Contact</a>
-                <a href="{% url 'accounts:detail' %}" class="nav-item px-3 py-2 rounded">
+                <a href="{% url 'accounts:cart_detail' %}" class="nav-item px-3 py-2 rounded">
                     Panier <span class="bg-white text-red-600 rounded-full px-2 cart-count">{{ cart_item_count|default:0 }}</span>
                 </a>
                 <a href="{% url 'accounts:sold_products' %}" class="nav-item px-3 py-2 rounded">Produits les plus vendus</a>
@@ -72,24 +72,42 @@
     <div class="container mx-auto p-6">
         <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Page Principale</h1>
         <p class="text-center text-gray-600 mb-6">Bienvenue sur Echop ! Découvrez nos produits en avant-première.</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {% for product in products %}
-                <div class="product-card bg-white p-4 rounded-lg shadow-lg text-center">
-                    <img src="{% static 'accounts/images/vin/vin5.jpg' %}" alt="{{ product.name }}" class="w-full h-48 object-cover rounded-t-lg">
-                    <h2 class="text-xl font-semibold mt-2">{{ product.name }}</h2>
-                    <p class="text-gray-600 mt-2">{{ product.description|truncatewords:10 }}</p>
-                    <p class="text-red-600 font-bold mt-2">{{ product.price }} FCFA</p>
-                    <button class="btn-add-to-cart bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 mt-2" data-product-id="{{ product.id }}">Ajouter au panier</button>
-                    <a href="{% url 'accounts:products' %}" class="btn bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 mt-2 inline-block">Voir plus</a>
-                </div>
-            {% empty %}
-                <p class="text-center text-gray-600">Aucun produit disponible pour le moment.</p>
-            {% endfor %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Produit 1: Lait Nido -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/laits/nido4.jpg' %}" alt="Lait Nido" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un délicieux lait en poudre Nido, parfait pour toute la famille, riche en nutriments essentiels.
+                    decouvrer toute les categories de lait que nous disposons
+                </p>
+                <a href="{% url 'accounts:milk' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            </div>
+
+            <!-- Produit 2: Jupe Femme -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/ensemble menager.jpeg' %}" alt="Jupe Femme" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une élégante jupe pour femmes, idéale pour toutes les occasions avec un style tendance.</p>
+                <a href="{% url 'accounts:menage' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            </div>
+
+            <!-- Produit 3: Vin -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/vin/vin1.webp' %}" alt="Vin" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un vin raffiné aux arômes fruités, parfait pour accompagner vos repas ou moments spéciaux.
+                    Decouvrer tout les types de vin de meilleures que l'on dispose
+                </p>
+                <a href="{% url 'accounts:vin' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            </div>
+
+            <!-- Produit 4: Parfum -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/parfum louis vuitton.jpg' %}" alt="Parfum" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un parfum captivant avec des notes boisées et florales, idéal pour une touche d'élégance. decouvrer Tous
+                    les parfums que l'on dispose
+                </p>
+                <a href="{% url 'accounts:parfum' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            </div>
         </div>
-        <div class="mt-6 text-center">
-            <a href="{% url 'accounts:products' %}" class="btn bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700">
-                Voir tous les produits
-            </a>
+            
         </div>
     </div>
 
@@ -107,16 +125,13 @@
             </div>
             <div>
                 <p>Email : support@echop.com | Téléphone : +237 677 24 69 00</p>
-                <p class="mt-2">Suivez-nous : 
-                    <a href="#" class="text-red-300 hover:text-white">Facebook</a> | 
-                    <a href="#" class="text-red-300 hover:text-white">Twitter</a> | 
-                    <a href="#" class="text-red-300 hover:text-white">Instagram</a>
-                </p>
+              
             </div>
         </div>
     </footer>
 
     {% csrf_token %}
     <script src="{% static 'js/cart.js' %}"></script>
+
 </body>
 </html>

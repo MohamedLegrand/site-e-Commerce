@@ -11,7 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 showNotification('Erreur : Jeton CSRF manquant.', 'bg-red-500');
                 return;
             }
-            fetch(`${urls.addToCart.replace(/\/+$/, '')}/${productId}/`, {
+            // Utilisation de add_to_cart_url définie dans le template
+            fetch(`{{ add_to_cart_url }}`.replace('0', productId), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,7 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateCartItem(productId, quantity, action = 'update') {
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-        fetch(`${urls.addToCart.replace(/\/+$/, '')}/${productId}/`, {
+        // Utilisation de add_to_cart_url pour la cohérence
+        fetch(`{{ add_to_cart_url }}`.replace('0', productId), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -126,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function clearCart() {
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+        // Supposons que urls.clearCart n'est pas défini, donc on laisse tel quel pour l'instant
         fetch(urls.clearCart, {
             method: 'POST',
             headers: {
@@ -184,3 +187,79 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+// Ajout du code search.js sans modification des autres parties
+// Début de search.js
+$(document).ready(function() {
+    $("#search-input").autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: "/product-autocomplete/",
+                dataType: "json",
+                data: {
+                    term: request.term
+                },
+                success: function(data) {
+                    response($.map(data, function(item) {
+                        return {
+                            label: item.label,
+                            value: item.value,
+                            price: item.price,
+                            image: item.image
+                        };
+                    }));
+                }
+            });
+        },
+        minLength: 2,
+        select: function(event, ui) {
+            $("#search-input").val(ui.item.label);
+            $("#product-price").text(ui.item.price + " FCFA");
+            $("#product-image").attr("src", ui.item.image).attr("alt", ui.item.label);
+            $("#add-to-cart-btn").data("product-id", ui.item.value).show();
+            return false;
+        }
+    });
+
+    // Gestion du bouton "Ajouter au panier"
+    $("#add-to-cart-btn").on("click", function() {
+        const productId = $(this).data("product-id");
+        const csrfToken = $('[name=csrfmiddlewaretoken]').val();
+        if (!csrfToken) {
+            showNotification('Erreur : Jeton CSRF manquant.', 'bg-red-500');
+            return;
+        }
+        fetch(`{{ add_to_cart_url }}`.replace('0', productId), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ quantity: 1 })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                showNotification('Produit ajouté au panier !', 'bg-green-500');
+                const cartCount = $('.cart-count');
+                if (cartCount.length && data.cart_item_count !== undefined) {
+                    cartCount.text(data.cart_item_count); // Correction : utiliser .text() au lieu de .textContent
+                }
+            } else {
+                showNotification('Erreur : ' + data.message, 'bg-red-500');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            showNotification('Une erreur est survenue lors de l\'ajout au panier.', 'bg-red-500');
+        });
+    });
+
+    function showNotification(message, bgClass) {
+        const notification = $('<div>').addClass(`fixed top-4 right-4 ${bgClass} text-white px-4 py-2 rounded shadow-lg`).text(message);
+        $('body').append(notification);
+        setTimeout(() => notification.remove(), 3000);
+    }
+});
+// Fin de search.js

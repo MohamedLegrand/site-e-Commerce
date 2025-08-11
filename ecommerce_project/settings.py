@@ -125,8 +125,13 @@ USE_TZ = True
 
 import os
 
-STATIC_URL = 'media/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'media')]
+STATIC_URL = '/static/'  # URL de base pour les fichiers statiques
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # Dossier où se trouvent tes fichiers statiques (par exemple, static/accounts/images/)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Dossier où collectstatic mettra les fichiers statiques
+
+# Fichiers médias
+MEDIA_URL = '/media/'  # URL de base pour les fichiers uploadés (images de produits, etc.)
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

@@ -469,9 +469,7 @@
         <p class="mt-1">Contact : <a href="mailto:support@echop.com" class="text-yellow-300 hover:underline">support@echop.com</a> | Téléphone : +237 6 77 24 69 00</p>
     </footer>
 
-    <script src="{% static 'js/cart.js' %}" defer></script>
     <script>
-        // Assure-toi que cart.js est chargé avant d'exécuter ceci
         document.addEventListener('DOMContentLoaded', () => {
             const addToCartButtons = document.querySelectorAll('.btn-add-to-cart');
             addToCartButtons.forEach(button => {
@@ -482,6 +480,10 @@
                         showNotification('Erreur : Jeton CSRF manquant.', 'bg-red-500');
                         return;
                     }
+
+                    // Supprimer toutes les notifications avant la requête
+                    document.querySelectorAll('.fixed.top-4.right-4').forEach(notif => notif.remove());
+
                     fetch(`{{ add_to_cart_url }}`.replace('0', productId), {
                         method: 'POST',
                         headers: {
@@ -489,12 +491,19 @@
                             'X-CSRFToken': csrfToken,
                             'X-Requested-With': 'XMLHttpRequest'
                         },
-                        body: JSON.stringify({ quantity: 1 })
+                        body: JSON.stringify({ action: 'add', quantity: 1 })
                     })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            console.log(`Erreur HTTP : ${response.status} - ${response.statusText}`);
+                            return response.json().then(errorData => Promise.reject(errorData));
+                        }
+                        return response.json();
+                    })
                     .then(data => {
+                        console.log('Réponse complète :', data);
                         if (data.status === 'success') {
-                            showNotification('Produit ajouté au panier !', 'bg-green-500');
+                            showNotification(data.message, 'bg-green-500');
                             const cartCount = document.querySelector('.cart-count');
                             if (cartCount && data.cart_item_count !== undefined) {
                                 cartCount.textContent = data.cart_item_count;
@@ -503,11 +512,11 @@
                                 updateCartDisplay(data.cart_items, data.total);
                             }
                         } else {
-                            showNotification('Erreur : ' + data.message, 'bg-red-500');
+                            showNotification('Erreur : ' + (data.message || 'Ajout au panier échoué'), 'bg-red-500');
                         }
                     })
                     .catch(error => {
-                        console.error('Erreur:', error);
+                        console.error('Erreur capturée :', error);
                         showNotification('Une erreur est survenue lors de l\'ajout au panier.', 'bg-red-500');
                     });
                 });

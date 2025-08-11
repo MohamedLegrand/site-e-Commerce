@@ -14,6 +14,8 @@ class CustomUser(AbstractUser):
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='client')
     loyalty_points = models.IntegerField(default=0)
+    purchase_count = models.PositiveIntegerField(default=0)  # Nouveau champ pour le nombre d'achats
+    total_sales = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Nouveau champ pour le total cumulé
     qr_code = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
 
     groups = models.ManyToManyField(
@@ -38,8 +40,8 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField(upload_to='products/', null=True, blank=True)  # Nouveau champ pour l'image
     
-
     def __str__(self):
         return self.name
 
@@ -68,8 +70,6 @@ def generate_qr_code(data, model_instance, field_name):
     file_name = f'{field_name}_{model_instance.id}.png'
     model_instance.__setattr__(field_name, File(buffer, name=file_name))
     model_instance.save()
-
-
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)

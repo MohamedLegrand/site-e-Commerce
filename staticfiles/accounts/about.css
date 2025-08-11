@@ -1,0 +1,12 @@
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+.nav-item {
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.nav-item:hover {
+    color: #b91c1c;
+}

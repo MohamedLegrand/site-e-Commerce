@@ -12,7 +12,7 @@
         <h1 class="text-3xl font-bold"><a href="{% url 'accounts:page_principale' %}" class="text-white hover:text-red-300">Echop</a></h1>
         <nav class="container mx-auto flex justify-between items-center mt-4">
             <ul class="flex space-x-6">
-                <li><a href="{% url 'accounts:detail' %}" class="text-white hover:text-red-300">Panier</a></li>
+                <li><a href="{% url 'accounts:cart_detail' %}" class="text-white hover:text-red-300">Panier</a></li>
             </ul>
         </nav>
     </header>
@@ -29,7 +29,7 @@
                     <div>
                         <h3 class="text-xl font-semibold">{{ product.name }}</h3>
                         <p class="text-gray-600 mt-2">Prix : {{ product.price }} FCFA</p>
-                        <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2" data-product-id="{{ product.id }}">Ajouter au panier</button>
+                        <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2 add-to-cart" data-product-id="{{ product.id }}">Ajouter au panier</button>
                     </div>
                 </div>
             {% endfor %}
@@ -49,5 +49,53 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-product-id');
+                    fetch(`/add-to-cart/${productId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken') // Nécessite la fonction getCookie ci-dessous
+                        },
+                        body: JSON.stringify({ action: 'add', quantity: 1 })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            alert(data.message); // Affiche un message de succès
+                            // Optionnel : mets à jour un compteur de panier si tu as un élément .cart-count
+                            const cartCount = document.querySelector('.cart-count');
+                            if (cartCount && data.cart_item_count !== undefined) {
+                                cartCount.textContent = data.cart_item_count;
+                            }
+                        } else {
+                            alert('Erreur : ' + data.message);
+                        }
+                    })
+                    .catch(error => console.error('Erreur :', error));
+                });
+            });
+
+            // Fonction pour récupérer le token CSRF
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+        });
+    </script>
 </body>
 </html>

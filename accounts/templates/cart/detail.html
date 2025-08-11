@@ -11,8 +11,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="{% static 'css/detail.css' %}" rel="stylesheet">
 </head>
-<body class="font-sans bg-gray-50 relative overflow-auto min-h-screen">
-    <!-- Conteneur pour les bulles animées -->
+<body class="bg-gray-50 font-sans relative overflow-auto min-h-screen">
     <div class="bubbles">
         <span style="--i:11;"></span>
         <span style="--i:12;"></span>
@@ -21,7 +20,6 @@
         <span style="--i:14;"></span>
     </div>
 
-    <!-- Header -->
     <header class="bg-red-500 text-white py-4 shadow-lg">
         <div class="container mx-auto px-4 flex justify-between items-center">
             <h1 class="text-2xl font-bold">Echop - Panier</h1>
@@ -29,7 +27,6 @@
         </div>
     </header>
 
-    <!-- Contenu principal -->
     <main class="container mx-auto py-8 pb-24">
         <h2 class="text-3xl font-semibold text-center mb-6 text-gray-800 animate-fade-in">Votre Panier</h2>
         <div class="cart-items">
@@ -38,11 +35,11 @@
                     <div class="cart-item flex justify-between items-center p-4 mb-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300" data-product-id="{{ item.product.id }}">
                         <div class="flex items-center">
                             <span class="text-lg">{{ item.product.name }} - </span>
-                            <input type="number" class="quantity-input w-16 p-1 border rounded ml-2" value="{{ item.quantity }}" min="0">
+                            <input type="number" class="quantity-input w-16 p-1 border rounded ml-2" value="{{ item.quantity }}" min="0" data-product-id="{{ item.product.id }}">
                         </div>
                         <div class="flex items-center">
-                            <button class="update-btn bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 mr-2">Mettre à jour</button>
-                            <button class="remove-btn bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Retirer</button>
+                            <button class="update-btn bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 mr-2" data-product-id="{{ item.product.id }}">Mettre à jour</button>
+                            <button class="remove-btn bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" data-product-id="{{ item.product.id }}">Retirer</button>
                             <span class="text-lg font-semibold ml-4">{{ item.product.price|mul:item.quantity }} FCFA</span>
                         </div>
                     </div>
@@ -53,14 +50,16 @@
         </div>
         <div class="cart-total text-right mt-6">
             <h3 class="text-2xl font-bold text-gray-800">Total : {{ total }} FCFA</h3>
-            <a href="{% url 'accounts:checkout' %}" class="mt-4 inline-block bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 hover:shadow-lg transform hover:translate-y-[-2px] transition duration-200">
-                <i class="fas fa-shopping-cart mr-2"></i> Passer à la caisse
-            </a>
+            <form method="POST" action="">
+                {% csrf_token %}
+                <button type="submit" name="action" value="proceed_to_payment" class="mt-4 inline-block bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 hover:shadow-lg transform hover:translate-y-[-2px] transition duration-200">
+                    <i class="fas fa-shopping-cart mr-2"></i> Effectuer le paiement
+                </button>
+            </form>
             <button class="clear-cart-btn bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 hover:shadow-lg transform hover:translate-y-[-2px] transition duration-200 mt-4 ml-4">Vider le Panier</button>
         </div>
     </main>
 
-    <!-- Footer -->
     <footer class="bg-red-500 text-gray-900 py-8">
         <div class="container mx-auto px-4 text-center">
             <h3 class="text-2xl font-semibold">Echop</h3>
@@ -71,7 +70,7 @@
                 <a href="{% url 'accounts:terms' %}" class="hover:text-red-200 transition duration-200">Politique de confidentialité</a>
             </div>
             <p class="mt-4">Email : support@echop.com | Téléphone : +237 677 24 69 00</p>
-            <p class="mt-2">Suivez-nous : 
+            <p class="mt-2">Suivez-nous: 
                 <a href="https://facebook.com/echop" class="text-gray-900 hover:text-red-200 transition duration-200"><i class="fab fa-facebook-f mr-1"></i> Facebook</a> | 
                 <a href="https://twitter.com/echop" class="text-gray-900 hover:text-red-200 transition duration-200"><i class="fab fa-twitter mr-1"></i> Twitter</a> | 
                 <a href="https://instagram.com/echop" class="text-gray-900 hover:text-red-200 transition duration-200"><i class="fab fa-instagram mr-1"></i> Instagram</a>
@@ -81,12 +80,87 @@
 
     {% csrf_token %}
     <script>
-        const urls = {
-            addToCart: "{% url 'accounts:add_to_cart' 0 %}".replace('0', ''),
-            clearCart: "{% url 'accounts:clear_cart' %}"
-        };
-        console.log('URLs:', urls);
+        document.addEventListener('DOMContentLoaded', () => {
+            // Gestion du bouton "Vider le panier"
+            document.querySelector('.clear-cart-btn').addEventListener('click', () => {
+                fetch('{% url "accounts:clear_cart" %}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action: 'clear' }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => console.error('Erreur:', error));
+            });
+
+            // Gestion du bouton "Mettre à jour"
+            document.querySelectorAll('.update-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const productId = button.getAttribute('data-product-id');
+                    const quantityInput = document.querySelector(`.quantity-input[data-product-id="${productId}"]`);
+                    const quantity = parseInt(quantityInput.value) || 0;
+
+                    if (quantity < 0) {
+                        alert("La quantité ne peut pas être négative.");
+                        return;
+                    }
+
+                    fetch(`{% url "accounts:add_to_cart" 0 %}`.replace('0', productId), {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ action: 'update', quantity: quantity }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            location.reload(); // Recharge la page pour refléter les changements
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => console.error('Erreur:', error));
+                });
+            });
+
+            // Gestion du bouton "Retirer"
+            document.querySelectorAll('.remove-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const productId = button.getAttribute('data-product-id');
+
+                    fetch(`{% url "accounts:add_to_cart" 0 %}`.replace('0', productId), {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ action: 'remove' }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            location.reload(); // Recharge la page pour refléter les changements
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => console.error('Erreur:', error));
+                });
+            });
+        });
     </script>
-    <script src="{% static 'js/cart.js' %}" defer></script>
 </body>
 </html>

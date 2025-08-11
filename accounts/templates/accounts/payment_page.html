@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Page de Paiement - Echop</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .input-field {
+            @apply w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200;
+        }
+        .error-message {
+            @apply text-red-600 text-sm mt-1;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-white p-6 rounded-lg shadow-lg">
+        <div class="text-center mb-6">
+            <h2 class="text-2xl font-semibold text-red-700">Paiement de votre commande</h2>
+            <p class="text-gray-600 mt-1">Sécurisez votre achat en toute confiance</p>
+        </div>
+        <p class="text-gray-800 mb-6 text-center font-medium">Montant à payer : <span class="text-red-600 font-bold">{{ montant }} FCFA</span></p>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mb-4 p-2 text-center rounded {% if message.tags == 'success' %}bg-green-100{% else %}bg-red-100{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %} 
+
+        <form method="POST" id="paymentForm" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label for="nom" class="block text-sm font-medium text-gray-700">Nom complet</label>
+                <input type="text" id="nom" name="nom" required class="input-field" placeholder="Ex: Mohamed Legrand" value="{{ initial_data.nom }}" readonly>
+            </div>
+
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">Adresse Email</label>
+                <input type="email" id="email" name="email" required class="input-field" placeholder="Ex: exemple@email.com" value="{{ initial_data.email }}" readonly>
+            </div>
+
+            <div>
+                <label for="type_paiement" class="block text-sm font-medium text-gray-700">Méthode de paiement</label>
+                <select id="type_paiement" name="type_paiement" required class="input-field">
+                    <option value="orange">Orange Money</option>
+                    <option value="mtn">MTN Mobile Money</option>
+                    <option value="carte">Carte Bancaire</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="numero" class="block text-sm font-medium text-gray-700">Numéro de paiement</label>
+                <input type="text" id="numero" name="numero" required class="input-field" placeholder="Ex: 690000000" oninput="autoFillDetails()">
+            </div>
+
+            <button 
+                type="submit" 
+                class="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition duration-200 font-medium">
+                Effectuer le paiement
+            </button>
+        </form>
+        <p class="text-center text-xs text-gray-500 mt-4">Paiement sécurisé. Vos données sont protégées.</p>
+
+        <script>
+            function autoFillDetails() {
+                const numero = document.getElementById('numero').value.trim();
+                const nom = document.getElementById('nom');
+                const email = document.getElementById('email');
+                const typePaiement = document.getElementById('type_paiement');
+
+                if (numero.length >= 9 && /^\d+$/.test(numero)) {
+                    let userData;
+                    switch (numero.substring(0, 3)) {
+                        case '690':
+                            userData = { nom: 'Mohamed Legrand', email: 'mohamed.legrand@orange.cm' };
+                            break;
+                        case '691':
+                            userData = { nom: 'Fatima Diallo', email: 'fatima.diallo@mtn.cm' };
+                            break;
+                        case '697':
+                            userData = { nom: 'Jean Dupont', email: 'jean.dupont@bank.cm' };
+                            break;
+                        default:
+                            userData = { nom: 'Utilisateur Inconnu', email: 'inconnu@echop.cm' };
+                    }
+
+                    nom.value = userData.nom;
+                    email.value = userData.email;
+                    // Ne pas modifier typePaiement, laisser l'utilisateur choisir
+                } else {
+                    nom.value = '{{ initial_data.nom }}'; // Rétablir la valeur initiale
+                    email.value = '{{ initial_data.email }}'; // Rétablir la valeur initiale
+                }
+            }
+
+            document.getElementById('paymentForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(document.getElementById('paymentForm'));
+                fetch(window.location.href, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = "{% url 'accounts:payment_confirmation' %}";
+                    } else {
+                        return response.json().then(data => {
+                            throw new Error(data.message || 'Erreur lors du paiement');
+                        });
+                    }
+                })
+                .catch(error => {
+                    alert(error.message);
+                    console.error('Erreur:', error);
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>

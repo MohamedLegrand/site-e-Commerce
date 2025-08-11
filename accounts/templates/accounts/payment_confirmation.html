@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Paiement confirmé - Echop</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-white p-6 rounded-lg shadow-lg text-center">
+        <div class="mb-6">
+            <h2 class="text-2xl font-semibold text-red-700 mb-2">🎉 Paiement réussi !</h2>
+            <p class="text-gray-600">Merci pour votre achat. Votre commande est en cours de traitement.</p>
+        </div>
+        <a href="{% url 'accounts:page_principale' %}" class="inline-block w-full bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-200 font-medium">Retour à l'accueil</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Milk - Echop</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Produits Laitiers</h1>
+        <p class="text-center text-gray-600 mb-6">Découvrez notre sélection de produits laitiers de haute qualité.</p>
+
+        <!-- Section des produits laitiers -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Produit 1: Exemple de lait -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/laits/matinal1.webp' %}" alt="Lait Nido" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un lait en poudre riche en nutriments, idéal pour toute la famille.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            </div>
+
+            <!-- Produit 2: Exemple de lait (à compléter) -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/laits/nescafe1.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            </div>
+
+            <!-- Produit 3: Exemple de lait (à compléter) -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/laits/nescafe2.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/laits/nido1.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/laits/nido2.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/laits/nido3.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/laits/nido3.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/laits/nido4.jpg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            </div>
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/laits/ovaltine1.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/laits/ovaltine2.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            </div>
+
+
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/laits/ovaltine3.jpg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
+                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

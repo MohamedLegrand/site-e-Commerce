@@ -1,0 +1,11 @@
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+.btn-add-to-cart {
+    transition: all 0.3s ease;
+}
+
+.btn-add-to-cart:hover {
+    transform: scale(1.05);
+}

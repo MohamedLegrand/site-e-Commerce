@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 
 app_name = 'accounts'
 
-urlpatterns = [
+urlpatterns = [ 
     path('', views.home, name='home'),
     path('login/', views.user_login, name='login'),
     path('register/', views.register, name='register'),
@@ -36,7 +36,7 @@ urlpatterns = [
 
 
     path('profil/', views.profil_view, name='profil'),
-    path('detail/', views.cart_detail, name='detail'),
+   
 
     path('product-autocomplete/', views.product_autocomplete, name='product_autocomplete'),
     path('category/cosmetics/', views.category_cosmetics, name='category_cosmetics'),
@@ -47,6 +47,19 @@ urlpatterns = [
     path('search_product/', views.search_product, name='search_product'),
 
     path('clear_cart/', views.clear_cart, name='clear_cart'),
+
+    path('payer/', views.payment_page, name='payment_page'),
+
+    path('payment_confirmation/', views.payment_confirmation, name='payment_confirmation'),
+
+    path('invoice-view/', views.invoice_view, name='invoice_view'),
+
+
+
+    path('milk', views.milk, name='milk'),
+    path('vin', views.vin, name='vin'),
+    path('parfum', views.parfum, name='parfum'),
+    path('menage', views.menage, name='menage'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
