@@ -60,6 +60,10 @@ urlpatterns = [
     path('vin', views.vin, name='vin'),
     path('parfum', views.parfum, name='parfum'),
     path('menage', views.menage, name='menage'),
+    path('montre', views.montre, name='montre'),
+    path('viande', views.viande, name='viande'),
+    path('snacks', views.snacks, name='snacks'),
+    path('glassware', views.glassware, name='glassware'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

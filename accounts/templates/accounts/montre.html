@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Milk - Echop</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-red-600 shadow-md py-4">
+        <div class="container mx-auto text-left pl-6">
+            <h1 class="text-4xl font-bold text-white">Echop</h1>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-200 py-2">
+        <div class="container mx-auto flex justify-end">
+            <a href="{% url 'accounts:cart_detail' %}" class="text-gray-800 hover:text-red-600 font-semibold">Panier</a>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Montres</h1>
+        <p class="text-center text-gray-600 mb-6">Découvrez les montres de meilleures marques.</p>
+
+        <!-- Section des montres -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Produit 1: Montre 1 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montres1.jpg' %}" alt="Montre 1" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre élégante avec un cadran en acier inoxydable.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 25 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=1 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 2: Montre 2 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montres2.jpg' %}" alt="Montre 2" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre sportive avec bracelet en cuir noir.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 30 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=2 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 3: Montre 3 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montres3.jpg' %}" alt="Montre 3" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre classique avec un design minimaliste.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 22 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=3 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 4: Montre 4 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montre4.jpg' %}" alt="Montre 4" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre chronographe avec fonctions avancées.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 35 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=4 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 5: Montre 5 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montre5.jpg' %}" alt="Montre 5" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre élégante avec un cadran en or rose.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 40 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=5 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 6: Montre 6 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montre6.jpg' %}" alt="Montre 6" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre digitale avec écran LED lumineux.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 18 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=6 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 7: Montre 7 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montre7.jpg' %}" alt="Montre 7" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre robuste avec bracelet en caoutchouc.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 28 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=7 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 8: Montre 8 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montre8.jpg' %}" alt="Montre 8" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre fine avec un cadran en nacre.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 32 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=8 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 9: Montre 9 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montre9.jpg' %}" alt="Montre 9" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre vintage avec un style rétro.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 26 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=9 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 10: Montre 10 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montre10.jpg' %}" alt="Montre 10" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre de luxe avec un cadran saphir.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 50 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=10 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 11: Montre 11 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montre11.jpg' %}" alt="Montre 11" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre élégante avec un bracelet en maille milanaise.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 33 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=11 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 12: Montre 12 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montre12.jpg' %}" alt="Montre 12" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre connectée avec suivi d'activité.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 45 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=12 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 13: Montre 13 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montre13.jpg' %}" alt="Montre 13" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre robuste avec un boîtier en titane.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 38 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=13 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 14: Montre 14 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montre14.jpg' %}" alt="Montre 14" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre féminine avec des diamants incrustés.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 60 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=14 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 15: Montre 15 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montre15.jpg' %}" alt="Montre 15" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre avec un cadran bleu profond.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 27 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=15 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 16: Montre 16 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montre16.jpg' %}" alt="Montre 16" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre élégante avec un cadran en céramique.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 34 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=16 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 17: Montre 17 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montre17.jpg' %}" alt="Montre 17" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre sportive avec chronomètre intégré.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 29 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=17 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 18: Montre 18 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montre18.jpg' %}" alt="Montre 18" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre avec un design inspiré des années 70.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 31 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=18 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 19: Montre 19 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montre19.jpg' %}" alt="Montre 19" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre avec un boîtier en carbone résistant.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 42 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=19 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 20: Montre 20 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/montre20.jpg' %}" alt="Montre 20" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une montre de luxe avec un mouvement automatique.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 55 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=20 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-red-600 text-white py-6 mt-6">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2025 Echop. Tous droits réservés.</p>
+            <p class="mt-2">Contactez-nous : support@echop.com</p>
+        </div>
+    </footer>
+</body>
+</html>

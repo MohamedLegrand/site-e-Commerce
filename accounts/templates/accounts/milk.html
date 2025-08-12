@@ -6,81 +6,123 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-red-600 shadow-md py-4">
+        <div class="container mx-auto text-left pl-6">
+            <h1 class="text-4xl font-bold text-white">Echop</h1>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-200 py-2">
+        <div class="container mx-auto flex justify-end">
+            <a href="{% url 'accounts:cart_detail' %}" class="text-gray-800 hover:text-red-600 font-semibold">Panier</a>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
     <div class="container mx-auto p-6">
         <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Produits Laitiers</h1>
         <p class="text-center text-gray-600 mb-6">Découvrez notre sélection de produits laitiers de haute qualité.</p>
 
         <!-- Section des produits laitiers -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Produit 1: Exemple de lait -->
+            <!-- Produit 1: Matinal 1 -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/laits/matinal1.webp' %}" alt="Lait Nido" class="rounded mb-4 w-full h-56 object-cover">
+                <img src="{% static 'images/laits/matinal1.webp' %}" alt="Matinal 1" class="rounded mb-4 w-full h-56 object-cover">
                 <p class="text-gray-600 mb-2">Un lait en poudre riche en nutriments, idéal pour toute la famille.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 3 500 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=1 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-            <!-- Produit 2: Exemple de lait (à compléter) -->
+            <!-- Produit 2: Nescafé 1 -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/laits/nescafe1.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+                <img src="{% static 'images/laits/nescafe1.webp' %}" alt="Nescafé 1" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un mélange lait-café instantané pour un réveil énergisant.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 2 800 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=2 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-            <!-- Produit 3: Exemple de lait (à compléter) -->
+            <!-- Produit 3: Nescafé 2 -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/laits/nescafe2.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+                <img src="{% static 'images/laits/nescafe2.webp' %}" alt="Nescafé 2" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un lait aromatisé au café pour une pause gourmande.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 3 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=3 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
+            <!-- Produit 4: Nido 1 -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/laits/nido1.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+                <img src="{% static 'images/laits/nido1.webp' %}" alt="Nido 1" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un lait en poudre enrichi en vitamines pour les enfants.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 4 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=4 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
+            <!-- Produit 5: Nido 2 -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/laits/nido2.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+                <img src="{% static 'images/laits/nido2.webp' %}" alt="Nido 2" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un lait en poudre fortifiant pour un apport quotidien en calcium.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 3 800 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=5 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
+            <!-- Produit 6: Nido 3 -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/laits/nido3.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+                <img src="{% static 'images/laits/nido3.webp' %}" alt="Nido 3" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un lait en poudre léger, parfait pour les desserts maison.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 3 600 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=6 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
+            <!-- Produit 7: Nido 3 (doublon) -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/laits/nido3.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+                <img src="{% static 'images/laits/nido3.webp' %}" alt="Nido 3" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un lait en poudre léger, parfait pour les desserts maison (édition spéciale).</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 3 700 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=7 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
+            <!-- Produit 8: Nido 4 -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/laits/nido4.jpg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-            </div>
-            <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/laits/ovaltine1.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+                <img src="{% static 'images/laits/nido4.jpg' %}" alt="Nido 4" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un lait en poudre enrichi pour une nutrition complète.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 4 200 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=8 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
+            <!-- Produit 9: Ovaltine 1 -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/laits/ovaltine2.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+                <img src="{% static 'images/laits/ovaltine1.webp' %}" alt="Ovaltine 1" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une boisson lactée maltée pour un boost d'énergie.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 2 500 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=9 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-
+            <!-- Produit 10: Ovaltine 2 -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/laits/ovaltine3.jpg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+                <img src="{% static 'images/laits/ovaltine2.webp' %}" alt="Ovaltine 2" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une version chocolatée de la boisson lactée Ovaltine.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 2 700 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=10 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 11: Ovaltine 3 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/laits/ovaltine3.jpg' %}" alt="Ovaltine 3" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un lait malté enrichi pour les petits déjeuners nutritifs.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 2 900 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=11 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="bg-red-600 text-white py-6 mt-6">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2025 Echop. Tous droits réservés.</p>
+            <p class="mt-2">Contactez-nous : support@echop.com</p>
+        </div>
+    </footer>
 </body>
 </html>

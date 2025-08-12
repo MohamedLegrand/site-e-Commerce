@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Snacks - Echop</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-red-600 shadow-md py-4">
+        <div class="container mx-auto text-left pl-6">
+            <h1 class="text-4xl font-bold text-white">Echop</h1>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-200 py-2">
+        <div class="container mx-auto flex justify-end">
+            <a href="{% url 'accounts:cart_detail' %}" class="text-gray-800 hover:text-red-600 font-semibold">Panier</a>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Biscuits et Bonbons</h1>
+        <p class="text-center text-gray-600 mb-6">Découvrez notre sélection de gourmandises délicieuses.</p>
+
+        <!-- Section des biscuits et bonbons -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Produit 1: Biscuit Choco -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/all bonbon.webp' %}" alt="Assortiment de Bonbons" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un assortiment de bonbons variés pour toutes les envies, au prix de 1 500 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 500 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=1 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 2: Bonbon Acidulé -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/biscuit chocolat.jpeg' %}" alt="Biscuit Chocolat" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Des biscuits au chocolat croquants et savoureux, au prix de 1 000 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=2 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 3: Biscuit Vanille -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/biscuit cookies.webp' %}" alt="Biscuit Cookies" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Des biscuits cookies délicieux et croustillants, au prix de 1 300 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 300 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=3 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 4: Bonbon Fruits -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/biscuit fourre.webp' %}" alt="Biscuit Fourré" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Des biscuits fourrés à la crème, doux et savoureux, au prix de 1 200 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 200 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=4 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 5: Biscuit Beurre -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/biscuit grany.webp' %}" alt="Biscuit Grany" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Des biscuits Grany aux céréales, riches en goût, au prix de 1 400 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 400 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=5 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 6: Bonbon Caramel -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/biscuit melocake.jpeg' %}" alt="Biscuit Melocake" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Des biscuits Melocake moelleux et sucrés, au prix de 1 100 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 100 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=6 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 7: Biscuit Milk -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/biscuit milk.jpeg' %}" alt="Biscuit Milk" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Des biscuits au lait crémeux et délicats, au prix de 1 100 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 100 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=7 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 8: Biscuit Moches -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/biscuit moches.jpeg' %}" alt="Biscuit Moches" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Des biscuits Moches croustillants et savoureux, au prix de 1 100 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 100 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=8 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 9: Biscuit Petit Beurre -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/biscuit petit beurre.jpeg' %}" alt="Biscuit Petit Beurre" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Des biscuits Petit Beurre classiques et fondants, au prix de 1 100 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 100 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=9 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 10: Biscuit Petit Déjeuner -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/biscuit petit dejeuner.jpeg' %}" alt="Biscuit Petit Déjeuner" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Des biscuits pour le petit-déjeuner, nutritifs et croquants, au prix de 1 100 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 100 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=10 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 11: Biscuit Prince -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/biscuit prince.jpeg' %}" alt="Biscuit Prince" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Des biscuits Prince au chocolat, irrésistibles, au prix de 1 100 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 100 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=11 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 12: Biscuits Custard -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/biscuits custard.webp' %}" alt="Biscuits Custard" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Des biscuits custard crémeux et délicats, au prix de 1 100 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 100 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=12 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 13: Bonbon Carambar -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/bonbon carambar.webp' %}" alt="Bonbon Carambar" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Des bonbons Carambar au caramel tendre, au prix de 1 100 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 100 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=13 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 14: Bonbon Haribo -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/bonbon haribo.webp' %}" alt="Bonbon Haribo" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Des bonbons Haribo gélifiés et fruités, au prix de 1 100 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 100 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=14 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 15: Bonbon Maoam -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/bonbon maoam.webp' %}" alt="Bonbon Maoam" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Des bonbons Maoam acidulés et colorés, au prix de 1 100 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 100 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=15 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 16: Bonbon Rond -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/bonbon rond.jpeg' %}" alt="Bonbon Rond" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Des bonbons ronds aux saveurs fruitées, au prix de 1 100 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 100 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=16 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 17: Bonbon TicTac -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/bonbon tictac.jpeg' %}" alt="Bonbon TicTac" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Des bonbons TicTac frais et mentholés, au prix de 1 100 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 100 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=17 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-red-600 text-white py-6 mt-6">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2025 Echop. Tous droits réservés.</p>
+            <p class="mt-2">Contactez-nous : support@echop.com</p>
+        </div>
+    </footer>
+</body>
+</html>

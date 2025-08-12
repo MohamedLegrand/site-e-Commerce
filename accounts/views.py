@@ -396,3 +396,15 @@ def parfum(request):
 
 def menage(request):
     return render(request, 'accounts/menage.html')
+
+def montre(request):
+    return render(request, 'accounts/montre.html')
+
+def viande(request):
+    return render(request, 'accounts/viande.html')
+
+def snacks(request):
+    return render(request, 'accounts/snacks.html')
+
+def glassware(request):
+    return render(request, 'accounts/glassware.html')

@@ -6,140 +6,155 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-red-600 shadow-md py-4">
+        <div class="container mx-auto text-left pl-6">
+            <h1 class="text-4xl font-bold text-white">Echop</h1>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-200 py-2">
+        <div class="container mx-auto flex justify-end">
+            <a href="{% url 'accounts:cart_detail' %}" class="text-gray-800 hover:text-red-600 font-semibold">Panier</a>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
     <div class="container mx-auto p-6">
-        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Produits la parfumeries</h1>
-        <p class="text-center text-gray-600 mb-6">Découvrez nos parfum de meilleures qualité.</p>
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Produits de Parfumerie</h1>
+        <p class="text-center text-gray-600 mb-6">Découvrez nos parfums de meilleure qualité.</p>
 
-        <!-- Section des produits laitiers -->
+        <!-- Section des produits de parfumerie -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Produit 1: Exemple de lait -->
+            <!-- Produit 1: Parfum Louis Vuitton -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/parfum louis vuitton.jpg' %}" alt="Lait Nido" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">parfum pure</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+                <img src="{% static 'images/parfumerie/parfum louis vuitton.jpg' %}" alt="Parfum Louis Vuitton" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un parfum luxueux aux notes boisées et florales, parfait pour les occasions spéciales.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 150 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=1 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-            <!-- Produit 2: Exemple de lait (à compléter) -->
+            <!-- Produit 2: Accessoire de Maquillage Complet -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/accessoire de maquillage complet.jpg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2"> à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+                <img src="{% static 'images/parfumerie/accessoire de maquillage complet.jpg' %}" alt="Accessoire de Maquillage Complet" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un kit complet pour un maquillage professionnel et élégant.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 25 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=2 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-            <!-- Produit 3: Exemple de lait (à compléter) -->
+            <!-- Produit 3: Boite de Maquillage -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/boite de maquillage.jpg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+                <img src="{% static 'images/parfumerie/boite de maquillage.jpg' %}" alt="Boite de Maquillage" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une boite élégante contenant des essentiels de maquillage pour tous les jours.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 18 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=3 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-
+            <!-- Produit 4: Huile pour Cheveux Balea -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/huile pour cheveux balea.jpg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+                <img src="{% static 'images/parfumerie/huile pour cheveux balea.jpg' %}" alt="Huile pour Cheveux Balea" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une huile nourrissante pour des cheveux doux et brillants.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 5 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=4 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-
+            <!-- Produit 5: Parfum Baldessarini -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/parfum baldessarni.jpg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+                <img src="{% static 'images/parfumerie/parfum baldessarni.jpg' %}" alt="Parfum Baldessarini" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un parfum masculin aux notes épicées et boisées, idéal pour tous les jours.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 40 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=5 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
+            <!-- Produit 6: Parfum Beautiful Belle -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/parfum beautifullbelle.jpg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+                <img src="{% static 'images/parfumerie/parfum beautifullbelle.jpg' %}" alt="Parfum Beautiful Belle" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un parfum floral et doux pour une touche féminine élégante.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 35 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=6 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
+            <!-- Produit 7: Parfum Blanc Opium -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/parfum blanc opium.jpg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+                <img src="{% static 'images/parfumerie/parfum blanc opium.jpg' %}" alt="Parfum Blanc Opium" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un parfum oriental envoûtant avec des notes vanillées.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 60 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=7 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
+            <!-- Produit 8: Parfum Idole -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/parfum idole.jpg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+                <img src="{% static 'images/parfumerie/parfum idole.jpg' %}" alt="Parfum Idole" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un parfum audacieux avec des notes fruitées et florales.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 45 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=8 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-
+            <!-- Produit 9: Parfum L'Interdit -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/parfum linterdi.jpg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+                <img src="{% static 'images/parfumerie/parfum linterdi.jpg' %}" alt="Parfum L'Interdit" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un parfum sensuel avec des notes tubéreuse et jasmin.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 55 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=9 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-
+            <!-- Produit 10: Parfum Mugler -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/Parfum mugler.jpg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+                <img src="{% static 'images/parfumerie/Parfum mugler.jpg' %}" alt="Parfum Mugler" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un parfum unique avec des notes gourmandes et audacieuses.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 50 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=10 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-              <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/Parfum prada.jpg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+            <!-- Produit 11: Parfum Prada -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/Parfum prada.jpg' %}" alt="Parfum Prada" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un parfum raffiné avec des notes florales et poudrées.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 48 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=11 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-              <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/parfum prada2.jpg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+            <!-- Produit 12: Parfum Prada 2 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/parfum prada2.jpg' %}" alt="Parfum Prada 2" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une variation élégante du classique Prada avec des notes fruitées.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 50 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=12 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-              <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/parfum royal rose.jpg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+            <!-- Produit 13: Parfum Royal Rose -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/parfum royal rose.jpg' %}" alt="Parfum Royal Rose" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un parfum floral royal avec des notes de rose et de jasmin.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 42 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=13 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-              <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/parfum tom ford eau de soleil blanc.jpg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+            <!-- Produit 14: Parfum Tom Ford Eau de Soleil Blanc -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/parfum tom ford eau de soleil blanc.jpg' %}" alt="Parfum Tom Ford Eau de Soleil Blanc" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un parfum lumineux avec des notes citrus et florales.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 70 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=14 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-              <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/Parfum mugler.jpg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+            <!-- Produit 15: Parfum Mugler (doublon) -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/Parfum mugler.jpg' %}" alt="Parfum Mugler" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un parfum unique avec des notes gourmandes et audacieuses (édition spéciale).</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 52 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=15 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
-
-
-            
-
-            
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="bg-red-600 text-white py-6 mt-6">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2025 Echop. Tous droits réservés.</p>
+            <p class="mt-2">Contactez-nous : support@echop.com</p>
+        </div>
+    </footer>
 </body>
 </html>

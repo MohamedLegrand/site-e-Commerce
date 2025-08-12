@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Milk - Echop</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-red-600 shadow-md py-4">
+        <div class="container mx-auto text-left pl-6">
+            <h1 class="text-4xl font-bold text-white">Echop</h1>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-200 py-2">
+        <div class="container mx-auto flex justify-end">
+            <a href="{% url 'accounts:cart_detail' %}" class="text-gray-800 hover:text-red-600 font-semibold">Panier</a>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Boucherie et Charcuterie</h1>
+        <p class="text-center text-gray-600 mb-6">Découvrez nos viandes fraîches et savoureuses, issues de producteurs de confiance.</p>
+
+        <!-- Section des produits -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Produit 1 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/viande de boeuf.webp' %}" alt="Viande de bœuf" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Viande de bœuf tendre et juteuse, idéale pour vos grillades et plats mijotés.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 8 500 FCFA / kg</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=1 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 2 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/viande de cheval.webp' %}" alt="Viande de cheval" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Viande de cheval riche en fer et savoureuse, parfaite pour les amateurs de goûts uniques.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 9 000 FCFA / kg</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=2 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 3 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/viande de lapin.webp' %}" alt="Viande de lapin" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Viande de lapin maigre et délicate, idéale pour une alimentation équilibrée.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 11 500 FCFA / kg</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=3 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 4 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/viande de mouton.webp' %}" alt="Viande de mouton" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Viande de mouton savoureuse et parfumée, parfaite pour les plats traditionnels.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 7 800 FCFA / kg</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=4 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 5 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/viande de porc.jpeg' %}" alt="Viande de porc" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Viande de porc tendre et savoureuse, parfaite pour grillades et rôtis.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 6 500 FCFA / kg</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=5 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 6 -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/viande rouge.webp' %}" alt="Viande rouge" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Viande rouge de qualité supérieure, tendre et goûteuse pour vos repas festifs.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 10 000 FCFA / kg</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=6 %}" class="text-green-600 border-2 border-green-600 hover:text-red-600 hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-red-600 text-white py-6 mt-6">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2025 Echop. Tous droits réservés.</p>
+            <p class="mt-2">Contactez-nous : support@echop.com</p>
+        </div>
+    </footer>
+</body>
+</html>

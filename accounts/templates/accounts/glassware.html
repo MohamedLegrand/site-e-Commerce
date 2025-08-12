@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Glassware - Echop</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-red-600 shadow-md py-4">
+        <div class="container mx-auto text-left pl-6">
+            <h1 class="text-4xl font-bold text-white">Echop</h1>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-200 py-2">
+        <div class="container mx-auto flex justify-end">
+            <a href="{% url 'accounts:cart_detail' %}" class="text-gray-800 hover:text-red-600 font-semibold">Panier</a>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Verres et Plats Cassables</h1>
+        <p class="text-center text-gray-600 mb-6">Découvrez notre collection d'articles élégants et fragiles.</p>
+
+        <!-- Section des verres et plats cassables -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Produit 1: Verre à Vin -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/plat1.webp' %}" alt="Verre à Vin" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un verre à vin raffiné en cristal transparent, idéal pour les dégustations, au prix de 4 200 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 4 200 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=1 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 2: Plat de Service -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/plat2.webp' %}" alt="Plat de Service" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un plat de service en verre coloré, parfait pour les buffets, au prix de 6 800 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 6 800 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=2 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 3: Verre à Eau -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/plat3.webp' %}" alt="Verre à Eau" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un verre à eau en verre gravé, élégant pour le quotidien, au prix de 2 500 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 2 500 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=3 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 4: Assiette Plate -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/plat4.webp' %}" alt="Assiette Plate" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une assiette plate en verre dépoli, idéale pour les plats sophistiqués, au prix de 5 300 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 5 300 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=4 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 5: Verre à Cocktail -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/plat5.jpeg' %}" alt="Verre à Cocktail" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un verre à cocktail en verre teinté, parfait pour les soirées, au prix de 3 800 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 3 800 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=5 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 6: Assortiment de Plats -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/all plat.webp' %}" alt="Assortiment de Plats" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un assortiment de plats en verre décoratif, idéal pour les présentations variées, au prix de 7 500 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 7 500 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=6 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 7: Verre Élégant -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/verre1.webp' %}" alt="Verre Élégant" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un verre élégant en verre taillé, parfait pour les boissons chaudes, au prix de 3 200 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 3 200 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=7 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 8: Verre Moderne -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/verre2.webp' %}" alt="Verre Moderne" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un verre moderne avec design géométrique, idéal pour les apéritifs, au prix de 3 900 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 3 900 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=8 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 9: Verre Classique -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/verre3.webp' %}" alt="Verre Classique" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un verre classique en verre clair, polyvalent pour toutes les boissons, au prix de 2 800 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 2 800 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=9 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 10: Verre Design -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/verre4.webp' %}" alt="Verre Design" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un verre design avec finitions artisanales, parfait pour les événements, au prix de 4 500 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 4 500 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=10 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 11: Verre Coloré -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/verre5.webp' %}" alt="Verre Coloré" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un verre coloré en verre teinté, idéal pour une touche décorative, au prix de 3 600 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 3 600 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=11 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 12: Verre Sculpté -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/verre6.jpeg' %}" alt="Verre Sculpté" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un verre sculpté avec motifs uniques, parfait pour les collectionneurs, au prix de 5 200 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 5 200 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=12 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 13: Verre Épuré -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/verre7.jpeg' %}" alt="Verre Épuré" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un verre épuré en verre transparent, minimaliste et élégant, au prix de 2 900 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 2 900 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=13 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 14: Verre Artisanal -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/verre8.jpeg' %}" alt="Verre Artisanal" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un verre artisanal avec finitions uniques, idéal pour les cadeaux, au prix de 4 800 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 4 800 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=14 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 15: Verre Festif -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/verre9.jpeg' %}" alt="Verre Festif" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un verre festif avec décorations saisonnières, parfait pour les fêtes, au prix de 3 700 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 3 700 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=15 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 16: Verre Luxe -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/verre10.jpeg' %}" alt="Verre Luxe" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un verre de luxe en cristal taillé, pour une expérience haut de gamme, au prix de 6 500 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 6 500 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=16 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+
+            <!-- Produit 17: Assortiment de Verres -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <img src="{% static 'images/parfumerie/all plats.webp' %}" alt="Assortiment de Verres" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un assortiment de verres en verre varié, parfait pour toutes les occasions, au prix de 8 000 FCFA.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 8 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=17 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-red-600 text-white py-6 mt-6">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2025 Echop. Tous droits réservés.</p>
+            <p class="mt-2">Contactez-nous : support@echop.com</p>
+        </div>
+    </footer>
+</body>
+</html>

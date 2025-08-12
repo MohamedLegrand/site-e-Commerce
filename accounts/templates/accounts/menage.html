@@ -6,93 +6,107 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-red-600 shadow-md py-4">
+        <div class="container mx-auto text-left pl-6">
+            <h1 class="text-4xl font-bold text-white">Echop</h1>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-200 py-2">
+        <div class="container mx-auto flex justify-end">
+            <a href="{% url 'accounts:cart_detail' %}" class="text-gray-800 hover:text-red-600 font-semibold">Panier</a>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
     <div class="container mx-auto p-6">
-        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Produits menagers</h1>
-        <p class="text-center text-gray-600 mb-6">Découvrez nos prduits menagers.</p>
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Produits ménagers</h1>
+        <p class="text-center text-gray-600 mb-6">Découvrez nos produits ménagers.</p>
 
-        <!-- Section des produits laitiers -->
+        <!-- Section des produits ménagers -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Produit 1: Exemple de lait -->
+            <!-- Produit 1: Aspirateur -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/aspirateur.webp' %}" alt="Lait Nido" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">aspirateur</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+                <img src="{% static 'images/parfumerie/aspirateur.webp' %}" alt="Aspirateur" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un aspirateur puissant pour un nettoyage efficace de toutes les surfaces.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 25 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=1 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-            <!-- Produit 2: Exemple de lait (à compléter) -->
+            <!-- Produit 2: Bidon Persil -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/bidon persil.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2"> à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+                <img src="{% static 'images/parfumerie/bidon persil.webp' %}" alt="Bidon Persil" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un détergent liquide Persil pour un linge frais et propre.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 3 500 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=2 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-            <!-- Produit 3: Exemple de lait (à compléter) -->
+            <!-- Produit 3: Brosse -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/brosse.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+                <img src="{% static 'images/parfumerie/brosse.webp' %}" alt="Brosse" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Une brosse robuste pour le nettoyage des surfaces difficiles.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 200 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=3 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-
+            <!-- Produit 4: Ensemble ménager -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/ensemble menager.jpeg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+                <img src="{% static 'images/parfumerie/ensemble menager.jpeg' %}" alt="Ensemble ménager" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un ensemble complet pour tous vos besoins de ménage au quotidien.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 15 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=4 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-
+            <!-- Produit 5: Liquide pour vaisselle -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/liquide pour vaiselle.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+                <img src="{% static 'images/parfumerie/liquide pour vaiselle.webp' %}" alt="Liquide pour vaisselle" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un liquide vaisselle doux et efficace pour une vaisselle impeccable.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 2 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=5 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
+            <!-- Produit 6: Produits WC -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/produits wc.jpeg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venuit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+                <img src="{% static 'images/parfumerie/produits wc.jpeg' %}" alt="Produits WC" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Des produits pour un nettoyage hygiénique et parfumé des toilettes.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 800 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=6 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
+            <!-- Produit 7: Sac pour ordure -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/sau pour ordure.jpeg' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+                <img src="{% static 'images/parfumerie/sau pour ordure.jpeg' %}" alt="Sac pour ordure" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Des sacs résistants pour une gestion facile des déchets.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 500 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=7 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
+            <!-- Produit 8: Savon Azur -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/savon azur.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+                <img src="{% static 'images/parfumerie/savon azur.webp' %}" alt="Savon Azur" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un savon doux pour un lavage efficace des mains et du corps.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 800 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=8 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
 
-
+            <!-- Produit 9: Savon de Marseille -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/savon de marseille.webp' %}" alt="Autre Lait" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Description à venir pour ce produit laitier savoureux.</p>
-                <a href="{% url 'accounts:products' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
-
-                
+                <img src="{% static 'images/parfumerie/savon de marseille.webp' %}" alt="Savon de Marseille" class="rounded mb-4 w-full h-56 object-cover">
+                <p class="text-gray-600 mb-2">Un savon naturel et traditionnel pour un nettoyage écologique.</p>
+                <p class="text-gray-800 font-semibold mb-2">Prix : 1 000 FCFA</p>
+                <a href="{% url 'accounts:add_to_cart' product_id=9 %}" class="bg-white text-green-600 border-2 border-green-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-semibold px-4 py-2 rounded inline-block">Ajouter au panier</a>
             </div>
-
-
-            
-
-            
-
-            
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="bg-red-600 text-white py-6 mt-6">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2025 Echop. Tous droits réservés.</p>
+            <p class="mt-2">Contactez-nous : support@echop.com</p>
+        </div>
+    </footer>
 </body>
 </html>
