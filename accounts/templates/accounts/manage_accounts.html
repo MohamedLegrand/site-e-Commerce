@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion des Comptes - Echop</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Header -->
+    <header class="bg-red-600 text-white p-4 shadow-md">
+        <div class="container mx-auto">
+            <h1 class="text-2xl font-bold">Echop</h1>
+        </div>
+    </header>
+
+   
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-6 mt-6 text-center">
+        <h2 class="text-2xl font-bold">Gestion des Comptes</h2>
+        <p class="mt-4 text-gray-600">Ajoutez ou modifiez les utilisateurs ici.</p>
+
+        <!-- Formulaire d'ajout d'utilisateur -->
+        <form method="post" class="mt-6 max-w-md mx-auto bg-white p-4 rounded shadow">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="username" class="block text-left">Nom d'utilisateur :</label>
+                <input type="text" id="username" name="username" class="w-full p-2 border rounded" required>
+            </div>
+            <div class="mb-4">
+                <label for="email" class="block text-left">Email :</label>
+                <input type="email" id="email" name="email" class="w-full p-2 border rounded" required>
+            </div>
+            <div class="mb-4">
+                <label for="password" class="block text-left">Mot de passe :</label>
+                <input type="password" id="password" name="password" class="w-full p-2 border rounded" required>
+            </div>
+            <div class="mb-4">
+                <label for="role" class="block text-left">Rôle :</label>
+                <select id="role" name="role" class="w-full p-2 border rounded" required>
+                    <option value="client">Client</option>
+                    <option value="gestionnaire">Gestionnaire</option>
+                    <option value="seller">Commerçant</option>
+                    <option value="delivery">Livreur</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Ajouter Utilisateur</button>
+        </form>
+
+        <!-- Liste des comptes disponibles -->
+        <div class="mt-6 text-left max-w-2xl mx-auto">
+            <h3 class="text-xl font-semibold">Comptes disponibles :</h3>
+            {% if users %}
+                <ul class="mt-2 space-y-2">
+                    {% for user in users %}
+                        <li class="bg-white p-3 rounded shadow flex justify-between">
+                            <span>{{ user.username }} - {{ user.email }} (Rôle: {{ user.role }})</span>
+                            <a href="#" class="text-red-600 hover:text-red-800">Modifier</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="mt-2 text-gray-600">Aucun compte disponible pour le moment.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-red-600 text-white p-4 mt-6">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2025 Echop. Tous droits réservés.</p>
+            <p class="mt-2">
+                <a href="{% url 'accounts:contact' %}" class="text-red-200 hover:text-red-50">Contact</a> |
+                <a href="{% url 'accounts:terms' %}" class="text-red-200 hover:text-red-50">Conditions d'utilisation</a> |
+                <a href="{% url 'accounts:about' %}" class="text-red-200 hover:text-red-50">À propos</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -11,8 +11,9 @@ class CustomUser(AbstractUser):
         ('seller', 'Commerçant'),
         ('delivery', 'Livreur'),
         ('admin', 'Admin'),
+        ('gestionnaire', 'Gestionnaire'),
     )
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='client')
+    role = models.CharField(max_length=15, choices=ROLE_CHOICES, default='client')
     loyalty_points = models.IntegerField(default=0)
     purchase_count = models.PositiveIntegerField(default=0)  # Nouveau champ pour le nombre d'achats
     total_sales = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Nouveau champ pour le total cumulé

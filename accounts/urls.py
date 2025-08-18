@@ -65,6 +65,13 @@ urlpatterns = [
     path('snacks', views.snacks, name='snacks'),
     path('glassware', views.glassware, name='glassware'),
 
+
+    path('manager_dashboard/', views.manager_dashboard, name='manager_dashboard'),
+    path('manage_accounts/', views.manage_accounts, name='manage_accounts'),
+    path('manage_products/', views.manage_products, name='manage_products'),
+    path('manage_rewards/', views.manage_rewards, name='manage_rewards'),
+    path('manage_questions/', views.manage_questions, name='manage_questions'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

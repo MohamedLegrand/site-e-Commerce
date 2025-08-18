@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion des Produits - Echop</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Header -->
+    <header class="bg-red-600 text-white p-4 shadow-md">
+        <div class="container mx-auto">
+            <h1 class="text-2xl font-bold">Echop</h1>
+        </div>
+    </header>
+
+   
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-6 mt-6 text-center">
+        <h2 class="text-2xl font-bold">Gestion des Produits</h2>
+        <p class="mt-4 text-gray-600">Ajoutez ou modifiez les produits ici.</p>
+
+        <!-- Formulaire d'ajout de produit -->
+        <form method="post" class="mt-6 max-w-md mx-auto bg-white p-4 rounded shadow">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="name" class="block text-left">Nom du produit :</label>
+                <input type="text" id="name" name="name" class="w-full p-2 border rounded" required>
+            </div>
+            <div class="mb-4">
+                <label for="price" class="block text-left">Prix (FCFA) :</label>
+                <input type="number" id="price" name="price" step="0.01" class="w-full p-2 border rounded" required>
+            </div>
+            <div class="mb-4">
+                <label for="stock" class="block text-left">Stock :</label>
+                <input type="number" id="stock" name="stock" class="w-full p-2 border rounded" required>
+            </div>
+            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Ajouter Produit</button>
+        </form>
+
+        <!-- Liste des produits disponibles -->
+        <div class="mt-6 text-left max-w-2xl mx-auto">
+            <h3 class="text-xl font-semibold">Produits disponibles :</h3>
+            {% if products %}
+                <ul class="mt-2 space-y-2">
+                    {% for product in products %}
+                        <li class="bg-white p-3 rounded shadow flex justify-between">
+                            <span>{{ product.name }} - {{ product.price }} FCFA (Stock: {{ product.stock }})</span>
+                            <a href="#" class="text-red-600 hover:text-red-800">Modifier</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="mt-2 text-gray-600">Aucun produit disponible pour le moment.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-red-600 text-white p-4 mt-6">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2025 Echop. Tous droits réservés.</p>
+            <p class="mt-2">
+                <a href="{% url 'accounts:contact' %}" class="text-red-200 hover:text-red-50">Contact</a> |
+                <a href="{% url 'accounts:terms' %}" class="text-red-200 hover:text-red-50">Conditions d'utilisation</a> |
+                <a href="{% url 'accounts:about' %}" class="text-red-200 hover:text-red-50">À propos</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

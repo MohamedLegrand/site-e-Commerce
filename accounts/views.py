@@ -14,6 +14,7 @@ from decimal import Decimal
 import base64
 import qrcode
 from io import BytesIO
+from django.contrib.auth.hashers import make_password
 
 def user_login(request):
     if request.method == 'POST':
@@ -24,10 +25,13 @@ def user_login(request):
             login(request, user)
             qr_data = f"UserID:{user.id},Points:{user.loyalty_points},Date:{timezone.now()}"
             generate_qr_code(qr_data, user, 'qr_code')
+            if user.role == 'gestionnaire':
+                return redirect('accounts:manager_dashboard')
             return redirect('accounts:page_principale')
         else:
             messages.error(request, "Identifiants incorrects.")
     return render(request, 'accounts/login.html')
+
 
 def register(request):
     if request.method == 'POST':
@@ -408,3 +412,68 @@ def snacks(request):
 
 def glassware(request):
     return render(request, 'accounts/glassware.html')
+
+
+@login_required
+def manager_dashboard(request):
+    if request.user.role != 'gestionnaire':
+        return render(request, 'accounts/access_denied.html', {'message': "Vous n'avez pas l'autorisation d'accéder à cette page."})
+    products = Product.objects.all()[:5]  # Affiche les 5 premiers produits pour un aperçu
+    return render(request, 'accounts/manager_dashboard.html', {'products': products})
+
+
+
+@login_required
+def manage_accounts(request):
+    if request.user.role != 'gestionnaire':
+        return render(request, 'accounts/access_denied.html', {'message': "Vous n'avez pas l'autorisation d'accéder à cette page."})
+    users = CustomUser.objects.all()  # Récupère tous les utilisateurs
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        role = request.POST.get('role')
+        if username and email and password and role:
+            if not CustomUser.objects.filter(username=username).exists():
+                CustomUser.objects.create_user(username=username, email=email, password=make_password(password), role=role)
+                messages.success(request, "Utilisateur ajouté avec succès.")
+            else:
+                messages.error(request, "Ce nom d'utilisateur existe déjà.")
+        else:
+            messages.error(request, "Tous les champs sont requis.")
+    return render(request, 'accounts/manage_accounts.html', {'users': users})
+
+@login_required
+def manage_products(request):
+    if request.user.role != 'gestionnaire':
+        return render(request, 'accounts/access_denied.html', {'message': "Vous n'avez pas l'autorisation d'accéder à cette page."})
+    return render(request, 'accounts/manage_products.html', {'message': 'Page de gestion des produits en cours de développement.'})
+
+@login_required
+def manage_rewards(request):
+    if request.user.role != 'gestionnaire':
+        return render(request, 'accounts/access_denied.html', {'message': "Vous n'avez pas l'autorisation d'accéder à cette page."})
+    return render(request, 'accounts/manage_rewards.html', {'message': 'Page de gestion des récompenses en cours de développement.'})
+
+@login_required
+def manage_questions(request):
+    if request.user.role != 'gestionnaire':
+        return render(request, 'accounts/access_denied.html', {'message': "Vous n'avez pas l'autorisation d'accéder à cette page."})
+    return render(request, 'accounts/manage_questions.html', {'message': 'Page de gestion des questions en cours de développement.'})
+
+
+@login_required
+def manage_products(request):
+    if request.user.role != 'gestionnaire':
+        return render(request, 'accounts/access_denied.html', {'message': "Vous n'avez pas l'autorisation d'accéder à cette page."})
+    products = Product.objects.all()  # Récupère tous les produits
+    if request.method == 'POST' and request.POST.get('action') == 'add':
+        name = request.POST.get('name')
+        price = request.POST.get('price')
+        stock = request.POST.get('stock')
+        if name and price and stock:
+            Product.objects.create(name=name, price=Decimal(price), stock=stock)
+            messages.success(request, "Produit ajouté avec succès.")
+        else:
+            messages.error(request, "Données invalides.")
+    return render(request, 'accounts/manage_products.html', {'products': products})
