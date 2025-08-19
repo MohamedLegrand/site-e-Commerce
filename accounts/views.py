@@ -27,11 +27,13 @@ def user_login(request):
             generate_qr_code(qr_data, user, 'qr_code')
             if user.role == 'gestionnaire':
                 return redirect('accounts:manager_dashboard')
-            return redirect('accounts:page_principale')
+            elif user.role == 'delivery':  # Nouvelle condition pour les livreurs
+                return redirect('accounts:delivery_dashboard')  # Placeholder pour une page des livreurs
+            else:  # Tous les autres rôles (client, seller, admin, etc.)
+                return redirect('accounts:page_principale')
         else:
             messages.error(request, "Identifiants incorrects.")
     return render(request, 'accounts/login.html')
-
 
 def register(request):
     if request.method == 'POST':
@@ -302,6 +304,8 @@ from django.contrib import messages
 from django.http import HttpResponseBadRequest
 
 
+from django.db import transaction
+
 @login_required
 def payment_page(request):
     total = request.session.get('panier_total', 0)
@@ -326,9 +330,30 @@ def payment_page(request):
         cart_items = Cart.objects.filter(user=request.user).values('product__name', 'quantity', 'product__price')
         products = [{"name": item['product__name'], "quantity": item['quantity'], "price": float(item['product__price'])} for item in cart_items]
 
-        user.purchase_count += 1
-        user.total_sales += Decimal(str(total))
-        user.save()
+        # Calculer le total pour vérification
+        calculated_total = sum(float(item['product__price']) * item['quantity'] for item in cart_items) if cart_items else 0
+
+        # Vérifier que le total est cohérent
+        if abs(calculated_total - total) > 0.01:  # Tolérance pour arrondis
+            messages.error(request, f"Erreur dans le calcul du total. Calculé: {calculated_total}, Session: {total}. Veuillez réessayer.")
+            return render(request, 'accounts/payment_page.html', {'montant': total, 'initial_data': initial_data})
+
+        # Sauvegarde initiale pour comparaison
+        print(f"Avant mise à jour - purchase_count: {user.purchase_count}, total_sales: {user.total_sales}, ID: {user.id}")
+
+        # Accumuler les valeurs dans une transaction explicite
+        with transaction.atomic():
+            user.purchase_count += 1
+            user.total_sales += Decimal(str(total))
+            user.save()
+            user.refresh_from_db()  # Recharge les données depuis la base
+
+        # Vérification après sauvegarde
+        print(f"Après mise à jour - purchase_count: {user.purchase_count}, total_sales: {user.total_sales}, ID: {user.id}")
+
+        # Vérification supplémentaire avec une nouvelle requête
+        updated_user = CustomUser.objects.get(id=user.id)
+        print(f"Vérification DB - purchase_count: {updated_user.purchase_count}, total_sales: {updated_user.total_sales}, ID: {updated_user.id}")
 
         print(f"Paiement simulé pour {nom}, Email: {email}, Type: {type_paiement}, Numéro: {numero}")
         messages.success(request, "Paiement simulé avec succès.")
@@ -477,3 +502,59 @@ def manage_products(request):
         else:
             messages.error(request, "Données invalides.")
     return render(request, 'accounts/manage_products.html', {'products': products})
+
+
+
+
+
+@login_required
+def delivery_dashboard(request):
+    if request.user.role != 'delivery':
+        return render(request, 'accounts/access_denied.html', {'message': "Vous n'avez pas l'autorisation d'accéder à cette page."})
+
+    # Simulation temporaire des commandes à effectuer
+    pending_orders = Cart.objects.filter(user__role='client').values('user__username', 'product__name', 'quantity', 'product__price')
+    orders_to_deliver = []
+    total_to_deliver = 0
+    for order in pending_orders:
+        total = float(order['product__price']) * order['quantity']
+        orders_to_deliver.append({
+            'client': order['user__username'],
+            'product': order['product__name'],
+            'quantity': order['quantity'],
+            'total': total
+        })
+        total_to_deliver += total
+
+    # Gestion du message au gestionnaire
+    message_sent = False
+    if request.method == 'POST':
+        message = request.POST.get('message')
+        if message:
+            managers = CustomUser.objects.filter(role='gestionnaire')
+            if managers.exists():
+                email_subject = f"Message du livreur {request.user.username}"
+                email_message = f"Message: {message}\nEnvoyé par: {request.user.username} ({request.user.email})\nDate: {timezone.now()}"
+                from_email = 'from@example.com'  # Remplace par un email configuré
+                recipient_list = [manager.email for manager in managers]
+
+                try:
+                    send_mail(
+                        email_subject,
+                        email_message,
+                        from_email,
+                        recipient_list,
+                        fail_silently=False,
+                    )
+                    message_sent = True
+                    messages.success(request, "Message envoyé avec succès au gestionnaire.")
+                except Exception as e:
+                    messages.error(request, f"Erreur lors de l'envoi du message : {str(e)}")
+            else:
+                messages.error(request, "Aucun gestionnaire disponible pour recevoir le message.")
+
+    return render(request, 'accounts/delivery_dashboard.html', {
+        'orders_to_deliver': orders_to_deliver,
+        'total_to_deliver': total_to_deliver,
+        'message_sent': message_sent
+    })

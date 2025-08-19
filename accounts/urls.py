@@ -72,6 +72,9 @@ urlpatterns = [
     path('manage_rewards/', views.manage_rewards, name='manage_rewards'),
     path('manage_questions/', views.manage_questions, name='manage_questions'),
 
+
+    path('delivery_dashboard/', views.delivery_dashboard, name='delivery_dashboard'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

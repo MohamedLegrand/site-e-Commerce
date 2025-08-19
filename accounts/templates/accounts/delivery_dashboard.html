@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord - Livreurs - Echop</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Header -->
+    <header class="bg-red-600 text-white p-4 shadow-md">
+        <div class="container mx-auto">
+            <h1 class="text-2xl font-bold">Echop - Tableau de bord Livreurs</h1>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="{% url 'accounts:delivery_dashboard' %}" class="mr-4 hover:text-red-300">Commandes</a>
+            <a href="{% url 'accounts:logout' %}" class="hover:text-red-300">Déconnexion</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-6 mt-6">
+        <h2 class="text-2xl font-bold mb-4">Commandes à effectuer</h2>
+        {% if orders_to_deliver %}
+            <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="p-2">Client</th>
+                            <th class="p-2">Produit</th>
+                            <th class="p-2">Quantité</th>
+                            <th class="p-2">Total (FCFA)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders_to_deliver %}
+                            <tr class="border-b">
+                                <td class="p-2">{{ order.client }}</td>
+                                <td class="p-2">{{ order.product }}</td>
+                                <td class="p-2">{{ order.quantity }}</td>
+                                <td class="p-2">{{ order.total|floatformat:2 }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <p class="mt-4 font-semibold">Total à livrer : {{ total_to_deliver|floatformat:2 }} FCFA</p>
+            </div>
+        {% else %}
+            <p class="text-gray-600">Aucune commande à livrer pour le moment.</p>
+        {% endif %}
+
+        <!-- Discussion avec le gestionnaire -->
+        <h2 class="text-2xl font-bold mb-4 mt-8">Contacter le gestionnaire</h2>
+        {% if message_sent %}
+            <p class="text-green-600 mb-4">Message envoyé avec succès !</p>
+        {% endif %}
+        <form method="post" class="bg-white rounded-lg shadow-md p-4">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="message" class="block text-gray-700 font-semibold">Votre message :</label>
+                <textarea id="message" name="message" rows="4" class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Tapez votre message ici..." required></textarea>
+            </div>
+            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Envoyer</button>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-red-600 text-white p-4 mt-6 text-center">
+        <p>© 2025 Echop. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>

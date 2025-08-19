@@ -9,7 +9,7 @@ class CustomUser(AbstractUser):
     ROLE_CHOICES = (
         ('client', 'Client'),
         ('seller', 'Commerçant'),
-        ('delivery', 'Livreur'),
+        ('livreur', 'Livreur'),
         ('admin', 'Admin'),
         ('gestionnaire', 'Gestionnaire'),
     )
@@ -77,3 +77,15 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+
+class Order(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=20, choices=(('en_attente', 'En attente'), ('en_livraison', 'En livraison'), ('livree', 'Livrée')), default='en_attente')
+    created_at = models.DateTimeField(auto_now_add=True)
+    delivery_person = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='deliveries')
+
+    def __str__(self):
+        return f"Commande {self.id} de {self.user.username}"
