@@ -15,24 +15,37 @@ import base64
 import qrcode
 from io import BytesIO
 from django.contrib.auth.hashers import make_password
+from django.http import HttpResponse
+from weasyprint import HTML
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.pagesizes import letter
+from .models import Order
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 def user_login(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         username = request.POST.get('username', '').strip()
         password = request.POST.get('password', '').strip()
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            qr_data = f"UserID:{user.id},Points:{user.loyalty_points},Date:{timezone.now()}"
+            qr_data = f"UserID:{user.id},Points:{getattr(user, 'loyalty_points', 0)},Date:{timezone.now()}"
             generate_qr_code(qr_data, user, 'qr_code')
-            if user.role == 'gestionnaire':
-                return redirect('accounts:manager_dashboard')
-            elif user.role == 'delivery':  # Nouvelle condition pour les livreurs
-                return redirect('accounts:delivery_dashboard')  # Placeholder pour une page des livreurs
-            else:  # Tous les autres rôles (client, seller, admin, etc.)
-                return redirect('accounts:page_principale')
+            role = getattr(user, 'role', 'client')  # Gère le cas où role n'existe pas
+            return JsonResponse({
+                'success': True,
+                'role': role,
+                'message': 'Connexion réussie'
+            })
         else:
-            messages.error(request, "Identifiants incorrects.")
+            return JsonResponse({
+                'success': False,
+                'message': 'Identifiants incorrects.'
+            })
+    # Gère les requêtes GET pour afficher le formulaire
     return render(request, 'accounts/login.html')
 
 def register(request):
@@ -306,7 +319,6 @@ from django.http import HttpResponseBadRequest
 
 from django.db import transaction
 
-@login_required
 def payment_page(request):
     total = request.session.get('panier_total', 0)
     user = request.user
@@ -334,26 +346,16 @@ def payment_page(request):
         calculated_total = sum(float(item['product__price']) * item['quantity'] for item in cart_items) if cart_items else 0
 
         # Vérifier que le total est cohérent
-        if abs(calculated_total - total) > 0.01:  # Tolérance pour arrondis
+        if abs(calculated_total - total) > 0.01:
             messages.error(request, f"Erreur dans le calcul du total. Calculé: {calculated_total}, Session: {total}. Veuillez réessayer.")
             return render(request, 'accounts/payment_page.html', {'montant': total, 'initial_data': initial_data})
 
-        # Sauvegarde initiale pour comparaison
-        print(f"Avant mise à jour - purchase_count: {user.purchase_count}, total_sales: {user.total_sales}, ID: {user.id}")
-
-        # Accumuler les valeurs dans une transaction explicite
+        # Mise à jour utilisateur
         with transaction.atomic():
             user.purchase_count += 1
             user.total_sales += Decimal(str(total))
             user.save()
-            user.refresh_from_db()  # Recharge les données depuis la base
-
-        # Vérification après sauvegarde
-        print(f"Après mise à jour - purchase_count: {user.purchase_count}, total_sales: {user.total_sales}, ID: {user.id}")
-
-        # Vérification supplémentaire avec une nouvelle requête
-        updated_user = CustomUser.objects.get(id=user.id)
-        print(f"Vérification DB - purchase_count: {updated_user.purchase_count}, total_sales: {updated_user.total_sales}, ID: {updated_user.id}")
+            user.refresh_from_db()
 
         print(f"Paiement simulé pour {nom}, Email: {email}, Type: {type_paiement}, Numéro: {numero}")
         messages.success(request, "Paiement simulé avec succès.")
@@ -366,7 +368,8 @@ def payment_page(request):
             'time': current_time.strftime('%H:%M:%S'),
             'products': products,
             'total': total,
-            'user': user.username
+            'user': user.username,
+            'invoice_number': f'ECH-{current_time.strftime("%Y%m%d")}-{user.id}'
         }
 
         # Générer le QR code
@@ -380,7 +383,7 @@ def payment_page(request):
         qr_code_image = base64.b64encode(buffer.getvalue()).decode('utf-8')
         buffer.close()
 
-        # Stocker les données dans la session et vider le panier
+        # Stocker les données dans la session SANS les supprimer
         request.session['invoice_data'] = invoice_data
         request.session['qr_code_image'] = qr_code_image
         Cart.objects.filter(user=request.user).delete()
@@ -388,11 +391,12 @@ def payment_page(request):
         print(f"Invoice data: {request.session.get('invoice_data')}")
         print(f"QR code image: {request.session.get('qr_code_image')}")
 
-        return redirect('accounts:invoice_view')
+        # CHANGEMENT : Rediriger vers payment_confirmation au lieu de invoice
+        return redirect('accounts:payment_confirmation')
 
     return render(request, 'accounts/payment_page.html', {'montant': total, 'initial_data': initial_data})
 
-@login_required
+
 def invoice_view(request):
     invoice_data = request.session.get('invoice_data', {})
     qr_code_image = request.session.get('qr_code_image', '')
@@ -410,8 +414,13 @@ def invoice_view(request):
 
 def payment_confirmation(request):
     dernier_montant = request.session.get('dernier_montant', 0)
-    return render(request, 'accounts/payment_confirmation.html', {'montant': dernier_montant})
-
+    # NOUVEAU : Vérifier si les données de facture sont disponibles
+    has_invoice_data = bool(request.session.get('invoice_data'))
+    
+    return render(request, 'accounts/payment_confirmation.html', {
+        'montant': dernier_montant,
+        'has_invoice_data': has_invoice_data
+    })
 
 
 def milk(request):
@@ -509,24 +518,38 @@ def manage_products(request):
 
 @login_required
 def delivery_dashboard(request):
-    if request.user.role != 'delivery':
-        return render(request, 'accounts/access_denied.html', {'message': "Vous n'avez pas l'autorisation d'accéder à cette page."})
+    if request.user.role != 'delivery':  # Vérifie si l'utilisateur est un livreur
+        return render(request, 'accounts/access_denied.html', {
+            'message': "Vous n'avez pas l'autorisation d'accéder à cette page."
+        })
 
-    # Simulation temporaire des commandes à effectuer
-    pending_orders = Cart.objects.filter(user__role='client').values('user__username', 'product__name', 'quantity', 'product__price')
+    # Récupérer toutes les commandes des clients en attente
+    pending_orders = Order.objects.filter(status='pending').order_by('-created_at')
     orders_to_deliver = []
     total_to_deliver = 0
-    for order in pending_orders:
-        total = float(order['product__price']) * order['quantity']
-        orders_to_deliver.append({
-            'client': order['user__username'],
-            'product': order['product__name'],
-            'quantity': order['quantity'],
-            'total': total
-        })
-        total_to_deliver += total
 
-    # Gestion du message au gestionnaire
+    for order in pending_orders:
+        order_total = 0
+        items_data = []
+        for item in order.items.all():  # related_name = 'items' dans OrderItem
+            line_total = float(item.price) * item.quantity
+            items_data.append({
+                'product': item.product.name,
+                'quantity': item.quantity,
+                'total': line_total
+            })
+            order_total += line_total
+
+        orders_to_deliver.append({
+            'order_id': order.id,
+            'client': order.user.username,
+            'items': items_data,
+            'order_total': order_total,
+            'created_at': order.created_at
+        })
+        total_to_deliver += order_total
+
+    # Gestion de l'envoi de message au gestionnaire
     message_sent = False
     if request.method == 'POST':
         message = request.POST.get('message')
@@ -534,18 +557,16 @@ def delivery_dashboard(request):
             managers = CustomUser.objects.filter(role='gestionnaire')
             if managers.exists():
                 email_subject = f"Message du livreur {request.user.username}"
-                email_message = f"Message: {message}\nEnvoyé par: {request.user.username} ({request.user.email})\nDate: {timezone.now()}"
-                from_email = 'from@example.com'  # Remplace par un email configuré
+                email_message = (
+                    f"Message: {message}\n"
+                    f"Envoyé par: {request.user.username} ({request.user.email})\n"
+                    f"Date: {timezone.now()}"
+                )
+                from_email = 'from@example.com'  # Remplace par un email configuré dans settings.py
                 recipient_list = [manager.email for manager in managers]
 
                 try:
-                    send_mail(
-                        email_subject,
-                        email_message,
-                        from_email,
-                        recipient_list,
-                        fail_silently=False,
-                    )
+                    send_mail(email_subject, email_message, from_email, recipient_list, fail_silently=False)
                     message_sent = True
                     messages.success(request, "Message envoyé avec succès au gestionnaire.")
                 except Exception as e:
@@ -558,3 +579,199 @@ def delivery_dashboard(request):
         'total_to_deliver': total_to_deliver,
         'message_sent': message_sent
     })
+
+
+    from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import CustomUser
+
+@login_required
+def manage_profil(request):
+    if request.user.role != 'gestionnaire':
+        return render(request, 'accounts/access_denied.html', {'message': "Vous n'avez pas l'autorisation d'accéder à cette page."})
+
+    user = request.user
+    context = {
+        'username': user.username,
+        'email': user.email,
+        'role': user.role,
+        'purchase_count': user.purchase_count,
+        'total_sales': user.total_sales,
+        'loyalty_points': user.loyalty_points,
+    }
+    return render(request, 'accounts/manage_profil.html', context)
+
+
+@login_required
+def invoice(request):
+    # Récupérer la dernière commande de l'utilisateur
+    order = Order.objects.filter(user=request.user).order_by('-created_at').first()
+    if not order:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'error': 'Aucune commande trouvée'}, status=404)
+        messages.error(request, "Aucune commande trouvée.")
+        return redirect('accounts:dashboard')
+
+    # Générer le QR code pour la commande
+    qr = qrcode.QRCode(version=1, box_size=10, border=5)
+    qr.add_data(f"Commande #{order.id} - {request.user.username}")
+    qr.make(fit=True)
+    img = qr.make_image(fill='black', back_color='white')
+    buffer = BytesIO()
+    img.save(buffer, format='PNG')
+    qr_code_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+    # Construire les produits
+    products_data = []
+    for item in order.items.all():  # items = related_name de OrderItem
+        products_data.append({
+            'name': item.product.name,
+            'quantity': item.quantity,
+            'price': float(item.price),
+        })
+
+    invoice_data = {
+        'invoice_number': order.id,
+        'user': request.user.username,
+        'date': order.created_at.strftime('%d/%m/%Y'),
+        'time': order.created_at.strftime('%H:%M'),
+        'products': products_data,
+        'total': float(order.total),
+    }
+
+    # Réponse JSON pour la modale
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'invoice_data': invoice_data,
+            'qr_code_image': qr_code_base64
+        })
+
+    # Page HTML classique
+    context = {
+        'invoice_data': invoice_data,
+        'qr_code_image': qr_code_base64
+    }
+    return render(request, 'accounts/invoice.html', context)
+
+
+@login_required
+def download_invoice(request):
+    invoice_data = request.session.get('invoice_data', {})
+    qr_code_image = request.session.get('qr_code_image', '')
+
+    if not invoice_data or not qr_code_image:
+        messages.error(request, "Aucune donnée de facture disponible.")
+        return redirect('accounts:dashboard')
+
+    # Créer le PDF avec ReportLab
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="facture_echop_{timezone.now().strftime("%Y%m%d_%H%M%S")}.pdf"'
+
+    doc = SimpleDocTemplate(response, pagesize=letter)
+    elements = []
+
+    # Styles
+    styles = getSampleStyleSheet()
+    title_style = styles['Heading1']
+    title_style.textColor = colors.red
+    normal_style = styles['BodyText']
+
+    # Ajouter le titre
+    elements.append(Paragraph("Facture Echop", title_style))
+    elements.append(Paragraph(f"Date: {invoice_data['date']} à {invoice_data['time']}", normal_style))
+    elements.append(Paragraph(f"Client: {invoice_data['user']}", normal_style))
+    elements.append(Paragraph("<br/><br/>", normal_style))
+
+    # Tableau des produits
+    data = [['Produit', 'Quantité', 'Prix unitaire (FCFA)', 'Total (FCFA)']]
+    total = 0
+    for product in invoice_data['products']:
+        row_total = product['quantity'] * product['price']
+        data.append([
+            product['name'],
+            str(product['quantity']),
+            f"{product['price']:.2f}",
+            f"{row_total:.2f}"
+        ])
+        total += row_total
+    data.append(['', '', 'Total', f"{total:.2f}"])
+
+    table = Table(data)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 12),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, -1), (-1, -1), colors.lightgrey),
+        ('TEXTCOLOR', (0, -1), (-1, -1), colors.black),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ]))
+    elements.append(table)
+
+    # Ajouter le QR code
+    from reportlab.graphics.shapes import Image
+    qr_image_data = base64.b64decode(qr_code_image)
+    from io import BytesIO
+    qr_image = BytesIO(qr_image_data)
+    elements.append(Paragraph("QR Code:", normal_style))
+    elements.append(Image(qr_image, width=100, height=100))
+
+    # Construire le PDF
+    doc.build(elements)
+
+    # CHANGEMENT : Ne pas supprimer les données de session ici
+    # Les données restent disponibles pour d'autres utilisations
+    
+    return response
+
+
+
+# NOUVELLE FONCTION : Pour nettoyer la session après utilisation
+@login_required
+def clear_invoice_session(request):
+    """Vue pour nettoyer les données de facture de la session"""
+    if 'invoice_data' in request.session:
+        del request.session['invoice_data']
+    if 'qr_code_image' in request.session:
+        del request.session['qr_code_image']
+    if 'dernier_montant' in request.session:
+        del request.session['dernier_montant']
+    
+    return JsonResponse({'status': 'success', 'message': 'Session nettoyée'})
+
+
+
+def is_admin(user):
+    return user.is_authenticated and user.is_superuser
+
+@login_required
+@user_passes_test(is_admin)
+def admin_dashboard(request):
+    # Récupérer des données pour le tableau de bord
+    total_users = User.objects.count()
+    active_users = User.objects.filter(is_active=True).count()
+
+    context = {
+        'total_users': total_users,
+        'active_users': active_users,
+        'title': 'Tableau de bord Administrateur'
+    }
+    return render(request, 'accounts/admin_dashboard.html', context)
+
+
+
+def verify_qr(request, user_id):
+    # Récupérer l'utilisateur avec l'ID fourni
+    user = get_object_or_404(User, id=user_id)
+    
+    # Préparer les données à afficher
+    context = {
+        'user': user,
+        'username': user.username,
+        'email': user.email if user.email else 'Non défini',
+        'date_joined': user.date_joined.strftime('%B %Y'),
+    }
+    
+    return render(request, 'accounts/verify_qr.html', context)

@@ -2,16 +2,452 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paiement confirmé - Echop</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Animation pour la modale */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateY(-30px) scale(0.95);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-width: 4xl;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .success-animation {
+            animation: bounce 1s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .loading-spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #dc2626;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            .modal-content { box-shadow: none !important; }
+        }
+    </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-white p-6 rounded-lg shadow-lg text-center">
-        <div class="mb-6">
-            <h2 class="text-2xl font-semibold text-red-700 mb-2">🎉 Paiement réussi !</h2>
-            <p class="text-gray-600">Merci pour votre achat. Votre commande est en cours de traitement.</p>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen flex items-center justify-center p-4">
+    <!-- Page principale de confirmation -->
+    <div class="max-w-lg w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <!-- En-tête avec animation de succès -->
+        <div class="gradient-bg text-white p-8 text-center relative">
+            <div class="success-animation">
+                <div class="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <h2 class="text-3xl font-bold mb-2">Paiement réussi !</h2>
+                <p class="text-red-100">Merci pour votre confiance. Votre commande est confirmée.</p>
+            </div>
         </div>
-        <a href="{% url 'accounts:page_principale' %}" class="inline-block w-full bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-200 font-medium">Retour à l'accueil</a>
+
+        <!-- Contenu principal -->
+        <div class="p-8">
+            <div class="text-center mb-6">
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                    <p class="text-green-800 font-medium">Votre commande est en cours de traitement</p>
+                    <p class="text-green-600 text-sm mt-1">Vous recevrez une notification dès l'expédition</p>
+                </div>
+                
+                {% if montant %}
+                <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                    <p class="text-gray-600 text-sm">Montant payé</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ montant|floatformat:0 }} FCFA</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="space-y-3">
+                <button id="viewInvoiceBtn" 
+                        class="w-full bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-all duration-200 font-medium flex items-center justify-center space-x-2 transform hover:scale-[1.02]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>Voir la facture</span>
+                </button>
+                
+                <a href="{% url 'accounts:page_principale' %}" 
+                   class="w-full bg-red-600 text-white px-6 py-3 rounded-xl hover:bg-red-700 transition-all duration-200 font-medium inline-block text-center transform hover:scale-[1.02]">
+                    Retour à l'accueil
+                </a>
+                
+                <a href="{% url 'accounts:dashboard' %}" 
+                   class="w-full bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-700 transition-all duration-200 font-medium inline-block text-center">
+                    passer une commande
+                </a>
+            </div>
+        </div>
     </div>
+
+    <!-- Modale pour la facture améliorée -->
+    <div id="invoiceModal" class="modal">
+        <div class="modal-content">
+            <!-- En-tête de la modale -->
+            <div class="gradient-bg text-white p-6 flex justify-between items-center no-print">
+                <div>
+                    <h2 class="text-2xl font-bold">Facture Echop</h2>
+                    <p class="text-red-100">Détails de votre commande</p>
+                </div>
+                <button id="closeModalBtn" class="text-white hover:text-red-200 transition-colors">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Contenu de la facture -->
+            <div id="invoiceContent" class="p-6">
+                <!-- État de chargement -->
+                <div id="loadingState" class="text-center py-12">
+                    <div class="loading-spinner mx-auto mb-4"></div>
+                    <p class="text-gray-600">Chargement de votre facture...</p>
+                </div>
+
+                <!-- État d'erreur -->
+                <div id="errorState" class="hidden text-center py-12">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Erreur de chargement</h3>
+                    <p class="text-gray-600 mb-4">Impossible de charger la facture pour le moment.</p>
+                    <button id="retryBtn" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                        Réessayer
+                    </button>
+                </div>
+
+                <!-- Contenu réel de la facture -->
+                <div id="invoiceData" class="hidden"></div>
+            </div>
+
+            <!-- Actions de la modale -->
+            <div class="bg-gray-50 p-6 flex space-x-4 no-print">
+                <a href="{% url 'accounts:download_invoice' %}" 
+                   class="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-center font-medium">
+                    📄 Télécharger PDF
+                </a>
+                <button onclick="window.print()" 
+                        class="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                    🖨️ Imprimer
+                </button>
+                <button id="closeModalBtn2" 
+                        class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class InvoiceModal {
+            constructor() {
+                this.modal = document.getElementById('invoiceModal');
+                this.loadingState = document.getElementById('loadingState');
+                this.errorState = document.getElementById('errorState');
+                this.invoiceData = document.getElementById('invoiceData');
+                this.isLoaded = false;
+                this.invoiceContent = null;
+                
+                this.initEventListeners();
+            }
+
+            initEventListeners() {
+                // Bouton d'ouverture
+                document.getElementById('viewInvoiceBtn').addEventListener('click', () => {
+                    this.openModal();
+                });
+
+                // Boutons de fermeture
+                document.getElementById('closeModalBtn').addEventListener('click', () => {
+                    this.closeModal();
+                });
+                
+                document.getElementById('closeModalBtn2').addEventListener('click', () => {
+                    this.closeModal();
+                });
+
+                // Bouton de retry
+                document.getElementById('retryBtn').addEventListener('click', () => {
+                    this.loadInvoice();
+                });
+
+                // Fermeture en cliquant à l'extérieur
+                this.modal.addEventListener('click', (e) => {
+                    if (e.target === this.modal) {
+                        this.closeModal();
+                    }
+                });
+
+                // Fermeture avec Escape
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.modal.classList.contains('show')) {
+                        this.closeModal();
+                    }
+                });
+            }
+
+            openModal() {
+                this.modal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                
+                if (!this.isLoaded) {
+                    this.loadInvoice();
+                }
+            }
+
+            closeModal() {
+                this.modal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+
+            showLoading() {
+                this.loadingState.classList.remove('hidden');
+                this.errorState.classList.add('hidden');
+                this.invoiceData.classList.add('hidden');
+            }
+
+            showError() {
+                this.loadingState.classList.add('hidden');
+                this.errorState.classList.remove('hidden');
+                this.invoiceData.classList.add('hidden');
+            }
+
+            showInvoice(content) {
+                this.loadingState.classList.add('hidden');
+                this.errorState.classList.add('hidden');
+                this.invoiceData.classList.remove('hidden');
+                this.invoiceData.innerHTML = content;
+                this.isLoaded = true;
+            }
+
+            async loadInvoice() {
+                this.showLoading();
+
+                try {
+                    // Option 1: Charger une vue JSON dédiée (recommandé)
+                    const response = await fetch('{% url "accounts:invoice" %}', {
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+                    }
+
+                    const contentType = response.headers.get('content-type');
+                    
+                    if (contentType && contentType.includes('application/json')) {
+                        // Si la réponse est JSON
+                        const data = await response.json();
+                        this.renderInvoiceFromJSON(data);
+                    } else {
+                        // Si la réponse est HTML
+                        const html = await response.text();
+                        this.renderInvoiceFromHTML(html);
+                    }
+
+                } catch (error) {
+                    console.error('Erreur lors du chargement de la facture:', error);
+                    this.showError();
+                }
+            }
+
+            renderInvoiceFromJSON(data) {
+                if (!data.invoice_data) {
+                    this.showError();
+                    return;
+                }
+
+                const { invoice_data, qr_code_image } = data;
+                
+                let productsHTML = '';
+                let total = 0;
+
+                if (invoice_data.products && invoice_data.products.length > 0) {
+                    productsHTML = invoice_data.products.map(product => {
+                        const lineTotal = product.quantity * product.price;
+                        total += lineTotal;
+                        return `
+                            <tr class="border-b border-gray-200">
+                                <td class="py-3 px-4 font-medium">${product.name}</td>
+                                <td class="py-3 px-4 text-center">${product.quantity}</td>
+                                <td class="py-3 px-4 text-right">${product.price.toFixed(0)} FCFA</td>
+                                <td class="py-3 px-4 text-right font-semibold">${lineTotal.toFixed(0)} FCFA</td>
+                            </tr>
+                        `;
+                    }).join('');
+                } else {
+                    productsHTML = '<tr><td colspan="4" class="text-center py-8 text-gray-500">Aucun produit trouvé</td></tr>';
+                }
+
+                const invoiceHTML = `
+                    <div class="space-y-6">
+                        <!-- Informations de base -->
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <span class="font-semibold text-gray-700">Date:</span>
+                                    <span class="text-gray-600">${invoice_data.date}</span>
+                                </div>
+                                <div>
+                                    <span class="font-semibold text-gray-700">Heure:</span>
+                                    <span class="text-gray-600">${invoice_data.time}</span>
+                                </div>
+                                <div>
+                                    <span class="font-semibold text-gray-700">Client:</span>
+                                    <span class="text-gray-600">${invoice_data.user}</span>
+                                </div>
+                                <div>
+                                    <span class="font-semibold text-gray-700">Numéro:</span>
+                                    <span class="text-gray-600">#${invoice_data.invoice_number || 'N/A'}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tableau des produits -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full border-collapse border border-gray-200 rounded-lg">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="py-3 px-4 text-left font-semibold border border-gray-200">Produit</th>
+                                        <th class="py-3 px-4 text-center font-semibold border border-gray-200">Quantité</th>
+                                        <th class="py-3 px-4 text-right font-semibold border border-gray-200">Prix unitaire</th>
+                                        <th class="py-3 px-4 text-right font-semibold border border-gray-200">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${productsHTML}
+                                </tbody>
+                                <tfoot>
+                                    <tr class="bg-red-50 font-bold">
+                                        <td colspan="3" class="py-4 px-4 text-lg border border-gray-200">Total général</td>
+                                        <td class="py-4 px-4 text-right text-lg text-red-600 border border-gray-200">
+                                            ${(invoice_data.total || total).toFixed(0)} FCFA
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <!-- QR Code -->
+                        ${qr_code_image ? `
+                            <div class="text-center">
+                                <h4 class="font-semibold text-gray-700 mb-3">Code QR de vérification</h4>
+                                <div class="bg-white p-4 rounded-lg border border-gray-200 inline-block">
+                                    <img src="data:image/png;base64,${qr_code_image}" 
+                                         alt="QR Code" 
+                                         class="w-32 h-32 mx-auto">
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+
+                this.showInvoice(invoiceHTML);
+            }
+
+            renderInvoiceFromHTML(html) {
+                // Extraire seulement le contenu pertinent du HTML complet
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Chercher les éléments pertinents
+                const content = doc.querySelector('.container') || doc.querySelector('body');
+                
+                if (content) {
+                    // Nettoyer le HTML (supprimer header, footer, etc.)
+                    const unwantedElements = content.querySelectorAll('header, footer, .no-print');
+                    unwantedElements.forEach(el => el.remove());
+                    
+                    this.showInvoice(content.innerHTML);
+                } else {
+                    this.showError();
+                }
+            }
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            new InvoiceModal();
+            
+            // Animation d'entrée pour la page
+            setTimeout(() => {
+                document.querySelector('.max-w-lg').style.transform = 'translateY(0)';
+                document.querySelector('.max-w-lg').style.opacity = '1';
+            }, 100);
+        });
+
+        // Style pour l'animation d'entrée
+        document.querySelector('.max-w-lg').style.transform = 'translateY(20px)';
+        document.querySelector('.max-w-lg').style.opacity = '0';
+        document.querySelector('.max-w-lg').style.transition = 'all 0.6s ease-out';
+    </script>
 </body>
 </html>

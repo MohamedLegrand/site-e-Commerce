@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Gestionnaire - Echop</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Header -->
+    <header class="bg-red-600 text-white p-4 shadow-md">
+        <div class="container mx-auto">
+            <h1 class="text-2xl font-bold">Echop - Profil Gestionnaire</h1>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="{% url 'accounts:manager_dashboard' %}" class="mr-4 hover:text-red-300">Tableau de bord</a>
+            <a href="{% url 'accounts:manage_profil' %}" class="mr-4 hover:text-red-300">Profil</a>
+            <a href="{% url 'accounts:logout' %}" class="hover:text-red-300">Déconnexion</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-6 mt-6">
+        <h2 class="text-2xl font-bold mb-4">Informations du Profil</h2>
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <p class="mb-2"><strong>Nom d'utilisateur :</strong> {{ username }}</p>
+            <p class="mb-2"><strong>Email :</strong> {{ email }}</p>
+            <p class="mb-2"><strong>Rôle :</strong> {{ role }}</p>
+            <p class="mb-2"><strong>Nombre d'achats :</strong> {{ purchase_count }}</p>
+            <p class="mb-2"><strong>Total des ventes (FCFA) :</strong> {{ total_sales|floatformat:2 }}</p>
+            <p class="mb-2"><strong>Points de fidélité :</strong> {{ loyalty_points }}</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-red-600 text-white p-4 mt-6 text-center">
+        <p>© 2025 Echop. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>

@@ -4,9 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - Echop</title>
+    <title>Conversations - Echop</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/contact.css' %}">
+    <style>
+        .chat-bubble-user {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+        }
+        .chat-bubble-other {
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+        }
+        .message-input:focus {
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+    </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans">
 
@@ -14,40 +25,116 @@
     <header class="bg-red-600 text-white p-6 shadow-lg">
         <div class="container mx-auto flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold">Echop - Contact</h1>
-                <p class="mt-2 text-lg">Vous avez une question ? Contactez-nous !</p>
+                <h1 class="text-3xl font-bold">Echop - Conversations</h1>
+                <p class="mt-2 text-lg">Discutez avec la communauté !</p>
             </div>
-           
+            <div class="flex items-center space-x-4">
+                <div class="bg-yellow-400 text-gray-800 px-3 py-1 rounded-full text-sm font-semibold">
+                    En ligne
+                </div>
+            </div>                
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-10">
-        <h2 class="text-3xl font-semibold text-center mb-10 text-red-700">Nous contacter</h2>
-        <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
-            Vous avez une question ou un souci avec un produit ? Remplissez le formulaire ci-dessous, et notre équipe vous répondra dans les plus brefs délais.
-        </p>
-        
-        <form method="POST" class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg">
-            {% csrf_token %}
-            <div class="mb-6">
-                <label for="name" class="block text-red-600 font-semibold mb-2">Nom</label>
-                <input type="text" id="name" name="name" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Votre nom" required>
+    <main class="container mx-auto px-4 py-6">
+        <!-- Chat Container -->
+        <div class="max-w-4xl mx-auto">
+            <!-- Chat Header -->
+            <div class="bg-white rounded-t-lg border-b border-gray-200 p-4">
+                <h2 class="text-xl font-semibold text-red-700">Discussion générale</h2>
+                <p class="text-gray-600 text-sm mt-1">Échangez avec les autres membres de la communauté Echop</p>
             </div>
-            <div class="mb-6">
-                <label for="email" class="block text-red-600 font-semibold mb-2">Adresse email</label>
-                <input type="email" id="email" name="email" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="votre.email@exemple.com" required>
+
+            <!-- Messages Area -->
+            <div class="bg-white h-96 overflow-y-auto p-4 border-l border-r border-gray-200" id="messages-container">
+                <!-- Example messages (these would come from your backend) -->
+                <div class="mb-4">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                            U
+                        </div>
+                        <div class="flex-1">
+                            <div class="chat-bubble-other text-gray-800 px-4 py-2 rounded-lg max-w-xs">
+                                Bonjour tout le monde ! Comment ça va aujourd'hui ?
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Utilisateur123 • Il y a 10 min</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="flex items-start space-x-3 justify-end">
+                        <div class="flex-1 text-right">
+                            <div class="chat-bubble-user text-white px-4 py-2 rounded-lg max-w-xs ml-auto">
+                                Salut ! Ça va très bien, merci. Et toi ?
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Vous • Il y a 8 min</p>
+                        </div>
+                        <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                            V
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                            M
+                        </div>
+                        <div class="flex-1">
+                            <div class="chat-bubble-other text-gray-800 px-4 py-2 rounded-lg max-w-xs">
+                                Super ! J'ai une question sur les nouveaux produits Echop. Quelqu'un peut m'aider ?
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Marie_Cam • Il y a 5 min</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="mb-6">
-                <label for="subject" class="block text-red-600 font-semibold mb-2">Sujet</label>
-                <input type="text" id="subject" name="subject" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Objet de votre message" required>
+
+            <!-- Message Form -->
+            <form method="POST" class="bg-white rounded-b-lg border-t border-gray-200 p-4">
+                {% csrf_token %}
+                <div class="flex items-center space-x-3">
+                    <input type="hidden" name="name" value="Utilisateur_Actuel">
+                    <input type="hidden" name="email" value="user@echop.com">
+                    <input type="hidden" name="subject" value="Message de conversation">
+                    
+                    <textarea 
+                        name="message" 
+                        rows="1" 
+                        class="message-input flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 resize-none" 
+                        placeholder="Tapez votre message ici..."
+                        required
+                    ></textarea>
+                    
+                    <button 
+                        type="submit" 
+                        class="btn-submit bg-yellow-400 text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-yellow-500 transition-colors flex items-center space-x-2" 
+                        aria-label="Envoyer le message"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        </svg>
+                        <span>Envoyer</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sidebar with online users (optional) -->
+        <div class="max-w-4xl mx-auto mt-6">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-red-700 mb-4">Membres en ligne</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Utilisateur123</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Marie_Cam</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Paul_237</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Sophie_YDE</span>
+                    <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm">+12 autres</span>
+                </div>
             </div>
-            <div class="mb-6">
-                <label for="message" class="block text-red-600 font-semibold mb-2">Message</label>
-                <textarea id="message" name="message" rows="5" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Votre message ici..." required></textarea>
-            </div>
-            <button type="submit" class="btn-submit bg-yellow-400 text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-yellow-500 transition-colors w-full" aria-label="Envoyer le formulaire de contact">Envoyer</button>
-        </form>
+        </div>
     </main>
 
     <!-- Footer -->
@@ -60,6 +147,27 @@
         </div>
         <p class="mt-1">Contact : <a href="mailto:support@echop.com" class="text-yellow-300 hover:underline">support@echop.com</a> | Téléphone : +237 6 77 24 69 00</p>
     </footer>
+
+    <script>
+        // Auto-scroll to bottom of messages
+        const messagesContainer = document.getElementById('messages-container');
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        // Auto-resize textarea
+        const textarea = document.querySelector('textarea[name="message"]');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+        });
+
+        // Submit form on Enter (but not Shift+Enter)
+        textarea.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                this.closest('form').submit();
+            }
+        });
+    </script>
 
 </body>
 </html>

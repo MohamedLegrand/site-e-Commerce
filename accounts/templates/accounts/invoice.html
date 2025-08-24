@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facture #{{ invoice_data.invoice_number|default:"N/A" }} - Echop</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; }
+            .shadow-md { box-shadow: none !important; }
+        }
+        .invoice-header {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Header -->
+    <header class="invoice-header text-white p-6 shadow-lg no-print">
+        <div class="container mx-auto">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold">ECHOP</h1>
+                    <p class="text-red-100">Votre marketplace de confiance</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xl font-semibold">FACTURE</p>
+                    <p class="text-red-100">#{{ invoice_data.invoice_number|default:"ECH-2025-001" }}</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-6">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <!-- En-tête de facture -->
+            <div class="bg-gradient-to-r from-red-600 to-red-700 text-white p-6 print:bg-red-600">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Informations entreprise -->
+                    <div>
+                        <h2 class="text-2xl font-bold mb-2">ECHOP</h2>
+                        <div class="text-red-100 space-y-1">
+                            <p>📍 Yaoundé, Cameroun</p>
+                            <p>📞 +237 XXX XXX XXX</p>
+                            <p>✉️ contact@echop.cm</p>
+                            <p>🌐 www.echop.cm</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Informations facture -->
+                    <div class="text-right">
+                        <div class="bg-white bg-opacity-20 rounded-lg p-4">
+                            <p class="text-2xl font-bold">FACTURE</p>
+                            <p class="text-red-100">N° {{ invoice_data.invoice_number|default:"ECH-2025-001" }}</p>
+                            <div class="mt-3 space-y-1">
+                                <p><span class="font-semibold">Date :</span> {{ invoice_data.date|default:"N/A" }}</p>
+                                <p><span class="font-semibold">Heure :</span> {{ invoice_data.time|default:"N/A" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informations client -->
+            <div class="p-6 bg-gray-50">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">🧑‍💼 FACTURÉ À</h3>
+                        <div class="bg-white p-4 rounded-lg border border-gray-200">
+                            <p class="font-semibold text-gray-800">{{ invoice_data.user|default:"Client non spécifié" }}</p>
+                            <p class="text-gray-600">Client Echop</p>
+                            {% if invoice_data.user_email %}
+                                <p class="text-gray-600">{{ invoice_data.user_email }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">📊 RÉSUMÉ</h3>
+                        <div class="bg-white p-4 rounded-lg border border-gray-200">
+                            {% if invoice_data.products %}
+                                <p><span class="font-semibold">Articles :</span> {{ invoice_data.products|length }}</p>
+                                <p><span class="font-semibold">Quantité totale :</span> 
+                                    {% widthratio invoice_data.products|length 1 1 as total_items %}
+                                    {{ total_items }}</p>
+                            {% endif %}
+                            <p><span class="font-semibold">Statut :</span> <span class="text-green-600">✅ Payé</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tableau des produits -->
+            <div class="p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">🛍️ Détails de la commande</h3>
+                
+                {% if invoice_data.products %}
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse border border-gray-200 rounded-lg">
+                            <thead>
+                                <tr class="bg-gradient-to-r from-gray-100 to-gray-200">
+                                    <th class="border border-gray-200 p-3 text-left font-semibold text-gray-700">Produit</th>
+                                    <th class="border border-gray-200 p-3 text-center font-semibold text-gray-700">Qté</th>
+                                    <th class="border border-gray-200 p-3 text-right font-semibold text-gray-700">Prix unitaire</th>
+                                    <th class="border border-gray-200 p-3 text-right font-semibold text-gray-700">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in invoice_data.products %}
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="border border-gray-200 p-3">
+                                            <div class="font-medium text-gray-800">{{ product.name|default:"Produit sans nom" }}</div>
+                                        </td>
+                                        <td class="border border-gray-200 p-3 text-center">
+                                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-medium">
+                                                {{ product.quantity|default:0 }}
+                                            </span>
+                                        </td>
+                                        <td class="border border-gray-200 p-3 text-right font-mono">
+                                            {{ product.price|default:0|floatformat:0 }} FCFA
+                                        </td>
+                                        <td class="border border-gray-200 p-3 text-right font-mono font-semibold">
+                                            <!-- Calcul côté template avec filtre safe -->
+                                            {% widthratio product.quantity product.price|default:0 1 as line_total %}
+                                            {{ line_total|floatformat:0 }} FCFA
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr class="bg-gradient-to-r from-red-50 to-red-100">
+                                    <td colspan="3" class="border border-gray-200 p-4 font-bold text-gray-800 text-lg">
+                                        💰 TOTAL GÉNÉRAL
+                                    </td>
+                                    <td class="border border-gray-200 p-4 font-bold text-right text-lg text-red-600">
+                                        {{ invoice_data.total|default:0|floatformat:0 }} FCFA
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-8">
+                        <div class="text-gray-400 text-6xl mb-4">🛒</div>
+                        <p class="text-gray-600">Aucun produit trouvé dans cette facture</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- QR Code et actions -->
+            <div class="bg-gray-50 p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <!-- QR Code -->
+                    <div class="text-center">
+                        <h4 class="font-semibold text-gray-700 mb-3">🔗 Code QR de vérification</h4>
+                        {% if qr_code_image %}
+                            <div class="bg-white p-4 rounded-lg border border-gray-200 inline-block">
+                                <img src="data:image/png;base64,{{ qr_code_image }}" 
+                                     alt="QR Code de la facture" 
+                                     class="mx-auto w-32 h-32">
+                                <p class="text-xs text-gray-500 mt-2">Scannez pour vérifier</p>
+                            </div>
+                        {% else %}
+                            <div class="bg-gray-100 p-8 rounded-lg border border-gray-200">
+                                <p class="text-gray-500">QR Code non disponible</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="text-center">
+                        <h4 class="font-semibold text-gray-700 mb-4">📥 Actions</h4>
+                        <div class="space-y-3">
+                            <a href="{% url 'accounts:download_invoice' %}" 
+                               class="w-full bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors inline-block font-medium no-print">
+                                📄 Télécharger PDF
+                            </a>
+                            <button onclick="window.print()" 
+                                    class="w-full bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors no-print">
+                                🖨️ Imprimer
+                            </button>
+                            <a href="{% url 'accounts:dashboard' %}" 
+                               class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors inline-block no-print">
+                                🏠 Retour au tableau de bord
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pied de page de la facture -->
+            <div class="bg-gradient-to-r from-red-600 to-red-700 text-white p-4">
+                <div class="text-center space-y-2">
+                    <p class="font-semibold">Merci pour votre confiance ! 🙏</p>
+                    <p class="text-red-100 text-sm">
+                        Cette facture est générée électroniquement et ne nécessite pas de signature.
+                    </p>
+                    <div class="flex justify-center space-x-4 text-sm text-red-100">
+                        <span>📧 support@echop.cm</span>
+                        <span>|</span>
+                        <span>📞 +237 XXX XXX XXX</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white p-4 mt-6 text-center no-print">
+        <p>© 2025 Echop. Tous droits réservés. | Développé avec ❤️ au Cameroun</p>
+    </footer>
+
+    <script>
+        // Fonctions d'amélioration UX
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-focus sur le bouton de téléchargement après 2 secondes
+            setTimeout(() => {
+                const downloadBtn = document.querySelector('a[href*="download_invoice"]');
+                if (downloadBtn) {
+                    downloadBtn.style.boxShadow = '0 0 15px rgba(220, 38, 38, 0.5)';
+                    downloadBtn.style.transform = 'scale(1.02)';
+                    
+                    // Retour à la normale après 3 secondes
+                    setTimeout(() => {
+                        downloadBtn.style.boxShadow = '';
+                        downloadBtn.style.transform = '';
+                    }, 3000);
+                }
+            }, 2000);
+        });
+
+        // Confirmation avant impression
+        function confirmPrint() {
+            if (confirm('Voulez-vous imprimer cette facture ?')) {
+                window.print();
+            }
+        }
+    </script>
+</body>
+</html>

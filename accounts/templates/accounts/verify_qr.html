@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vérification Profil - Echop</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="card p-6 max-w-md w-full text-center">
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">Informations du Profil</h1>
+        <p class="text-gray-600 mb-2">Scanné avec succès ! Voici les détails :</p>
+        
+        <div class="space-y-4 mb-6">
+            <div>
+                <p class="text-gray-700 font-medium">Nom d'utilisateur :</p>
+                <p class="text-gray-800 font-semibold">{{ username }}</p>
+            </div>
+            <div>
+                <p class="text-gray-700 font-medium">Email :</p>
+                <p class="text-gray-800 font-semibold">{{ email }}</p>
+            </div>
+            <div>
+                <p class="text-gray-700 font-medium">Membre depuis :</p>
+                <p class="text-gray-800 font-semibold">{{ date_joined }}</p>
+            </div>
+        </div>
+        
+        <a href="{% url 'accounts:page_principale' %}" class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition duration-300">
+            Retour à l'accueil
+        </a>
+    </div>
+</body>
+</html>

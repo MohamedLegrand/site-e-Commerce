@@ -52,7 +52,7 @@ urlpatterns = [
 
     path('payment_confirmation/', views.payment_confirmation, name='payment_confirmation'),
 
-    path('invoice-view/', views.invoice_view, name='invoice_view'),
+   
 
 
 
@@ -74,6 +74,15 @@ urlpatterns = [
 
 
     path('delivery_dashboard/', views.delivery_dashboard, name='delivery_dashboard'),
+
+    path('manage_profil/', views.manage_profil, name='manage_profil'),
+
+    path('invoice/', views.invoice, name='invoice'),
+    path('download_invoice/', views.download_invoice, name='download_invoice'),
+    path('clear_invoice_session/', views.clear_invoice_session, name='clear_invoice_session'),
+
+    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('verify-qr/<int:user_id>/', views.verify_qr, name='verify_qr'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

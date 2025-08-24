@@ -11,7 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 showNotification('Erreur : Jeton CSRF manquant.', 'bg-red-500');
                 return;
             }
-            fetch(`${urls.addToCart.replace(/\/+$/, '')}/${productId}/`, {
+            // Utilisation de add_to_cart_url définie dans le template
+            fetch(`{{ add_to_cart_url }}`.replace('0', productId), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,7 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateCartItem(productId, quantity, action = 'update') {
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-        fetch(`${urls.addToCart.replace(/\/+$/, '')}/${productId}/`, {
+        // Utilisation de add_to_cart_url pour la cohérence
+        fetch(`{{ add_to_cart_url }}`.replace('0', productId), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -126,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function clearCart() {
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+        // Supposons que urls.clearCart n'est pas défini, donc on laisse tel quel pour l'instant
         fetch(urls.clearCart, {
             method: 'POST',
             headers: {
@@ -226,7 +229,7 @@ $(document).ready(function() {
             showNotification('Erreur : Jeton CSRF manquant.', 'bg-red-500');
             return;
         }
-        fetch(`${urls.addToCart.replace(/\/+$/, '')}/${productId}/`, {
+        fetch(`{{ add_to_cart_url }}`.replace('0', productId), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
