@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte des Livraisons - {{ city_name }}</title>
+    <!-- Inclure Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            padding: 30px 40px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="%23ffffff" opacity="0.15"/><circle cx="10" cy="50" r="0.5" fill="%23ffffff" opacity="0.15"/><circle cx="90" cy="30" r="0.5" fill="%23ffffff" opacity="0.15"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-title h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin: 0;
+        }
+
+        .header-title .icon {
+            font-size: 2.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .map-container {
+            position: relative;
+            background: #f8fafc;
+            padding: 0;
+        }
+
+        .map-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: #374151;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .control-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-btn.active {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        #map {
+            height: 600px;
+            width: 100%;
+            border-radius: 0 0 24px 24px;
+            position: relative;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(248, 250, 252, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            border-radius: 0 0 24px 24px;
+            backdrop-filter: blur(5px);
+        }
+
+        .loading-content {
+            text-align: center;
+            color: #374151;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #ff6b6b;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .loading-subtitle {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        /* Styles personnalisés pour les popups Leaflet */
+        .custom-popup .leaflet-popup-content-wrapper {
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border: none;
+            background: white;
+            overflow: hidden;
+        }
+
+        .custom-popup .leaflet-popup-content {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+            min-width: 250px;
+        }
+
+        .custom-popup .leaflet-popup-tip {
+            background: white;
+            box-shadow: none;
+            border: none;
+        }
+
+        .popup-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f3f4f6;
+        }
+
+        .popup-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .popup-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .popup-address {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        .popup-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .popup-time {
+            font-size: 0.85rem;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-badge {
+            background: #10b981;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Styles pour les marqueurs personnalisés */
+        .custom-marker {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            width: 40px;
+            height: 40px;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border: 3px solid white;
+        }
+
+        .custom-marker::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transform: rotate(45deg);
+        }
+
+        /* Media queries pour responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header-title h1 {
+                font-size: 1.6rem;
+            }
+
+            .header-title .icon {
+                font-size: 2rem;
+                padding: 12px;
+            }
+
+            .header-stats {
+                gap: 15px;
+            }
+
+            .stat-item {
+                padding: 10px 15px;
+            }
+
+            .stat-number {
+                font-size: 1.4rem;
+            }
+
+            .map-controls {
+                top: 10px;
+                right: 10px;
+            }
+
+            #map {
+                height: 500px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-stats {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .custom-popup .leaflet-popup-content {
+                padding: 15px;
+                min-width: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div class="header-title">
+                    <div class="icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h1>Carte des Livraisons - {{ city_name }}</h1>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">
+                            <i class="fas fa-truck"></i>
+                        </span>
+                        <span class="stat-label">En livraison</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">
+                            <i class="fas fa-clock"></i>
+                        </span>
+                        <span class="stat-label">Temps réel</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">
+                            <i class="fas fa-route"></i>
+                        </span>
+                        <span class="stat-label">Optimisé</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <div class="map-controls">
+                <button class="control-btn" title="Centrer sur ma position" id="centerBtn">
+                    <i class="fas fa-crosshairs"></i>
+                </button>
+                <button class="control-btn" title="Mode satellite" id="satelliteBtn">
+                    <i class="fas fa-satellite"></i>
+                </button>
+                <button class="control-btn" title="Plein écran" id="fullscreenBtn">
+                    <i class="fas fa-expand"></i>
+                </button>
+                <button class="control-btn" title="Partager position" id="shareBtn">
+                    <i class="fas fa-share-alt"></i>
+                </button>
+            </div>
+
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loading-content">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Localisation en cours...</div>
+                    <div class="loading-subtitle">Recherche de votre position</div>
+                </div>
+            </div>
+
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <!-- Inclure Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialiser la carte avec une position par défaut (Yaoundé) en attendant la géolocalisation
+        var map = L.map('map').setView([3.8480, 11.5020], 12); // Coordonnées de Yaoundé
+
+        // Variables pour les couches de tuiles
+        let currentTileLayer;
+        let satelliteMode = false;
+
+        // Couche OpenStreetMap par défaut
+        const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+
+        // Couche satellite (Esri)
+        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 18,
+            attribution: '&copy; <a href="https://www.esri.com/">Esri</a> &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        });
+
+        // Ajouter la couche par défaut
+        currentTileLayer = osmLayer.addTo(map);
+
+        // Variable pour stocker le marqueur du livreur
+        let driverMarker;
+
+        // Fonction pour masquer le loading
+        function hideLoading() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            setTimeout(() => {
+                loadingOverlay.style.opacity = '0';
+                loadingOverlay.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    loadingOverlay.style.display = 'none';
+                }, 500);
+            }, 1000);
+        }
+
+        // Obtenir la position actuelle du livreur
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    // Mettre à jour la vue de la carte avec la position réelle
+                    map.setView([lat, lon], 13);
+
+                    // Ajouter ou mettre à jour le marqueur
+                    if (driverMarker) {
+                        map.removeLayer(driverMarker);
+                    }
+                    driverMarker = L.marker([lat, lon], {
+                        title: "Position du livreur"
+                    }).addTo(map);
+
+                    // Ajouter un popup avec les détails (récupérés via reverse geocoding)
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1`, {
+                        headers: {
+                            "User-Agent": "EchopDeliveryApp/1.0 (mohamed.legrand@example.com)" // Remplace par ton email
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const address = data.display_name || "Lieu inconnu";
+                        const popupContent = `
+                            <div class="popup-header">
+                                <div class="popup-icon">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <div>
+                                    <div class="popup-title">Position du livreur</div>
+                                </div>
+                            </div>
+                            <div class="popup-address">
+                                <i class="fas fa-map-marker-alt" style="color: #ff6b6b; margin-right: 8px;"></i>
+                                ${address}
+                            </div>
+                            <div class="popup-footer">
+                                <div class="popup-time">
+                                    <i class="fas fa-clock"></i>
+                                    ${new Date().toLocaleTimeString('fr-FR')}
+                                </div>
+                                <div class="status-badge">
+                                    <i class="fas fa-check"></i>
+                                    En ligne
+                                </div>
+                            </div>
+                        `;
+                        driverMarker.bindPopup(popupContent).openPopup();
+                        hideLoading();
+                    })
+                    .catch(error => {
+                        console.error("Erreur de géocodage inverse :", error);
+                        const popupContent = `
+                            <div class="popup-header">
+                                <div class="popup-icon">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <div>
+                                    <div class="popup-title">Position du livreur</div>
+                                </div>
+                            </div>
+                            <div class="popup-address">
+                                <i class="fas fa-map-marker-alt" style="color: #ff6b6b; margin-right: 8px;"></i>
+                                Position actuelle
+                            </div>
+                            <div class="popup-footer">
+                                <div class="popup-time">
+                                    <i class="fas fa-clock"></i>
+                                    ${new Date().toLocaleTimeString('fr-FR')}
+                                </div>
+                                <div class="status-badge">
+                                    <i class="fas fa-check"></i>
+                                    En ligne
+                                </div>
+                            </div>
+                        `;
+                        driverMarker.bindPopup(popupContent).openPopup();
+                        hideLoading();
+                    });
+                },
+                function(error) {
+                    console.error("Erreur de géolocalisation :", error);
+                    alert("Impossible d'accéder à votre position. Utilisation de la position par défaut (Yaoundé).");
+                    hideLoading();
+                }
+            );
+        } else {
+            alert("La géolocalisation n'est pas prise en charge par votre navigateur.");
+            hideLoading();
+        }
+
+        // Afficher le popup au survol
+        map.on('popupopen', function(e) {
+            const popup = e.popup;
+            popup.getElement().classList.add('custom-popup');
+        });
+
+        // Contrôles personnalisés
+        document.getElementById('centerBtn').addEventListener('click', function() {
+            if (driverMarker) {
+                map.setView(driverMarker.getLatLng(), 15);
+                driverMarker.openPopup();
+            }
+        });
+
+        document.getElementById('satelliteBtn').addEventListener('click', function() {
+            const btn = this;
+            if (!satelliteMode) {
+                map.removeLayer(currentTileLayer);
+                currentTileLayer = satelliteLayer.addTo(map);
+                btn.classList.add('active');
+                btn.innerHTML = '<i class="fas fa-map"></i>';
+                satelliteMode = true;
+            } else {
+                map.removeLayer(currentTileLayer);
+                currentTileLayer = osmLayer.addTo(map);
+                btn.classList.remove('active');
+                btn.innerHTML = '<i class="fas fa-satellite"></i>';
+                satelliteMode = false;
+            }
+        });
+
+        document.getElementById('fullscreenBtn').addEventListener('click', function() {
+            const mapContainer = document.querySelector('.container');
+            if (!document.fullscreenElement) {
+                mapContainer.requestFullscreen();
+                this.innerHTML = '<i class="fas fa-compress"></i>';
+            } else {
+                document.exitFullscreen();
+                this.innerHTML = '<i class="fas fa-expand"></i>';
+            }
+        });
+
+        document.getElementById('shareBtn').addEventListener('click', function() {
+            if (driverMarker && navigator.share) {
+                const position = driverMarker.getLatLng();
+                navigator.share({
+                    title: 'Position du livreur',
+                    text: 'Voici ma position actuelle',
+                    url: `https://www.openstreetmap.org/?mlat=${position.lat}&mlon=${position.lng}&zoom=15`
+                });
+            } else if (driverMarker) {
+                const position = driverMarker.getLatLng();
+                const url = `https://www.openstreetmap.org/?mlat=${position.lat}&mlon=${position.lng}&zoom=15`;
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Lien de position copié dans le presse-papier !');
+                });
+            }
+        });
+
+        // Gestion du plein écran
+        document.addEventListener('fullscreenchange', function() {
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            if (document.fullscreenElement) {
+                fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i>';
+            } else {
+                fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+            }
+            // Redimensionner la carte après changement de mode
+            setTimeout(() => map.invalidateSize(), 200);
+        });
+
+        // Redimensionner la carte lors du redimensionnement de la fenêtre
+        window.addEventListener('resize', function() {
+            map.invalidateSize();
+        });
+    </script>
+</body>
+</html>

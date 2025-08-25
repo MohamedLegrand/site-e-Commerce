@@ -1,38 +1,586 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Principale - Echop</title>
     {% load static %}
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="{% static 'accounts/page_principale.css' %}" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e53e3e;
+            --primary-dark: #c53030;
+            --secondary: #f56565;
+            --accent: #fed7d7;
+            --light: #f8f9fa;
+            --dark: #1a202c;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            min-height: 100vh;
+        }
+        
+        /* Animation d'arrière-plan */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--primary);
+            opacity: 0.2;
+            animation: float 15s infinite linear;
+        }
+        
+        .bg-circle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+            animation-duration: 25s;
+        }
+        
+        .bg-circle:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 70%;
+            left: 80%;
+            animation-delay: 2s;
+            animation-duration: 20s;
+        }
+        
+        .bg-circle:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            top: 40%;
+            left: 70%;
+            animation-delay: 4s;
+            animation-duration: 15s;
+        }
+        
+        .bg-circle:nth-child(4) {
+            width: 250px;
+            height: 250px;
+            top: 60%;
+            left: 10%;
+            animation-delay: 1s;
+            animation-duration: 30s;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(20px, 15px) rotate(5deg);
+            }
+            50% {
+                transform: translate(0, 30px) rotate(0deg);
+            }
+            75% {
+                transform: translate(-20px, 15px) rotate(-5deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+        }
+        
+        /* Header animé */
+        .main-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transform: rotate(30deg);
+            animation: shine 8s infinite linear;
+        }
+        
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) rotate(30deg);
+            }
+            100% {
+                transform: translateX(100%) rotate(30deg);
+            }
+        }
+        
+        /* Navigation améliorée */
+        .main-nav {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .nav-item {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: all 0.5s ease;
+        }
+        
+        .nav-item:hover::before {
+            left: 100%;
+        }
+        
+        /* Barre de recherche avec texte noir */
+        .search-form {
+            position: relative;
+        }
+        
+        .search-input {
+            padding-right: 50px;
+            border-radius: 50px;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            color: #000 !important; /* Texte en noir */
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .search-input::placeholder {
+            color: #666;
+        }
+        
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(229, 62, 62, 0.3);
+            background: #fff;
+        }
+        
+        .search-button {
+            position: absolute;
+            right: 4px;
+            top: 4px;
+            height: calc(100% - 8px);
+            border-radius: 50%;
+            width: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .search-button:hover {
+            transform: rotate(15deg) scale(1.1);
+        }
+        
+        /* Animation du compteur de panier */
+        .cart-count {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+            }
+        }
+        
+        /* Grille de produits améliorée */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px) rotate(1deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .product-image-container {
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .product-image {
+            height: 240px;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+        
+        .product-card:hover .product-image {
+            transform: scale(1.1);
+        }
+        
+        .product-content {
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-description {
+            color: #4a5568;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+        
+        .product-link {
+            color: var(--primary);
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .product-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .product-link:hover {
+            color: var(--primary-dark);
+        }
+        
+        .product-link:hover::after {
+            width: 100%;
+        }
+        
+        .product-link i {
+            margin-left: 8px;
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .product-link:hover i {
+            transform: translateX(4px);
+        }
+        
+        /* Hero section animée */
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('{% static "images/hero-bg.jpg" %}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding: 100px 0;
+            margin-bottom: 60px;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.8) 100%);
+            animation: pulseHero 8s infinite alternate;
+        }
+        
+        @keyframes pulseHero {
+            0% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 0.8;
+            }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-title {
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .hero-subtitle {
+            animation: fadeInUp 1s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+        
+        .hero-button {
+            animation: fadeInUp 1s ease-out 0.6s forwards;
+            opacity: 0;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: all 0.6s ease;
+        }
+        
+        .hero-button:hover::before {
+            left: 100%;
+        }
+        
+        /* Animation d'entrée pour les produits */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .product-card {
+            animation: fadeInUp 0.7s ease forwards;
+            opacity: 0;
+        }
+        
+        .product-card:nth-child(1) { animation-delay: 0.1s; }
+        .product-card:nth-child(2) { animation-delay: 0.2s; }
+        .product-card:nth-child(3) { animation-delay: 0.3s; }
+        .product-card:nth-child(4) { animation-delay: 0.4s; }
+        .product-card:nth-child(5) { animation-delay: 0.5s; }
+        .product-card:nth-child(6) { animation-delay: 0.6s; }
+        .product-card:nth-child(7) { animation-delay: 0.7s; }
+        .product-card:nth-child(8) { animation-delay: 0.8s; }
+        
+        /* Section newsletter animée */
+        .newsletter-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .newsletter-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(45deg);
+            animation: newsletterShine 6s infinite linear;
+        }
+        
+        @keyframes newsletterShine {
+            0% {
+                transform: translateX(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) rotate(45deg);
+            }
+        }
+        
+        /* Footer amélioré */
+        .main-footer {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            margin-top: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.05"><circle cx="50" cy="50" r="40" fill="white"/></svg>');
+            background-size: 200px;
+            animation: backgroundMove 20s infinite linear;
+        }
+        
+        @keyframes backgroundMove {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 200px 200px;
+            }
+        }
+        
+        .footer-links a {
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .footer-links a::before {
+            content: '›';
+            position: absolute;
+            left: -15px;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+            padding-left: 15px;
+        }
+        
+        .footer-links a:hover::before {
+            opacity: 1;
+            left: 0;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-container {
+                width: 100%;
+                order: 3;
+            }
+            
+            .hero-section {
+                padding: 60px 0;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .bg-circle {
+                display: none;
+            }
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-50">
+    <!-- Animation d'arrière-plan -->
+    <div class="bg-animation">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+
     <!-- Header -->
-    <header class="bg-red-600 text-white p-4 shadow-lg">
-        <div class="container mx-auto text-center">
-            <h1 class="text-2xl font-bold">Echop</h1>
+    <header class="main-header text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <h1 class="text-3xl font-bold">Echop</h1>
+                <span class="ml-2 text-accent bg-white px-2 py-1 rounded-full text-sm font-semibold">Premium</span>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                {% if user.is_authenticated %}
+                <span class="text-sm"><i class="fas fa-user-circle mr-1"></i> Bonjour, {{ user.first_name|default:user.username }}</span>
+                <a href="{% url 'accounts:logout' %}" class="text-sm bg-white text-red-600 px-3 py-1 rounded-lg font-medium hover:bg-gray-100 transition">Déconnexion</a>
+                {% else %}
+                <a href="{% url 'accounts:login' %}" class="text-sm bg-white text-red-600 px-3 py-1 rounded-lg font-medium hover:bg-gray-100 transition">Connexion</a>
+                {% endif %}
+            </div>
         </div>
     </header>
 
     <!-- Navbar -->
-    <nav class="bg-red-500 p-4 shadow-lg">
-        <div class="container mx-auto flex justify-between items-center">
-            <!-- Catégorie Produit (Liste déroulante) à gauche -->
+    <nav class="main-nav p-4 text-white">
+        <div class="container mx-auto flex justify-between items-center nav-container">
+            <!-- Catégorie Produit (Liste déroulante) -->
             <div class="relative dropdown">
-                <button class="nav-item px-3 py-2 rounded text-white focus:outline-none">Catégorie Produit</button>
+                <button class="nav-item px-4 py-2 rounded-lg bg-white bg-opacity-0 hover:bg-opacity-10 focus:outline-none flex items-center">
+                    <i class="fas fa-bars mr-2"></i> Catégories
+                </button>
                 <div class="dropdown-content">
-                    <a href="{% url 'accounts:category_cake' %}">Boulangerie</a>
-                    <a href="{% url 'accounts:category_clothing' %}">Vêtements</a>
-                    <a href="{% url 'accounts:category_alimentaire' %}">Produits Alimentaires</a>
-                    <a href="{% url 'accounts:category_cosmetics' %}">Parfumerie et produits cosmétiques</a>
+                    <a href="{% url 'accounts:category_cake' %}"><i class="fas fa-bread-slice mr-2"></i> Boulangerie</a>
+                    <a href="{% url 'accounts:category_clothing' %}"><i class="fas fa-tshirt mr-2"></i> Vêtements</a>
+                    <a href="{% url 'accounts:category_alimentaire' %}"><i class="fas fa-utensils mr-2"></i> Produits Alimentaires</a>
+                    <a href="{% url 'accounts:category_cosmetics' %}"><i class="fas fa-pump-soap mr-2"></i> Parfumerie et produits cosmétiques</a>
                 </div>
             </div>
 
-            <!-- Barre de recherche au centre -->
-            <div class="w-1/3">
-                <form method="get" action="{% url 'accounts:search_product' %}" class="flex">
-                    <input type="text" id="search-input" name="query" placeholder="Recherchez..." class="w-full p-2 rounded-l-lg focus:outline-none border border-gray-300" required autofocus>
-                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-r-lg hover:bg-red-700">Rechercher</button>
+            <!-- Barre de recherche avec texte noir -->
+            <div class="w-1/3 search-container">
+                <form method="get" action="{% url 'accounts:search_product' %}" class="flex search-form">
+                    <input type="text" id="search-input" name="query" placeholder="Rechercher un produit..." class="w-full p-3 pl-5 search-input focus:outline-none" required autofocus>
+                    <button type="submit" class="search-button bg-red-600 text-white hover:bg-red-700">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </form>
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -47,7 +595,7 @@
                                 $(this).closest("form").submit();
                             }
                         }).keypress(function(e) {
-                            if (e.which == 13) { // 13 = touche "Entrée"
+                            if (e.which == 13) {
                                 $(this).closest("form").submit();
                             }
                         });
@@ -55,118 +603,196 @@
                 </script>
             </div>
 
-            <!-- Contact, Panier, Produits les plus vendus à droite -->
-            <div class="space-x-4">
-                <a href="{% url 'accounts:contact' %}" class="nav-item px-3 py-2 rounded">Contact</a>
-                <a href="{% url 'accounts:cart_detail' %}" class="nav-item px-3 py-2 rounded">
-                    Panier <span class="bg-white text-red-600 rounded-full px-2 cart-count">{{ cart_item_count|default:0 }}</span>
+            <!-- Menu de navigation -->
+            <div class="flex items-center space-x-2">
+                <a href="{% url 'accounts:contact' %}" class="nav-item px-3 py-2 rounded-lg flex items-center">
+                    <i class="fas fa-envelope mr-1"></i> Contact
                 </a>
-                <a href="{% url 'accounts:sold_products' %}" class="nav-item px-3 py-2 rounded">Produits les plus vendus</a>
-                <a href="{% url 'accounts:dashboard' %}" class="nav-item px-3 py-2 rounded">Points cumules</a>
-                <a href="{% url 'accounts:profil' %}" class="nav-item px-3 py-2 rounded">Profil</a>
+                <a href="{% url 'accounts:cart_detail' %}" class="nav-item px-3 py-2 rounded-lg flex items-center relative">
+                    <i class="fas fa-shopping-cart mr-1"></i> Panier 
+                    <span class="cart-count absolute -top-1 -right-1 bg-white text-red-600 rounded-full px-2 py-1 text-xs font-bold">{{ cart_item_count|default:0 }}</span>
+                </a>
+                <a href="{% url 'accounts:sold_products' %}" class="nav-item px-3 py-2 rounded-lg flex items-center">
+                    <i class="fas fa-fire mr-1"></i> Tendances
+                </a>
+                <a href="{% url 'accounts:dashboard' %}" class="nav-item px-3 py-2 rounded-lg flex items-center">
+                    <i class="fas fa-trophy mr-1"></i> Points
+                </a>
+                <a href="{% url 'accounts:profil' %}" class="nav-item px-3 py-2 rounded-lg flex items-center">
+                    <i class="fas fa-user mr-1"></i> Profil
+                </a>
             </div>
         </div>
     </nav>
 
+    <!-- Hero Section -->
+    <div class="container mx-auto px-4 mt-6">
+        <div class="hero-section text-center rounded-xl">
+            <div class="hero-content">
+                <h2 class="text-4xl font-bold mb-4 hero-title">Bienvenue sur Echop</h2>
+                <p class="text-xl max-w-2xl mx-auto mb-8 hero-subtitle">Découvrez nos produits exclusifs et profitez d'une expérience d'achat premium</p>
+                <a href="#products" class="inline-block mt-6 bg-white text-red-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition hero-button">Explorer les produits <i class="fas fa-arrow-right ml-2"></i></a>
+            </div>
+        </div>
+    </div>
+
     <!-- Contenu principal -->
-    <div class="container mx-auto p-6">
-        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Page Principale</h1>
-        <p class="text-center text-gray-600 mb-6">Bienvenue sur Echop ! Découvrez nos produits en avant-première.</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="container mx-auto p-6" id="products">
+        <h2 class="text-3xl font-bold mb-2 text-center text-gray-800">Nos catégories populaires</h2>
+        <p class="text-center text-gray-600 mb-10">Découvrez nos produits en avant-première et trouvez ce qui vous correspond</p>
+        
+        <div class="product-grid">
             <!-- Produit 1: Lait Nido -->
-            <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/laits/OIP.webp' %}" alt="Lait Nido" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Un délicieux lait en poudre Nido, parfait pour toute la famille, riche en nutriments essentiels.
-                    decouvrer toute les categories de lait que nous disposons
-                </p>
-                <a href="{% url 'accounts:milk' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img src="{% static 'images/laits/OIP.webp' %}" alt="Lait Nido" class="product-image">
+                </div>
+                <div class="product-content">
+                    <p class="product-description">Un délicieux lait en poudre Nido, parfait pour toute la famille, riche en nutriments essentiels. Découvrez toute les catégories de lait que nous disposons.</p>
+                    <a href="{% url 'accounts:milk' %}" class="product-link">Voir plus <i class="fas fa-arrow-right"></i></a>
+                </div>
             </div>
 
-            <!-- Produit 2: Jupe Femme -->
-            <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/ensemble menager.jpeg' %}" alt="Jupe Femme" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Decouvrer un assortiment de produits parfait pour rendre vos maisons propres</p>
-                <a href="{% url 'accounts:menage' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            <!-- Produit 2: Produits Ménagers -->
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img src="{% static 'images/parfumerie/ensemble menager.jpeg' %}" alt="Produits Ménagers" class="product-image">
+                </div>
+                <div class="product-content">
+                    <p class="product-description">Découvrez un assortiment de produits parfait pour rendre vos maisons propres et bien entretenues.</p>
+                    <a href="{% url 'accounts:menage' %}" class="product-link">Voir plus <i class="fas fa-arrow-right"></i></a>
+                </div>
             </div>
 
             <!-- Produit 3: Vin -->
-            <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/vin/vin1.webp' %}" alt="Vin" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Un vin raffiné aux arômes fruités, parfait pour accompagner vos repas ou moments spéciaux.
-                    Decouvrer tout les types de vin de meilleures que l'on dispose
-                </p>
-                <a href="{% url 'accounts:vin' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img src="{% static 'images/vin/vin1.webp' %}" alt="Vin" class="product-image">
+                </div>
+                <div class="product-content">
+                    <p class="product-description">Un vin raffiné aux arômes fruités, parfait pour accompagner vos repas ou moments spéciaux. Découvrez tous les types de vins de qualité que nous proposons.</p>
+                    <a href="{% url 'accounts:vin' %}" class="product-link">Voir plus <i class="fas fa-arrow-right"></i></a>
+                </div>
             </div>
 
             <!-- Produit 4: Parfum -->
-            <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/parfum louis vuitton.jpg' %}" alt="Parfum" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Un parfum captivant avec des notes boisées et florales, idéal pour une touche d'élégance. decouvrer Tous
-                    les parfums que l'on dispose
-                </p>
-                <a href="{% url 'accounts:parfum' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img src="{% static 'images/parfumerie/parfum louis vuitton.jpg' %}" alt="Parfum" class="product-image">
+                </div>
+                <div class="product-content">
+                    <p class="product-description">Un parfum captivant avec des notes boisées et florales, idéal pour une touche d'élégance. Découvrez tous les parfums que nous proposons.</p>
+                    <a href="{% url 'accounts:parfum' %}" class="product-link">Voir plus <i class="fas fa-arrow-right"></i></a>
+                </div>
             </div>
 
-
-            <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/montre12.jpg' %}" alt="Parfum" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Deouvrer nos montres adapte pour toutes les soirees 
-                    
-                </p>
-                <a href="{% url 'accounts:montre' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            <!-- Produit 5: Montres -->
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img src="{% static 'images/parfumerie/montre12.jpg' %}" alt="Montres" class="product-image">
+                </div>
+                <div class="product-content">
+                    <p class="product-description">Découvrez nos montres adaptées pour toutes les occasions, des modèles élégants aux designs modernes.</p>
+                    <a href="{% url 'accounts:montre' %}" class="product-link">Voir plus <i class="fas fa-arrow-right"></i></a>
+                </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/all.webp' %}" alt="Parfum" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Decouvrer nos viandes de meileures qualites 
-                    
-                </p>
-                <a href="{% url 'accounts:viande' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            <!-- Produit 6: Viandes -->
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img src="{% static 'images/parfumerie/all.webp' %}" alt="Viandes" class="product-image">
+                </div>
+                <div class="product-content">
+                    <p class="product-description">Découvrez nos viandes de meilleure qualité, soigneusement sélectionnées pour votre plaisir gustatif.</p>
+                    <a href="{% url 'accounts:viande' %}" class="product-link">Voir plus <i class="fas fa-arrow-right"></i></a>
+                </div>
             </div>
 
-
-            <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/all bonbon.webp' %}" alt="Parfum" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Biscuits et bonbons 
-                    
-                </p>
-                <a href="{% url 'accounts:snacks' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            <!-- Produit 7: Snacks -->
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img src="{% static 'images/parfumerie/all bonbon.webp' %}" alt="Snacks" class="product-image">
+                </div>
+                <div class="product-content">
+                    <p class="product-description">Biscuits et bonbons de toutes sortes pour satisfaire vos envies sucrées à tout moment de la journée.</p>
+                    <a href="{% url 'accounts:snacks' %}" class="product-link">Voir plus <i class="fas fa-arrow-right"></i></a>
+                </div>
             </div>
 
-
-            <div class="bg-white rounded-lg shadow-lg p-4">
-                <img src="{% static 'images/parfumerie/all plats.webp' %}" alt="Parfum" class="rounded mb-4 w-full h-56 object-cover">
-                <p class="text-gray-600 mb-2">Plats et verres
-                    
-                </p>
-                <a href="{% url 'accounts:glassware' %}" class="text-red-600 hover:text-red-800 font-semibold">Voir plus</a>
+            <!-- Produit 8: Verrerie -->
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img src="{% static 'images/parfumerie/all plats.webp' %}" alt="Verrerie" class="product-image">
+                </div>
+                <div class="product-content">
+                    <p class="product-description">Plats et verres élégants pour embellir votre table et rendre chaque repas spécial.</p>
+                    <a href="{% url 'accounts:glassware' %}" class="product-link">Voir plus <i class="fas fa-arrow-right"></i></a>
+                </div>
             </div>
         </div>
-            
+    </div>
+
+    <!-- Newsletter Section -->
+    <div class="container mx-auto px-4 mt-16">
+        <div class="newsletter-section text-center text-white p-12">
+            <div class="relative z-10">
+                <h3 class="text-2xl font-bold mb-4">Restez informé</h3>
+                <p class="mb-6 max-w-2xl mx-auto">Inscrivez-vous à notre newsletter pour recevoir nos offres exclusives et être informé des nouveaux produits</p>
+                <form class="max-w-md mx-auto flex">
+                    <input type="email" placeholder="Votre email" class="flex-grow p-3 pl-5 rounded-l-lg focus:outline-none text-gray-800">
+                    <button type="submit" class="bg-gray-800 text-white px-6 py-3 rounded-r-lg font-semibold hover:bg-gray-900 transition">S'inscrire</button>
+                </form>
+            </div>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-red-600 text-white py-6 mt-12">
-        <div class="container mx-auto text-center">
-            <div class="mb-4">
-                <h2 class="text-xl font-semibold">Echop</h2>
-                <p class="mt-2">© 2025 Echop. Tous droits réservés.</p>
+    <footer class="main-footer text-white py-12 mt-16">
+        <div class="container mx-auto relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Echop</h3>
+                    <p class="opacity-80">Votre marketplace premium pour tous vos besoins quotidiens.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Liens rapides</h4>
+                    <ul class="space-y-2 footer-links">
+                        <li><a href="{% url 'accounts:about' %}">À propos de nous</a></li>
+                        <li><a href="{% url 'accounts:contact' %}">Contact</a></li>
+                        <li><a href="{% url 'accounts:terms' %}">Conditions d'utilisation</a></li>
+                        <li><a href="#">Politique de confidentialité</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Catégories</h4>
+                    <ul class="space-y-2 footer-links">
+                        <li><a href="{% url 'accounts:category_alimentaire' %}">Produits Alimentaires</a></li>
+                        <li><a href="{% url 'accounts:category_cosmetics' %}">Beauté & Cosmétiques</a></li>
+                        <li><a href="{% url 'accounts:category_clothing' %}">Vêtements</a></li>
+                        <li><a href="{% url 'accounts:category_cake' %}">Boulangerie</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Contact</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-center"><i class="fas fa-envelope mr-2"></i> support@echop.com</li>
+                        <li class="flex items-center"><i class="fas fa-phone mr-2"></i> +237 677 24 69 00</li>
+                        <li class="flex items-center"><i class="fas fa-map-marker-alt mr-2"></i> Yaoundé, Cameroun</li>
+                    </ul>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-white hover:text-accent"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white hover:text-accent"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white hover:text-accent"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
             </div>
-            <div class="flex justify-center space-x-6 mb-4">
-                <a href="{% url 'accounts:contact' %}" class="hover:text-red-300 transition-colors duration-200">Contact</a>
-                <a href="{% url 'accounts:about' %}" class="hover:text-red-300 transition-colors duration-200">À propos</a>
-                <a href="{% url 'accounts:terms' %}" class="hover:text-red-300 transition-colors duration-200">Conditions</a>
-            </div>
-            <div>
-                <p>Email : support@echop.com | Téléphone : +237 677 24 69 00</p>
-              
+            <div class="border-t border-red-400 mt-8 pt-8 text-center opacity-80">
+                <p>© 2025 Echop. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
 
     {% csrf_token %}
     <script src="{% static 'js/cart.js' %}"></script>
-
 </body>
 </html>

@@ -1,94 +1,518 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Conditions - Echop</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conditions d'Utilisation - Echop</title>
     {% load static %}
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="{% static 'accounts/conditions.css' %}" rel="stylesheet">
     <style>
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
         }
+        
+        .hero-pattern {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(185, 28, 28, 0.85) 100%), url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.8s ease-out;
+        }
+        
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid #dc2626;
+        }
+        
+        .section-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #dc2626;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 40;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .back-to-top:hover {
+            background: #b91c1c;
+            transform: translateY(-3px);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #dc2626 0%, #f87171 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: #fef2f2;
+            color: #dc2626;
+        }
+        
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background-color: #dc2626;
+            border-radius: 50%;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid #dc2626;
+        }
+        
+        .terms-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .terms-list li {
+            padding: 0.5rem 0;
+            position: relative;
+            padding-left: 1.75rem;
+        }
+        
+        .terms-list li::before {
+            content: '•';
+            color: #dc2626;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        .hover-lift {
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-3px);
+        }
     </style>
 </head>
-<body class="bg-gray-100">
-    <!-- Header -->
-    <header class="bg-red-600 text-white p-4 shadow-lg">
-        <div class="container mx-auto text-center">
-            <h1 class="text-2xl font-bold"><a href="{% url 'accounts:page_principale' %}" class="text-white hover:text-red-300">Echop</a></h1>
+<body class="bg-gray-50">
+    <!-- Header amélioré -->
+    <header class="hero-pattern text-white shadow-xl">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold">
+                    <a href="{% url 'accounts:page_principale' %}" class="text-white hover:text-red-200 transition-colors duration-300 flex items-center">
+                        <i class="fas fa-store mr-2"></i>Echop
+                    </a>
+                </h1>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="{% url 'accounts:page_principale' %}" class="hover:text-red-200 transition-colors duration-300">Accueil</a>
+                    <a href="{% url 'accounts:contact' %}" class="hover:text-red-200 transition-colors duration-300">Contact</a>
+                    <a href="{% url 'accounts:about' %}" class="hover:text-red-200 transition-colors duration-300">À propos</a>
+                    <a href="{% url 'accounts:terms' %}" class="font-semibold border-b-2 border-white">Conditions</a>
+                </nav>
+                <button class="md:hidden text-white">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Hero Section -->
+        <div class="container mx-auto px-4 py-16 md:py-20 text-center fade-in">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Conditions d'<span class="text-white">Utilisation</span></h1>
+            <p class="text-xl md:text-2xl text-red-100 max-w-3xl mx-auto">Veuillez lire attentivement les conditions qui régissent l'utilisation de notre plateforme basée à Yaoundé, Cameroun.</p>
         </div>
     </header>
 
-    <!-- Navbar -->
-    <nav class="bg-red-500 p-4 shadow-lg">
-        <div class="container mx-auto flex justify-center items-center">
-            <!-- Aucun texte statique supplémentaire -->
+    <!-- Navigation sticky -->
+    <div class="sticky-nav py-4 hidden md:block">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-center space-x-6">
+                <a href="#conditions-generales" class="nav-link text-gray-700">Conditions Générales</a>
+                <a href="#politiques-retour" class="nav-link text-gray-700">Politiques de Retour</a>
+                <a href="#programme-fidelite" class="nav-link text-gray-700">Programme de Fidélité</a>
+                <a href="#informations-legales" class="nav-link text-gray-700">Informations Légales</a>
+            </div>
         </div>
-    </nav>
+    </div>
 
     <!-- Contenu principal -->
-    <div class="container mx-auto p-6 fade-in">
-        <h1 class="text-4xl font-bold text-center text-red-600 mb-6">Conditions d'Utilisation - Echop</h1>
-        <p class="text-center text-gray-700 mb-8">Veuillez lire attentivement les conditions qui régissent l'utilisation de notre plateforme basée à Yaoundé, Cameroun.</p>
-
+    <div class="container mx-auto px-4 py-16">
         <!-- Section Conditions Générales -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-semibold text-red-600 mb-4">Conditions Générales</h2>
-            <p class="text-gray-700 leading-relaxed">
-                Les présentes conditions d'utilisation régissent votre accès et votre utilisation de la plateforme Echop, basée à Yaoundé, Cameroun. En utilisant nos services, vous acceptez pleinement ces termes. Echop se réserve le droit de modifier ces conditions à tout moment, et les mises à jour seront publiées sur cette page. Tout utilisateur doit avoir au moins 18 ans ou être accompagné d'un tuteur légal pour effectuer des achats. Nous nous engageons à fournir un service fiable, mais ne pouvons garantir une disponibilité continue en raison de facteurs techniques ou externes. Toute violation de ces conditions peut entraîner la suspension ou la résiliation de votre compte.
-            </p>
+        <section id="conditions-generales" class="mb-16 slide-up">
+            <div class="flex items-center mb-8">
+                <div class="bg-red-100 p-3 rounded-full mr-4">
+                    <i class="fas fa-file-contract text-red-600 text-2xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-red-600">Conditions <span class="gradient-text">Générales</span></h2>
+            </div>
+            
+            <div class="section-card bg-white p-8 rounded-lg shadow-md">
+                <p class="text-gray-700 leading-relaxed mb-6">
+                    Les présentes conditions d'utilisation régissent votre accès et votre utilisation de la plateforme Echop, basée à Yaoundé, Cameroun. En utilisant nos services, vous acceptez pleinement ces termes.
+                </p>
+                
+                <div class="highlight-box">
+                    <h3 class="font-semibold text-red-600 mb-2">Points Importants</h3>
+                    <ul class="terms-list">
+                        <li>Echop se réserve le droit de modifier ces conditions à tout moment</li>
+                        <li>Tout utilisateur doit avoir au moins 18 ans ou être accompagné d'un tuteur légal</li>
+                        <li>Toute violation peut entraîner la suspension ou la résiliation de votre compte</li>
+                    </ul>
+                </div>
+                
+                <p class="text-gray-700 leading-relaxed">
+                    Nous nous engageons à fournir un service fiable, mais ne pouvons garantir une disponibilité continue en raison de facteurs techniques ou externes. Il est de votre responsabilité de consulter régulièrement cette page pour prendre connaissance des éventuelles modifications.
+                </p>
+            </div>
         </section>
 
         <!-- Section Politiques de Retour -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-semibold text-red-600 mb-4">Politiques de Retour</h2>
-            <p class="text-gray-700 leading-relaxed">
-                Echop offre une politique de retour généreuse pour assurer votre satisfaction. Vous disposez de 14 jours calendaires à partir de la date de réception pour retourner un produit, à condition qu'il soit dans son emballage d'origine et en bon état. Les frais de retour sont à la charge du client, sauf en cas d'erreur de notre part (ex. : produit défectueux ou incorrect). Pour initier un retour, contactez notre service client à support@echop.cm avec votre numéro de commande. Les remboursements seront traités dans un délai de 10 jours ouvrables après réception du produit retourné, via le même mode de paiement utilisé lors de l'achat.
-            </p>
+        <section id="politiques-retour" class="mb-16 slide-up">
+            <div class="flex items-center mb-8">
+                <div class="bg-red-100 p-3 rounded-full mr-4">
+                    <i class="fas fa-undo-alt text-red-600 text-2xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-red-600">Politiques de <span class="gradient-text">Retour</span></h2>
+            </div>
+            
+            <div class="section-card bg-white p-8 rounded-lg shadow-md">
+                <p class="text-gray-700 leading-relaxed mb-6">
+                    Echop offre une politique de retour généreuse pour assurer votre satisfaction. Vous disposez de <span class="font-semibold text-red-600">14 jours calendaires</span> à partir de la date de réception pour retourner un produit, à condition qu'il soit dans son emballage d'origine et en bon état.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-red-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-red-600 mb-2 flex items-center">
+                            <i class="fas fa-check-circle mr-2"></i> Retours Acceptés
+                        </h3>
+                        <ul class="terms-list">
+                            <li>Produits défectueux</li>
+                            <li>Erreur de notre part</li>
+                            <li>Produits non ouverts dans les 14 jours</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-gray-600 mb-2 flex items-center">
+                            <i class="fas fa-times-circle mr-2"></i> Retours Non Acceptés
+                        </h3>
+                        <ul class="terms-list">
+                            <li>Produits personnalisés</li>
+                            <li>Produits endommagés par le client</li>
+                            <li>Produits périmés ou ouverts</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <p class="text-gray-700 leading-relaxed">
+                    Les frais de retour sont à la charge du client, sauf en cas d'erreur de notre part. Pour initier un retour, contactez notre service client à <a href="mailto:support@echop.cm" class="text-red-600 hover:underline">support@echop.cm</a> avec votre numéro de commande. Les remboursements seront traités dans un délai de 10 jours ouvrables après réception du produit retourné.
+                </p>
+            </div>
         </section>
 
         <!-- Section Programme de Fidélité -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-semibold text-red-600 mb-4">Programme de Fidélité</h2>
-            <p class="text-gray-700 leading-relaxed">
-                Notre programme de fidélité intelligent permet à chaque client de gagner 1 point par dollar dépensé. Ces points peuvent être échangés contre une réduction de 10% une fois 100 points accumulés. Les points sont crédités sur votre compte après chaque achat validé et peuvent être suivis via votre tableau de bord. Les points expirent après 12 mois d'inactivité. Toute tentative de fraude ou d'abus du programme (ex. : création de comptes multiples) entraînera la perte des points et une possible suspension du compte. Des promotions spéciales peuvent augmenter vos gains de points pendant les périodes festives au Cameroun.
-            </p>
+        <section id="programme-fidelite" class="mb-16 slide-up">
+            <div class="flex items-center mb-8">
+                <div class="bg-red-100 p-3 rounded-full mr-4">
+                    <i class="fas fa-crown text-red-600 text-2xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-red-600">Programme de <span class="gradient-text">Fidélité</span></h2>
+            </div>
+            
+            <div class="section-card bg-white p-8 rounded-lg shadow-md">
+                <p class="text-gray-700 leading-relaxed mb-6">
+                    Notre programme de fidélité intelligent permet à chaque client de gagner <span class="font-semibold text-red-600">1 point par dollar dépensé</span>. Ces points peuvent être échangés contre une réduction de 10% une fois 100 points accumulés.
+                </p>
+                
+                <div class="bg-gradient-to-r from-red-50 to-red-100 p-6 rounded-lg mb-6">
+                    <h3 class="font-semibold text-red-600 mb-4 text-center">Comment ça marche ?</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div class="p-4">
+                            <div class="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3 shadow-md">
+                                <i class="fas fa-shopping-cart text-red-600 text-xl"></i>
+                            </div>
+                            <h4 class="font-semibold">Achetez</h4>
+                            <p class="text-sm mt-1">Effectuez vos achats normalement</p>
+                        </div>
+                        <div class="p-4">
+                            <div class="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3 shadow-md">
+                                <i class="fas fa-coins text-red-600 text-xl"></i>
+                            </div>
+                            <h4 class="font-semibold">Cumulez</h4>
+                            <p class="text-sm mt-1">Gagnez 1 point par dollar dépensé</p>
+                        </div>
+                        <div class="p-4">
+                            <div class="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3 shadow-md">
+                                <i class="fas fa-gift text-red-600 text-xl"></i>
+                            </div>
+                            <h4 class="font-semibold">Bénéficiez</h4>
+                            <p class="text-sm mt-1">Échangez 100 points contre 10% de réduction</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="text-gray-700 leading-relaxed">
+                    Les points sont crédités sur votre compte après chaque achat validé et peuvent être suivis via votre tableau de bord. Les points expirent après 12 mois d'inactivité. Toute tentative de fraude ou d'abus du programme entraînera la perte des points et une possible suspension du compte. Des promotions spéciales peuvent augmenter vos gains de points pendant les périodes festives au Cameroun.
+                </p>
+            </div>
         </section>
 
         <!-- Section Informations Légales -->
-        <section>
-            <h2 class="text-2xl font-semibold text-red-600 mb-4">Informations Légales</h2>
-            <p class="text-gray-700 leading-relaxed">
-                Echop est une marque déposée par Echop SARL, enregistrée au Cameroun sous le numéro RC/YDE/2020/1234. Notre siège social est situé à Yaoundé, quartier Bastos. Pour toute question juridique, contactez-nous à legal@echop.cm. Ces conditions sont régies par les lois de la République du Cameroun. En cas de litige, les parties s'engagent à tenter une résolution amiable avant de recourir aux tribunaux compétents de Yaoundé. Nous ne collectons ni ne partageons vos données personnelles sans votre consentement, conformément à la législation locale sur la protection des données.
-            </p>
+        <section id="informations-legales" class="slide-up">
+            <div class="flex items-center mb-8">
+                <div class="bg-red-100 p-3 rounded-full mr-4">
+                    <i class="fas fa-balance-scale text-red-600 text-2xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-red-600">Informations <span class="gradient-text">Légales</span></h2>
+            </div>
+            
+            <div class="section-card bg-white p-8 rounded-lg shadow-md">
+                <p class="text-gray-700 leading-relaxed mb-6">
+                    Echop est une marque déposée par Echop SARL, enregistrée au Cameroun sous le numéro <span class="font-semibold">RC/YDE/2020/1234</span>. Notre siège social est situé à Yaoundé, quartier Bastos.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-gray-50 p-5 rounded-lg">
+                        <h3 class="font-semibold text-red-600 mb-3 flex items-center">
+                            <i class="fas fa-gavel mr-2"></i> Aspects Légaux
+                        </h3>
+                        <ul class="terms-list">
+                            <li>Marque déposée Echop SARL</li>
+                            <li>RC/YDE/2020/1234</li>
+                            <li>Siège social à Yaoundé, Bastos</li>
+                            <li>Lois de la République du Cameroun</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-5 rounded-lg">
+                        <h3 class="font-semibold text-red-600 mb-3 flex items-center">
+                            <i class="fas fa-shield-alt mr-2"></i> Protection des Données
+                        </h3>
+                        <ul class="terms-list">
+                            <li>Données personnelles protégées</li>
+                            <li>Respect de la législation locale</li>
+                            <li>Consentement requis pour le partage</li>
+                            <li>Contact : legal@echop.cm</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <p class="text-gray-700 leading-relaxed">
+                    Pour toute question juridique, contactez-nous à <a href="mailto:legal@echop.cm" class="text-red-600 hover:underline">legal@echop.cm</a>. Ces conditions sont régies par les lois de la République du Cameroun. En cas de litige, les parties s'engagent à tenter une résolution amiable avant de recourir aux tribunaux compétents de Yaoundé. Nous ne collectons ni ne partageons vos données personnelles sans votre consentement, conformément à la législation locale sur la protection des données.
+                </p>
+            </div>
+        </section>
+        
+        <!-- Section Acceptation -->
+        <section class="mt-16 p-8 bg-red-600 text-white rounded-lg text-center">
+            <h2 class="text-2xl font-bold mb-4">Acceptation des Conditions</h2>
+            <p class="mb-6">En utilisant notre plateforme, vous reconnaissez avoir lu, compris et accepté nos conditions d'utilisation.</p>
+            <a href="{% url 'accounts:page_principale' %}" class="bg-white text-red-600 px-6 py-3 rounded-full font-semibold hover:bg-red-50 transition-colors duration-300 inline-flex items-center">
+                Retour à l'accueil <i class="fas fa-arrow-right ml-2"></i>
+            </a>
         </section>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-red-600 text-white py-6 mt-12">
-        <div class="container mx-auto text-center">
-            <div class="mb-4">
-                <h2 class="text-xl font-semibold">Echop</h2>
-                <p class="mt-2">© 2025 Echop. Tous droits réservés.</p>
+    <!-- Footer amélioré -->
+    <footer class="bg-red-700 text-white pt-12 pb-6 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-store mr-2"></i> Echop
+                    </h3>
+                    <p class="text-red-100">Votre marketplace camerounaise préférée, connectant acheteurs et vendeurs depuis 2020.</p>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Liens Rapides</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'accounts:page_principale' %}" class="text-red-100 hover:text-white transition-colors duration-300 hover-lift inline-block">Accueil</a></li>
+                        <li><a href="{% url 'accounts:about' %}" class="text-red-100 hover:text-white transition-colors duration-300 hover-lift inline-block">À propos</a></li>
+                        <li><a href="{% url 'accounts:contact' %}" class="text-red-100 hover:text-white transition-colors duration-300 hover-lift inline-block">Contact</a></li>
+                        <li><a href="{% url 'accounts:terms' %}" class="text-red-100 hover:text-white transition-colors duration-300 hover-lift inline-block">Conditions d'utilisation</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Contactez-nous</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2 text-red-200"></i>
+                            <span class="text-red-100">Yaoundé, Cameroun</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone mt-1 mr-2 text-red-200"></i>
+                            <span class="text-red-100">+237 6 77 24 69 00</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-2 text-red-200"></i>
+                            <span class="text-red-100">support@echop.cm</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Suivez-nous</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="bg-red-600 hover:bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300 hover-lift">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="bg-red-600 hover:bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300 hover-lift">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="bg-red-600 hover:bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300 hover-lift">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="bg-red-600 hover:bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300 hover-lift">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="flex justify-center space-x-6 mb-4">
-                <a href="{% url 'accounts:contact' %}" class="hover:text-red-300 transition-colors duration-200">Contact</a>
-                <a href="{% url 'accounts:about' %}" class="hover:text-red-300 transition-colors duration-200">À propos</a>
-                <a href="{% url 'accounts:terms' %}" class="hover:text-red-300 transition-colors duration-200">Conditions</a>
-            </div>
-            <div>
-                <p>Email : support@echop.cm | Téléphone : +237 6 77 24 69 00</p>
-                <p class="mt-2">Suivez-nous: 
-                    <a href="#" class="text-red-300 hover:text-white">Facebook</a> | 
-                    <a href="#" class="text-red-300 hover:text-white">Twitter</a> | 
-                    <a href="#" class="text-red-300 hover:text-white">Instagram</a>
-                </p>
+            
+            <div class="border-t border-red-600 pt-6 text-center text-red-200">
+                <p>© 2025 Echop. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
+
+    <!-- Bouton back to top -->
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script>
+        // Animation au défilement
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('section').forEach(section => {
+                observer.observe(section);
+            });
+            
+            // Back to top button
+            const backToTopButton = document.getElementById('backToTop');
+            
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('visible');
+                } else {
+                    backToTopButton.classList.remove('visible');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Navigation active state
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            window.addEventListener('scroll', () => {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if (pageYOffset >= (sectionTop - 200)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').substring(1) === current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

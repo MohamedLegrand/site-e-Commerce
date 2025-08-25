@@ -24,6 +24,8 @@ from reportlab.lib.pagesizes import letter
 from .models import Order
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
+import requests
+
 
 def user_login(request):
     if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -571,9 +573,8 @@ def delivery_dashboard(request):
                     messages.success(request, "Message envoyé avec succès au gestionnaire.")
                 except Exception as e:
                     messages.error(request, f"Erreur lors de l'envoi du message : {str(e)}")
-            else:
-                messages.error(request, "Aucun gestionnaire disponible pour recevoir le message.")
 
+    # Retourner la réponse avec render
     return render(request, 'accounts/delivery_dashboard.html', {
         'orders_to_deliver': orders_to_deliver,
         'total_to_deliver': total_to_deliver,
@@ -581,7 +582,7 @@ def delivery_dashboard(request):
     })
 
 
-    from django.shortcuts import render
+    
 from django.contrib.auth.decorators import login_required
 from .models import CustomUser
 
@@ -775,3 +776,62 @@ def verify_qr(request, user_id):
     }
     
     return render(request, 'accounts/verify_qr.html', context)
+
+
+
+@login_required
+def delivery_map(request):
+    # Récupérer les commandes en attente
+    pending_orders = Order.objects.filter(status='pending').order_by('-created_at')
+    clients = []
+    for order in pending_orders:
+        address = order.client_address  # Champ adresse du client
+        latitude, longitude = get_coordinates(address)
+        if latitude and longitude:
+            clients.append({
+                'client_name': order.user.username,
+                'address': address,
+                'latitude': latitude,
+                'longitude': longitude
+            })
+
+    context = {
+        'city_name': "Yaoundé, Cameroun",
+        'clients': clients
+    }
+    return render(request, 'accounts/delivery_map.html', context)
+
+def get_coordinates(address):
+    url = "https://nominatim.openstreetmap.org/search"
+    params = {
+        "q": address,
+        "format": "json",
+        "limit": 1
+    }
+    headers = {
+        "User-Agent": "EchopDeliveryApp/1.0 (your_email@example.com)"  # Remplace par ton email
+    }
+
+    response = requests.get(url, params=params, headers=headers)
+    if response.status_code == 200 and response.json():
+        data = response.json()[0]
+        return float(data["lat"]), float(data["lon"])
+    else:
+        print(f"Erreur : {response.status_code}, {response.text}")
+        return None, None
+    
+
+
+@login_required
+def delivery_orders(request):
+    # Filtrer les commandes en attente assignées au livreur connecté
+    orders_to_deliver = Order.objects.filter(status='en_attente', delivery_person=request.user).order_by('-created_at')
+    total_to_deliver = sum(order.total for order in orders_to_deliver if order.total is not None)
+    current_date = timezone.now().strftime("%d/%m/%Y %H:%M")
+
+    context = {
+        'orders_to_deliver': orders_to_deliver,
+        'total_to_deliver': total_to_deliver,
+        'current_date': current_date
+    }
+    return render(request, 'accounts/delivery_orders.html', context)

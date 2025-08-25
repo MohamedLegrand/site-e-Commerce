@@ -1,86 +1,510 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>À propos - Echop</title>
-    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>À propos - Echop × DOVV Cameroun</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="{% static 'accounts/about.css' %}" rel="stylesheet">
     <style>
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
         }
+        
+        .hero-pattern {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(30, 58, 138, 0.85) 100%), url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.8s ease-out;
+        }
+        
+        .stagger-child > * {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s forwards;
+        }
+        
+        .stagger-child > *:nth-child(1) { animation-delay: 0.1s; }
+        .stagger-child > *:nth-child(2) { animation-delay: 0.2s; }
+        .stagger-child > *:nth-child(3) { animation-delay: 0.3s; }
+        .stagger-child > *:nth-child(4) { animation-delay: 0.4s; }
+        .stagger-child > *:nth-child(5) { animation-delay: 0.5s; }
+        
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .stat-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .timeline {
+            border-left: 3px solid #dc2626;
+            border-bottom-right-radius: 4px;
+            border-top-right-radius: 4px;
+            position: relative;
+            margin: 0 auto;
+            padding: 0 0 0 20px;
+            list-style: none;
+        }
+        
+        .timeline-item {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: #dc2626;
+            border-radius: 50%;
+            left: -29px;
+            top: 5px;
+        }
+        
+        .hover-lift {
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-3px);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #dc2626 0%, #1e3a8a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .dovv-badge {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .partner-logo {
+            transition: all 0.3s ease;
+            filter: grayscale(100%);
+            opacity: 0.7;
+        }
+        
+        .partner-logo:hover {
+            filter: grayscale(0%);
+            opacity: 1;
+            transform: scale(1.05);
+        }
     </style>
 </head>
-<body class="bg-gray-100">
-    <!-- Header -->
-    <header class="bg-red-600 text-white p-4 shadow-lg">
-        <div class="container mx-auto text-center">
-            <h1 class="text-2xl font-bold"><a href="{% url 'accounts:page_principale' %}" class="text-white hover:text-red-300">Echop</a></h1>
+<body class="bg-gray-50">
+    <!-- Header amélioré -->
+    <header class="hero-pattern text-white shadow-xl">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <h1 class="text-3xl font-bold">
+                        <a href="{% url 'accounts:page_principale' %}" class="text-white hover:text-red-200 transition-colors duration-300 flex items-center">
+                            <i class="fas fa-store mr-2"></i>Echop
+                        </a>
+                    </h1>
+                    <span class="mx-3 text-white">×</span>
+                    <div class="bg-white px-3 py-1 rounded-lg">
+                        <span class="text-blue-800 font-bold">DOVV</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="{% url 'accounts:page_principale' %}" class="hover:text-red-200 transition-colors duration-300">Accueil</a>
+                    <a href="{% url 'accounts:contact' %}" class="hover:text-red-200 transition-colors duration-300">Contact</a>
+                    <a href="{% url 'accounts:about' %}" class="font-semibold border-b-2 border-white">À propos</a>
+                    <a href="{% url 'accounts:terms' %}" class="hover:text-red-200 transition-colors duration-300">Conditions</a>
+                </nav>
+                <button class="md:hidden text-white">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Hero Section -->
+        <div class="container mx-auto px-4 py-16 md:py-24 text-center fade-in">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">À propos d'<span class="text-white">Echop × DOVV</span></h1>
+            <p class="text-xl md:text-2xl text-red-100 max-w-3xl mx-auto">Notre partenariat pour révolutionner votre expérience d'achat en ligne au Cameroun</p>
+            <div class="mt-10">
+                <a href="#notre-histoire" class="bg-white text-red-600 px-6 py-3 rounded-full font-semibold hover:bg-red-50 transition-colors duration-300 inline-flex items-center">
+                    Explorer notre histoire <i class="fas fa-arrow-down ml-2"></i>
+                </a>
+            </div>
         </div>
     </header>
 
-    <!-- Navbar -->
-    <nav class="bg-red-500 p-4 shadow-lg">
-        <div class="container mx-auto flex justify-center items-center">
-            <!-- Aucun texte statique supplémentaire -->
+    <!-- Statistiques -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
+                <div class="stat-card bg-gray-50 p-6 rounded-xl shadow-md">
+                    <div class="text-4xl font-bold text-red-600 mb-2">5+</div>
+                    <div class="text-gray-600">Années d'expérience</div>
+                </div>
+                <div class="stat-card bg-gray-50 p-6 rounded-xl shadow-md">
+                    <div class="text-4xl font-bold text-red-600 mb-2">50K+</div>
+                    <div class="text-gray-600">Produits disponibles</div>
+                </div>
+                <div class="stat-card bg-gray-50 p-6 rounded-xl shadow-md">
+                    <div class="text-4xl font-bold text-red-600 mb-2">15+</div>
+                    <div class="text-gray-600">Villes desservies</div>
+                </div>
+                <div class="stat-card bg-gray-50 p-6 rounded-xl shadow-md">
+                    <div class="text-4xl font-bold text-red-600 mb-2">24h</div>
+                    <div class="text-gray-600">Livraison express</div>
+                </div>
+            </div>
         </div>
-    </nav>
+    </section>
 
     <!-- Contenu principal -->
-    <div class="container mx-auto p-6 fade-in">
-        <h1 class="text-4xl font-bold text-center text-red-600 mb-6">À propos d'Echop</h1>
-        <p class="text-center text-gray-700 mb-8">Découvrez qui nous sommes et ce qui nous motive à offrir la meilleure expérience d'achat en ligne au Cameroun.</p>
-
+    <div class="container mx-auto px-4 py-16">
         <!-- Section Présentation -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-semibold text-red-600 mb-4">Notre Histoire</h2>
-            <p class="text-gray-700 leading-relaxed">
-                Fondée en 2020, Echop est une plateforme e-commerce basée à Yaoundé, Cameroun, dédiée à rendre l'achat en ligne accessible et agréable pour tous. Depuis nos débuts, nous avons travaillé sans relâche pour connecter les commerçants locaux avec une clientèle nationale, en mettant l'accent sur la promotion de produits artisanaux et industriels de qualité à des prix compétitifs. Notre voyage a débuté avec une petite équipe passionnée par l'idée de transformer le commerce traditionnel en une expérience numérique fluide et fiable. Aujourd'hui, Echop s'est imposée comme une référence dans le secteur, grâce à notre engagement envers l'innovation et le soutien aux petites entreprises camerounaises. Nous continuons d'évoluer pour répondre aux besoins croissants de notre communauté, en intégrant des technologies modernes pour améliorer l'expérience utilisateur à chaque étape.
-            </p>
+        <section id="notre-histoire" class="mb-16 slide-up">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-8 md:mb-0 md:pr-10">
+                    <span class="dovv-badge">Partenariat Stratégique</span>
+                    <h2 class="text-3xl font-bold text-red-600 mb-6">Notre <span class="gradient-text">Histoire</span></h2>
+                    <p class="text-gray-700 leading-relaxed mb-4">
+                        Fondé en 2020, Echop s'est associé au Supermarché DOVV, l'une des chaînes de distribution les plus réputées du Cameroun, pour offrir une expérience d'achat en ligne incomparable.
+                    </p>
+                    <p class="text-gray-700 leading-relaxed">
+                        Notre partenariat stratégique nous permet de proposer plus de 50 000 produits de grande consommation, des marques locales et internationales, avec la garantie de qualité et de fraîcheur qui fait la réputation de DOVV. Des produits d'épicerie aux électroménagers, en passant par les produits frais et les articles de maison, nous mettons le supermarché à votre porte.
+                    </p>
+                </div>
+                <div class="md:w-1/2">
+                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Équipe Echop et DOVV" class="rounded-xl shadow-lg floating">
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline -->
+        <section class="mb-16 py-12 bg-gray-50 rounded-xl">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center text-red-600 mb-12">Notre <span class="gradient-text">Parcours</span></h2>
+                
+                <div class="timeline max-w-3xl mx-auto">
+                    <div class="timeline-item">
+                        <h3 class="text-xl font-semibold text-gray-800">2020</h3>
+                        <p class="text-gray-600">Lancement du partenariat Echop × DOVV avec 5 catégories de produits</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="text-xl font-semibold text-gray-800">2021</h3>
+                        <p class="text-gray-600">Expansion à Douala et intégration de 15 000 produits supplémentaires</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="text-xl font-semibold text-gray-800">2022</h3>
+                        <p class="text-gray-600">Lancement de la livraison express en moins de 24h dans Yaoundé</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="text-xl font-semibold text-gray-800">2023</h3>
+                        <p class="text-gray-600">Plus de 50 000 produits disponibles et extension à 5 nouvelles villes</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="text-xl font-semibold text-gray-800">2024</h3>
+                        <p class="text-gray-600">Lancement des produits frais et mise en place de la livraison réfrigérée</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Partenariat -->
+        <section class="mb-16 slide-up">
+            <div class="bg-blue-50 p-8 rounded-xl">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-4">Notre Partenariat avec <span class="text-red-600">DOVV</span></h2>
+                    <p class="text-gray-700 max-w-3xl mx-auto">
+                        DOVV Supermarché, fort de ses 10 ans d'expérience dans la distribution au Cameroun, nous approvisionne directement en produits de qualité, garantissant fraîcheur et authenticité.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold text-blue-800 mb-4 flex items-center">
+                            <i class="fas fa-store mr-3"></i> Avantages DOVV
+                        </h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span>Approvisionnement direct depuis les rayons DOVV</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span>Garantie de fraîcheur et de qualité</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span>Prix identiques à ceux en magasin</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span>Promotions synchronisées</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold text-red-600 mb-4 flex items-center">
+                            <i class="fas fa-truck mr-3"></i> Avantages Echop
+                        </h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span>Livraison à domicile en 24h</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span>Interface intuitive et facile à utiliser</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span>Paiement sécurisé et multiple</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span>Service client dédié 7j/7</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- Section Mission -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-semibold text-red-600 mb-4">Notre Mission</h2>
-            <p class="text-gray-700 leading-relaxed">
-                Chez Echop, notre mission est de révolutionner le commerce en ligne au Cameroun en intégrant un système de fidélisation intelligent qui récompense nos clients. Nous croyons fermement que chaque achat devrait offrir une valeur ajoutée, c'est pourquoi nous avons conçu un programme où les points cumulables permettent d'obtenir des réductions personnalisées et des offres exclusives. Au-delà du commerce, nous nous engageons à soutenir l'économie locale en collaborant avec des artisans et des entrepreneurs de Yaoundé et d'autres régions. Notre objectif est de créer une communauté fidèle et satisfaite, tout en promouvant des pratiques durables et équitables. Nous investissons également dans des initiatives éducatives pour former les commerçants à l'utilisation des outils numériques, renforçant ainsi notre impact positif dans la société camerounaise.
-            </p>
+        <section class="mb-16 slide-up">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 order-2 md:order-1">
+                    <img src="https://images.unsplash.com/photo-1577720643272-265f0936742f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Mission Echop × DOVV" class="rounded-xl shadow-lg floating">
+                </div>
+                <div class="md:w-1/2 mb-8 md:mb-0 md:pl-10 order-1 md:order-2">
+                    <h2 class="text-3xl font-bold text-red-600 mb-6">Notre <span class="gradient-text">Mission</span></h2>
+                    <p class="text-gray-700 leading-relaxed">
+                        Notre mission commune est de révolutionner la façon dont les Camerounais font leurs courses, en combinant la qualité et la diversité des produits DOVV avec la commodité et l'innovation technologique d'Echop.
+                    </p>
+                    <p class="text-gray-700 leading-relaxed mt-4">
+                        Nous nous engageons à offrir une expérience d'achat en ligne sécurisée, rapide et agréable, avec un service client réactif et une livraison soignée. Notre objectif est de vous faire gagner du temps tout en vous garantissant des produits de qualité au meilleur prix.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Valeurs -->
+        <section class="mb-16 py-12 bg-white rounded-xl">
+            <h2 class="text-3xl font-bold text-center text-red-600 mb-12">Nos <span class="gradient-text">Engagements</span></h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto stagger-child">
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md text-center">
+                    <div class="text-red-600 text-4xl mb-4">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Qualité Garantie</h3>
+                    <p class="text-gray-600">Tous nos produits proviennent directement des rayons DOVV, avec les mêmes standards de qualité et de fraîcheur.</p>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md text-center">
+                    <div class="text-blue-600 text-4xl mb-4">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Livraison Rapide</h3>
+                    <p class="text-gray-600">Livraison express en 24h dans Yaoundé et Douala, et sous 48h dans les autres villes desservies.</p>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md text-center">
+                    <div class="text-red-600 text-4xl mb-4">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Prix Concurrentiels</h3>
+                    <p class="text-gray-600">Bénéficiez des mêmes prix qu'en magasin, avec des promotions régulières et un programme de fidélité avantageux.</p>
+                </div>
+            </div>
         </section>
 
         <!-- Section Fidélisation -->
-        <section>
-            <h2 class="text-2xl font-semibold text-red-600 mb-4">Notre Programme de Fidélité</h2>
-            <p class="text-gray-700 leading-relaxed">
-                Rejoignez notre programme de fidélité intelligent et profitez de nombreux avantages ! Avec Echop, vous gagnez 1 point par dollar dépensé, et une fois que vous atteignez 100 points, vous pouvez échanger ceux-ci contre une réduction de 10% sur votre prochain achat. Ce système est conçu pour récompenser votre fidélité et vous offrir une expérience d'achat personnalisée. Suivez vos points facilement via votre tableau de bord personnel, où vous trouverez également des offres spéciales adaptées à vos préférences. Nous organisons régulièrement des campagnes promotionnelles pour maximiser vos gains de points, notamment pendant les fêtes ou les événements locaux au Cameroun. Notre objectif est de rendre chaque transaction non seulement pratique, mais aussi gratifiante, tout en renforçant les liens avec notre clientèle à Yaoundé et au-delà.
-            </p>
+        <section class="slide-up">
+            <div class="bg-gradient-to-r from-red-600 to-blue-700 text-white rounded-xl p-8 md:p-12 shadow-lg">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 mb-8 md:mb-0">
+                        <h2 class="text-3xl font-bold mb-6">Programme de <span class="text-yellow-300">Fidélité</span></h2>
+                        <p class="mb-4">
+                            Avec Echop × DOVV, cumulez des points à chaque achat et bénéficiez d'avantages exclusifs.
+                        </p>
+                        <p class="mb-6">
+                            Pour chaque 1000 FCFA dépensé, gagnez 10 points. Échangez 500 points pour une réduction de 5% sur votre prochaine commande, ou 1000 points pour 12% de réduction.
+                        </p>
+                        <a href="{% url 'accounts:page_principale' %}" class="bg-white text-red-600 px-6 py-3 rounded-full font-semibold hover:bg-red-50 transition-colors duration-300 inline-flex items-center">
+                            Découvrir nos produits <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                    <div class="md:w-1/2 flex justify-center">
+                        <div class="bg-white text-gray-800 p-6 rounded-xl shadow-lg max-w-xs w-full">
+                            <div class="text-center mb-4">
+                                <i class="fas fa-crown text-4xl text-yellow-500"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-center mb-4">Avantages Exclusifs</h3>
+                            <ul class="space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>10 points/1000 FCFA dépensés</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>500 points = 5% de réduction</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>1000 points = 12% de réduction</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>Offres personnalisées</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-red-600 text-white py-6 mt-12">
-        <div class="container mx-auto text-center">
-            <div class="mb-4">
-                <h2 class="text-xl font-semibold">Echop</h2>
-                <p class="mt-2">© 2025 Echop. Tous droits réservés.</p>
+    <!-- Footer amélioré -->
+    <footer class="bg-gradient-to-r from-red-700 to-blue-800 text-white pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-store mr-2"></i> Echop × DOVV
+                    </h3>
+                    <p class="text-red-100">Votre supermarché en ligne, associant la qualité DOVV à la commodité d'Echop.</p>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Liens Rapides</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'accounts:page_principale' %}" class="text-red-100 hover:text-white transition-colors duration-300 hover-lift inline-block">Accueil</a></li>
+                        <li><a href="{% url 'accounts:about' %}" class="text-red-100 hover:text-white transition-colors duration-300 hover-lift inline-block">À propos</a></li>
+                        <li><a href="{% url 'accounts:contact' %}" class="text-red-100 hover:text-white transition-colors duration-300 hover-lift inline-block">Contact</a></li>
+                        <li><a href="{% url 'accounts:terms' %}" class="text-red-100 hover:text-white transition-colors duration-300 hover-lift inline-block">Conditions</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Contactez-nous</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2 text-red-200"></i>
+                            <span class="text-red-100">Yaoundé, Cameroun</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone mt-1 mr-2 text-red-200"></i>
+                            <span class="text-red-100">+237 6 77 24 69 00</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-2 text-red-200"></i>
+                            <span class="text-red-100">support@echop.cm</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Suivez-nous</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="bg-red-600 hover:bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300 hover-lift">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="bg-red-600 hover:bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300 hover-lift">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="bg-red-600 hover:bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300 hover-lift">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="flex justify-center space-x-6 mb-4">
-                <a href="{% url 'accounts:contact' %}" class="hover:text-red-300 transition-colors duration-200">Contact</a>
-                <a href="{% url 'accounts:about' %}" class="hover:text-red-300 transition-colors duration-200">À propos</a>
-                <a href="{% url 'accounts:terms' %}" class="hover:text-red-300 transition-colors duration-200">Conditions</a>
-            </div>
-            <div>
-                <p>Email : support@echop.cm | Téléphone : +237 6 77 24 69 00</p>
-                <p class="mt-2">Suivez-nous: 
-                    <a href="#" class="text-red-300 hover:text-white">Facebook</a> | 
-                    <a href="#" class="text-red-300 hover:text-white">Twitter</a> | 
-                    <a href="#" class="text-red-300 hover:text-white">Instagram</a>
-                </p>
+            
+            <div class="border-t border-red-400 pt-6 text-center text-red-200">
+                <p>© 2025 Echop × DOVV Supermarché. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
+
+    <script>
+        // Animation au défilement
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('section').forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
 </body>
 </html>

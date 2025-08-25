@@ -4,54 +4,599 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produits en Solde - Echop</title>
+    <title>Produits en Solde - Echop × DOVV Supermarché</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/sold_products.css' %}">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+        
+        .hero-pattern {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(185, 28, 28, 0.85) 100%), url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .discount-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #dc2626;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .dovv-badge {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        
+        .countdown-timer {
+            background: #fef2f2;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            margin: 16px 0;
+        }
+        
+        .timer-unit {
+            display: inline-block;
+            margin: 0 8px;
+        }
+        
+        .timer-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #dc2626;
+        }
+        
+        .timer-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        
+        .filter-btn {
+            transition: all 0.3s ease;
+            border-radius: 20px;
+        }
+        
+        .filter-btn.active {
+            background: #dc2626;
+            color: white;
+        }
+        
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cart-notification {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #10b981;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            z-index: 50;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        
+        .cart-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #dc2626 0%, #f87171 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hover-lift {
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-3px);
+        }
+    </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans">
+<body class="bg-gray-50">
 
-    <!-- Header -->
-    <header class="bg-red-600 text-white p-6 shadow-lg">
-        <div class="container mx-auto flex justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-bold">Echop - Produits en Solde</h1>
-                <p class="mt-2 text-lg">Découvrez nos meilleures offres sur les vêtements, chaussures et plus encore.</p>
+    <!-- Header amélioré -->
+    <header class="hero-pattern text-white shadow-xl">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <h1 class="text-3xl font-bold">
+                        <a href="{% url 'accounts:page_principale' %}" class="text-white hover:text-red-200 transition-colors duration-300 flex items-center">
+                            <i class="fas fa-store mr-2"></i>Echop
+                        </a>
+                    </h1>
+                    <span class="mx-3 text-white">×</span>
+                    <div class="bg-white px-3 py-1 rounded-lg">
+                        <span class="text-blue-800 font-bold">DOVV</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="{% url 'accounts:page_principale' %}" class="hover:text-red-200 transition-colors duration-300">Accueil</a>
+                    <a href="{% url 'accounts:contact' %}" class="hover:text-red-200 transition-colors duration-300">Contact</a>
+                    <a href="{% url 'accounts:about' %}" class="hover:text-red-200 transition-colors duration-300">À propos</a>
+                    <a href="#" class="font-semibold border-b-2 border-white">Soldes</a>
+                </nav>
+                <div class="flex items-center">
+                    <a href="#" class="bg-white text-red-600 px-4 py-2 rounded-full font-semibold hover:bg-red-50 transition-colors duration-300 flex items-center">
+                        <i class="fas fa-shopping-cart mr-2"></i> Panier
+                        <span class="ml-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">3</span>
+                    </a>
+                </div>
             </div>
-            <nav>
-                <ul class="flex">
-                    <li><a href="#" class="hover:text-yellow-300 transition-colors">Panier</a></li>
-                </ul>
-            </nav>
+        </div>
+        
+        <!-- Hero Section -->
+        <div class="container mx-auto px-4 py-12 text-center fade-in">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Soldes Exclusives <span class="text-white">DOVV</span></h1>
+            <p class="text-xl md:text-2xl text-red-100 max-w-3xl mx-auto">Découvrez les meilleures offres du Supermarché DOVV, livrées directement chez vous</p>
+            
+            <!-- Compte à rebours -->
+            <div class="countdown-timer max-w-md mx-auto mt-8">
+                <p class="text-gray-700 font-semibold mb-2">Les soldes se terminent dans:</p>
+                <div class="flex justify-center">
+                    <div class="timer-unit">
+                        <div class="timer-value" id="days">02</div>
+                        <div class="timer-label">Jours</div>
+                    </div>
+                    <div class="timer-unit">
+                        <div class="timer-value" id="hours">12</div>
+                        <div class="timer-label">Heures</div>
+                    </div>
+                    <div class="timer-unit">
+                        <div class="timer-value" id="minutes">45</div>
+                        <div class="timer-label">Minutes</div>
+                    </div>
+                    <div class="timer-unit">
+                        <div class="timer-value" id="seconds">30</div>
+                        <div class="timer-label">Secondes</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- Section Produits en Solde -->
+    <!-- Filtres -->
+    <div class="sticky-header py-4">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap justify-center gap-3">
+                <button class="filter-btn active bg-red-100 text-red-700 px-4 py-2">Tous les produits</button>
+                <button class="filter-btn bg-gray-100 text-gray-700 px-4 py-2">Alimentation</button>
+                <button class="filter-btn bg-gray-100 text-gray-700 px-4 py-2">Électroménager</button>
+                <button class="filter-btn bg-gray-100 text-gray-700 px-4 py-2">Maison</button>
+                <button class="filter-btn bg-gray-100 text-gray-700 px-4 py-2">Hygiène</button>
+                <button class="filter-btn bg-gray-100 text-gray-700 px-4 py-2">Boissons</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenu principal -->
     <main class="container mx-auto px-4 py-10">
-        <h2 class="text-3xl font-semibold text-center mb-10 text-red-700">Nos Produits en Solde</h2>
-        <div class="content-box">
-            <p class="text-lg text-gray-600 mb-4">Bienvenue sur la page des produits en solde
-            chez Echop ! Découvrez ici une sélection exclusive d'articles à prix réduits. 
-            Profitez de ces offres limitées à des 
-            tarifs exceptionnels. Restez à l'affût, car nos stocks sont mis à jour régulièrement !</p>
-            <p class="text-lg text-gray-600 mb-4">Nos soldes incluent des produits divers et varies, 
-            avec des réductions allant jusqu'à 50% 
-            sur certains articles. Vérifiez régulièrement pour ne pas manquer vos articles préférés.
-            Ajoutez-les rapidement à votre panier avant qu'ils ne soient épuisés !</p>
-            <p class="text-lg text-gray-600">Pour plus d'informations ou pour passer commande, 
-            n'hésitez pas à nous contacter via support@echop.com ou au +237 6 77 24 69 00. Bonne chasse aux bonnes affaires !</p>
+        <!-- Introduction -->
+        <div class="bg-white p-8 rounded-xl shadow-md mb-12 slide-up">
+            <h2 class="text-3xl font-semibold text-center mb-6 text-red-700">Soldes Exclusives <span class="gradient-text">DOVV</span></h2>
+            <p class="text-lg text-gray-600 mb-4 text-center">
+                Bienvenue sur la page des produits en solde en partenariat avec le Supermarché DOVV ! 
+                Découvrez ici une sélection exclusive d'articles à prix réduits, disponibles en dropshipping.
+            </p>
+            <p class="text-lg text-gray-600 mb-4 text-center">
+                Profitez de ces offres limitées à des tarifs exceptionnels, avec des réductions allant jusqu'à 50% sur certains articles. 
+                Nos stocks sont mis à jour régulièrement, alors vérifiez souvent pour ne pas manquer vos produits préférés.
+            </p>
+            <p class="text-lg text-gray-600 text-center">
+                Pour plus d'informations ou pour passer commande, n'hésitez pas à nous contacter via 
+                <a href="mailto:support@echop.cm" class="text-red-600 hover:underline">support@echop.cm</a> 
+                ou au <a href="tel:+237677246900" class="text-red-600 hover:underline">+237 6 77 24 69 00</a>. 
+                Bon shopping !
+            </p>
+        </div>
+
+        <!-- Produits -->
+        <h3 class="text-2xl font-semibold mb-6">Produits Populaires</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <!-- Produit 1 -->
+            <div class="product-card bg-white rounded-xl shadow-md overflow-hidden slide-up">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Pack de pâtes" class="w-full h-48 object-cover">
+                    <div class="discount-badge">-25%</div>
+                </div>
+                <div class="p-4">
+                    <span class="dovv-badge">DOVV Exclusive</span>
+                    <h4 class="font-semibold text-lg mb-2">Pack de Pâtes Barilla</h4>
+                    <p class="text-gray-600 text-sm mb-4">500g - Lot de 5 paquets</p>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-red-600 font-bold text-xl">8 500 FCFA</span>
+                            <span class="text-gray-400 text-sm line-through ml-2">11 300 FCFA</span>
+                        </div>
+                        <button class="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition-colors add-to-cart" data-product="Pack de Pâtes Barilla">
+                            <i class="fas fa-cart-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 2 -->
+            <div class="product-card bg-white rounded-xl shadow-md overflow-hidden slide-up">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Huile d'olive" class="w-full h-48 object-cover">
+                    <div class="discount-badge">-30%</div>
+                </div>
+                <div class="p-4">
+                    <span class="dovv-badge">DOVV Exclusive</span>
+                    <h4 class="font-semibold text-lg mb-2">Huile d'Olive Extra Vierge</h4>
+                    <p class="text-gray-600 text-sm mb-4">1L - Produit d'importation</p>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-red-600 font-bold text-xl">12 000 FCFA</span>
+                            <span class="text-gray-400 text-sm line-through ml-2">17 000 FCFA</span>
+                        </div>
+                        <button class="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition-colors add-to-cart" data-product="Huile d'Olive Extra Vierge">
+                            <i class="fas fa-cart-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 3 -->
+            <div class="product-card bg-white rounded-xl shadow-md overflow-hidden slide-up">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1586201375765-4e6847a123f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Machine à café" class="w-full h-48 object-cover">
+                    <div class="discount-badge">-40%</div>
+                </div>
+                <div class="p-4">
+                    <span class="dovv-badge">DOVV Exclusive</span>
+                    <h4 class="font-semibold text-lg mb-2">Machine à Café Automatique</h4>
+                    <p class="text-gray-600 text-sm mb-4">Marque Philips - Garantie 2 ans</p>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-red-600 font-bold text-xl">89 900 FCFA</span>
+                            <span class="text-gray-400 text-sm line-through ml-2">149 900 FCFA</span>
+                        </div>
+                        <button class="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition-colors add-to-cart" data-product="Machine à Café Automatique">
+                            <i class="fas fa-cart-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 4 -->
+            <div class="product-card bg-white rounded-xl shadow-md overflow-hidden slide-up">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1611262588024-d12430b98920?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Pack de lessive" class="w-full h-48 object-cover">
+                    <div class="discount-badge">-20%</div>
+                </div>
+                <div class="p-4">
+                    <span class="dovv-badge">DOVV Exclusive</span>
+                    <h4 class="font-semibold text-lg mb-2">Lessive Ariel</h4>
+                    <p class="text-gray-600 text-sm mb-4">Pack familial - 5L</p>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-red-600 font-bold text-xl">7 200 FCFA</span>
+                            <span class="text-gray-400 text-sm line-through ml-2">9 000 FCFA</span>
+                        </div>
+                        <button class="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition-colors add-to-cart" data-product="Lessive Ariel">
+                            <i class="fas fa-cart-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 5 -->
+            <div class="product-card bg-white rounded-xl shadow-md overflow-hidden slide-up">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Riz basmati" class="w-full h-48 object-cover">
+                    <div class="discount-badge">-15%</div>
+                </div>
+                <div class="p-4">
+                    <span class="dovv-badge">DOVV Exclusive</span>
+                    <h4 class="font-semibold text-lg mb-2">Riz Basmati</h4>
+                    <p class="text-gray-600 text-sm mb-4">Sac de 10kg - Qualité premium</p>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-red-600 font-bold text-xl">15 300 FCFA</span>
+                            <span class="text-gray-400 text-sm line-through ml-2">18 000 FCFA</span>
+                        </div>
+                        <button class="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition-colors add-to-cart" data-product="Riz Basmati">
+                            <i class="fas fa-cart-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 6 -->
+            <div class="product-card bg-white rounded-xl shadow-md overflow-hidden slide-up">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1600954700722-c6b7be8a0799?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Mixeur" class="w-full h-48 object-cover">
+                    <div class="discount-badge">-35%</div>
+                </div>
+                <div class="p-4">
+                    <span class="dovv-badge">DOVV Exclusive</span>
+                    <h4 class="font-semibold text-lg mb-2">Mixeur Électrique</h4>
+                    <p class="text-gray-600 text-sm mb-4">Moulinex - 500W - 5 vitesses</p>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-red-600 font-bold text-xl">24 500 FCFA</span>
+                            <span class="text-gray-400 text-sm line-through ml-2">37 700 FCFA</span>
+                        </div>
+                        <button class="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition-colors add-to-cart" data-product="Mixeur Électrique">
+                            <i class="fas fa-cart-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 7 -->
+            <div class="product-card bg-white rounded-xl shadow-md overflow-hidden slide-up">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1616627563234-524f1e9b57c1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Eau minérale" class="w-full h-48 object-cover">
+                    <div class="discount-badge">-10%</div>
+                </div>
+                <div class="p-4">
+                    <span class="dovv-badge">DOVV Exclusive</span>
+                    <h4 class="font-semibold text-lg mb-2">Eau Minérale Naturelle</h4>
+                    <p class="text-gray-600 text-sm mb-4">Bouteille de 1,5L - Lot de 12</p>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-red-600 font-bold text-xl">6 500 FCFA</span>
+                            <span class="text-gray-400 text-sm line-through ml-2">7 200 FCFA</span>
+                        </div>
+                        <button class="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition-colors add-to-cart" data-product="Eau Minérale Naturelle">
+                            <i class="fas fa-cart-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 8 -->
+            <div class="product-card bg-white rounded-xl shadow-md overflow-hidden slide-up">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1589985270826-4b7fe135a9c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Café" class="w-full h-48 object-cover">
+                    <div class="discount-badge">-25%</div>
+                </div>
+                <div class="p-4">
+                    <span class="dovv-badge">DOVV Exclusive</span>
+                    <h4 class="font-semibold text-lg mb-2">Café 100% Arabica</h4>
+                    <p class="text-gray-600 text-sm mb-4">Paquet de 500g - Origine Colombie</p>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-red-600 font-bold text-xl">8 900 FCFA</span>
+                            <span class="text-gray-400 text-sm line-through ml-2">11 800 FCFA</span>
+                        </div>
+                        <button class="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition-colors add-to-cart" data-product="Café 100% Arabica">
+                            <i class="fas fa-cart-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bannière de livraison -->
+        <div class="bg-red-600 text-white p-6 rounded-xl mt-12 text-center slide-up">
+            <h3 class="text-2xl font-semibold mb-2">Livraison Gratuite à Partir de 50 000 FCFA</h3>
+            <p class="mb-4">Commandez maintenant et recevez vos produits DOVV directement à votre porte</p>
+            <a href="#" class="bg-white text-red-600 px-6 py-3 rounded-full font-semibold hover:bg-red-50 transition-colors duration-300 inline-flex items-center">
+                Voir tous les produits <i class="fas fa-arrow-right ml-2"></i>
+            </a>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-red-600 text-white text-center py-6 mt-10">
-        <p>© 2025 Echop. Tous droits réservés.</p>
-        <div class="mt-2">
-            <a href="#" class="text-yellow-300 hover:underline mx-2">À propos</a>
-            <a href="#" class="text-yellow-300 hover:underline mx-2">Contact</a>
-            <a href="#" class="text-yellow-300 hover:underline mx-2">Conditions d'utilisation</a>
+    <!-- Footer amélioré -->
+    <footer class="bg-red-700 text-white pt-12 pb-6 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-store mr-2"></i> Echop × DOVV
+                    </h3>
+                    <p class="text-red-100">Votre plateforme de dropshipping exclusive avec les produits du Supermarché DOVV.</p>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Liens Rapides</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'accounts:page_principale' %}" class="text-red-100 hover:text-white transition-colors duration-300 hover-lift inline-block">Accueil</a></li>
+                        <li><a href="{% url 'accounts:about' %}" class="text-red-100 hover:text-white transition-colors duration-300 hover-lift inline-block">À propos</a></li>
+                        <li><a href="{% url 'accounts:contact' %}" class="text-red-100 hover:text-white transition-colors duration-300 hover-lift inline-block">Contact</a></li>
+                        <li><a href="{% url 'accounts:terms' %}" class="text-red-100 hover:text-white transition-colors duration-300 hover-lift inline-block">Conditions</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Contactez-nous</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2 text-red-200"></i>
+                            <span class="text-red-100">Yaoundé, Cameroun</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone mt-1 mr-2 text-red-200"></i>
+                            <span class="text-red-100">+237 6 77 24 69 00</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-2 text-red-200"></i>
+                            <span class="text-red-100">support@echop.cm</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Suivez-nous</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="bg-red-600 hover:bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300 hover-lift">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="bg-red-600 hover:bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300 hover-lift">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="bg-red-600 hover:bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300 hover-lift">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-red-600 pt-6 text-center text-red-200">
+                <p>© 2025 Echop × DOVV Supermarché. Tous droits réservés.</p>
+            </div>
         </div>
-        <p class="mt-1">Contact : <a href="mailto:support@echop.com" class="text-yellow-300 hover:underline">support@echop.com</a> | Téléphone : +237 6 77 24 69 00</p>
     </footer>
 
+    <!-- Notification d'ajout au panier -->
+    <div class="cart-notification" id="cartNotification">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span>Produit ajouté au panier!</span>
+    </div>
+
+    <script>
+        // Animation au défilement
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('.slide-up').forEach(section => {
+                observer.observe(section);
+            });
+            
+            // Compte à rebours
+            function updateCountdown() {
+                const days = document.getElementById('days');
+                const hours = document.getElementById('hours');
+                const minutes = document.getElementById('minutes');
+                const seconds = document.getElementById('seconds');
+                
+                // Définir la date de fin des soldes (2 jours à partir de maintenant)
+                const now = new Date();
+                const endDate = new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000);
+                
+                const interval = setInterval(() => {
+                    const now = new Date();
+                    const difference = endDate - now;
+                    
+                    if (difference <= 0) {
+                        clearInterval(interval);
+                        return;
+                    }
+                    
+                    const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((difference % (1000 * 60)) / 1000);
+                    
+                    days.textContent = d.toString().padStart(2, '0');
+                    hours.textContent = h.toString().padStart(2, '0');
+                    minutes.textContent = m.toString().padStart(2, '0');
+                    seconds.textContent = s.toString().padStart(2, '0');
+                }, 1000);
+            }
+            
+            updateCountdown();
+            
+            // Filtres
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                });
+            });
+            
+            // Ajout au panier
+            const addToCartButtons = document.querySelectorAll('.add-to-cart');
+            const cartNotification = document.getElementById('cartNotification');
+            
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const productName = button.getAttribute('data-product');
+                    cartNotification.querySelector('span').textContent = `${productName} ajouté au panier!`;
+                    
+                    cartNotification.classList.add('show');
+                    
+                    setTimeout(() => {
+                        cartNotification.classList.remove('show');
+                    }, 3000);
+                });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -2,43 +2,311 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Récompenses - Echop</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        }
+        .reward-gradient {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+        }
+        .input-focus:focus {
+            border-color: #dc2626;
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15);
+            transform: scale(1.02);
+        }
+        .floating-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .sparkle {
+            position: relative;
+            overflow: hidden;
+        }
+        .sparkle::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+            opacity: 0;
+        }
+        .sparkle:hover::before {
+            animation: sparkle-animation 0.8s ease-in-out;
+        }
+        @keyframes sparkle-animation {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
+        }
+        .reward-icon {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+        }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-gradient-to-br from-gray-50 via-red-50 to-amber-50 font-sans min-h-screen">
     <!-- Header -->
-    <header class="bg-red-600 text-white p-4 shadow-md">
-        <div class="container mx-auto">
-            <h1 class="text-2xl font-bold">Echop</h1>
+    <header class="gradient-bg text-white shadow-2xl relative overflow-hidden">
+        <div class="absolute inset-0 bg-black bg-opacity-10"></div>
+        <div class="container mx-auto px-4 py-6 relative z-10">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="reward-icon rounded-full p-3 floating-animation">
+                        <i class="fas fa-crown text-2xl text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold">Echop</h1>
+                        <p class="text-red-200 text-sm">Système de récompenses</p>
+                    </div>
+                </div>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#" class="hover:text-red-200 transition duration-300 font-medium flex items-center">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Tableau de bord
+                    </a>
+                    <a href="#" class="hover:text-red-200 transition duration-300 font-medium flex items-center">
+                        <i class="fas fa-gift mr-2"></i>Récompenses
+                    </a>
+                    <a href="#" class="hover:text-red-200 transition duration-300 font-medium flex items-center">
+                        <i class="fas fa-cog mr-2"></i>Paramètres
+                    </a>
+                </nav>
+            </div>
+        </div>
+        
+        <!-- Decorative elements -->
+        <div class="absolute top-4 right-10 text-red-400 opacity-20">
+            <i class="fas fa-star text-3xl floating-animation"></i>
+        </div>
+        <div class="absolute bottom-4 right-32 text-red-400 opacity-20">
+            <i class="fas fa-medal text-2xl floating-animation" style="animation-delay: 1s;"></i>
         </div>
     </header>
 
     <!-- Navigation -->
-   
-
+    
     <!-- Main Content -->
-    <div class="container mx-auto p-6 mt-6 text-center">
-        <h2 class="text-2xl font-bold">Gestion des Récompenses</h2>
-        <p class="mt-4 text-gray-600">Attribuez des récompenses aux utilisateurs éligibles.</p>
-        <form method="post" class="mt-6 max-w-md mx-auto bg-white p-4 rounded shadow">
-            {% csrf_token %}
-            <div class="mb-4">
-                <label for="user_id" class="block text-left">ID de l'utilisateur :</label>
-                <input type="number" id="user_id" name="user_id" class="w-full p-2 border rounded" required>
+    <div class="container mx-auto px-4 py-12">
+        <!-- En-tête de page avec design attractif -->
+        <div class="text-center mb-16">
+            <div class="inline-flex items-center justify-center w-24 h-24 reward-gradient rounded-full mb-6 floating-animation sparkle">
+                <i class="fas fa-trophy text-4xl text-white"></i>
             </div>
-            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Attribuer Récompense</button>
-        </form>
+            <h2 class="text-5xl font-bold bg-gradient-to-r from-red-600 to-amber-600 bg-clip-text text-transparent mb-4">
+                Gestion des Récompenses
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Attribuez des récompenses aux utilisateurs éligibles et reconnaissez leur fidélité.
+            </p>
+            
+            <!-- Statistiques visuelles -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 max-w-4xl mx-auto">
+                <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white card-hover">
+                    <div class="flex items-center justify-between mb-2">
+                        <i class="fas fa-users text-2xl opacity-80"></i>
+                        <span class="text-3xl font-bold">1,234</span>
+                    </div>
+                    <p class="text-blue-100">Utilisateurs éligibles</p>
+                </div>
+                <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 text-white card-hover">
+                    <div class="flex items-center justify-between mb-2">
+                        <i class="fas fa-gift text-2xl opacity-80"></i>
+                        <span class="text-3xl font-bold">856</span>
+                    </div>
+                    <p class="text-green-100">Récompenses attribuées</p>
+                </div>
+                <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white card-hover">
+                    <div class="flex items-center justify-between mb-2">
+                        <i class="fas fa-star text-2xl opacity-80"></i>
+                        <span class="text-3xl font-bold">4.8</span>
+                    </div>
+                    <p class="text-purple-100">Satisfaction moyenne</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulaire principal -->
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-3xl shadow-2xl p-10 card-hover sparkle border border-gray-100">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 reward-gradient rounded-full mb-4">
+                        <i class="fas fa-award text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800">Attribuer une récompense</h3>
+                    <p class="text-gray-600 mt-2">Sélectionnez un utilisateur pour lui attribuer une récompense</p>
+                </div>
+                
+                <form method="post" class="space-y-8">
+                    {% csrf_token %}
+                    
+                    <!-- Types de récompenses disponibles -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                        <div class="text-center p-4 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-xl">
+                            <i class="fas fa-medal text-2xl text-yellow-600 mb-2"></i>
+                            <p class="text-sm font-semibold text-yellow-800">Bronze</p>
+                        </div>
+                        <div class="text-center p-4 bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl">
+                            <i class="fas fa-medal text-2xl text-gray-600 mb-2"></i>
+                            <p class="text-sm font-semibold text-gray-700">Argent</p>
+                        </div>
+                        <div class="text-center p-4 bg-gradient-to-br from-yellow-300 to-yellow-400 rounded-xl">
+                            <i class="fas fa-medal text-2xl text-yellow-700 mb-2"></i>
+                            <p class="text-sm font-semibold text-yellow-800">Or</p>
+                        </div>
+                        <div class="text-center p-4 bg-gradient-to-br from-purple-200 to-purple-300 rounded-xl">
+                            <i class="fas fa-crown text-2xl text-purple-700 mb-2"></i>
+                            <p class="text-sm font-semibold text-purple-800">Platine</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label for="user_id" class="block text-lg font-semibold text-gray-800 mb-3">
+                                <i class="fas fa-user-circle mr-3 text-red-500"></i>ID de l'utilisateur :
+                            </label>
+                            <div class="relative">
+                                <input type="number" id="user_id" name="user_id" 
+                                       class="w-full p-6 border-3 border-gray-200 rounded-2xl input-focus transition-all duration-300 bg-gray-50 focus:bg-white text-lg font-medium" 
+                                       placeholder="Entrez l'ID de l'utilisateur (ex: 12345)" required>
+                                <div class="absolute right-6 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                    <i class="fas fa-hashtag"></i>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-2 ml-2">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                L'ID de l'utilisateur se trouve dans son profil
+                            </p>
+                        </div>
+                        
+                        <button type="submit" 
+                                class="w-full reward-gradient text-white px-8 py-6 rounded-2xl font-bold text-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 sparkle flex items-center justify-center space-x-3">
+                            <i class="fas fa-trophy text-2xl"></i>
+                            <span>Attribuer Récompense</span>
+                            <i class="fas fa-sparkles text-xl"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Instructions d'utilisation -->
+            <div class="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100">
+                <h4 class="font-bold text-blue-800 mb-3 flex items-center">
+                    <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
+                    Comment ça fonctionne ?
+                </h4>
+                <ul class="space-y-2 text-blue-700">
+                    <li class="flex items-center">
+                        <i class="fas fa-check-circle mr-3 text-green-500"></i>
+                        Entrez l'ID de l'utilisateur éligible
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check-circle mr-3 text-green-500"></i>
+                        Le système vérifie automatiquement l'éligibilité
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check-circle mr-3 text-green-500"></i>
+                        La récompense est attribuée instantanément
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-red-600 text-white p-4 mt-6">
-        <div class="container mx-auto text-center">
-            <p>&copy; 2025 Echop. Tous droits réservés.</p>
-            <p class="mt-2">
-                <a href="{% url 'accounts:contact' %}" class="text-red-200 hover:text-red-50">Contact</a> |
-                <a href="{% url 'accounts:terms' %}" class="text-red-200 hover:text-red-50">Conditions d'utilisation</a> |
-                <a href="{% url 'accounts:about' %}" class="text-red-200 hover:text-red-50">À propos</a>
-            </p>
+    <footer class="gradient-bg text-white mt-20 relative overflow-hidden">
+        <div class="absolute inset-0 bg-black bg-opacity-10"></div>
+        <div class="container mx-auto px-4 py-12 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="reward-icon rounded-full p-3">
+                            <i class="fas fa-crown text-xl text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-bold">Echop</h4>
+                            <p class="text-red-200 text-sm">Récompenses & Fidélité</p>
+                        </div>
+                    </div>
+                    <p class="text-red-100 leading-relaxed">
+                        Plateforme de gestion et de livraison pour commerçants et clients avec système de récompenses intégré.
+                    </p>
+                </div>
+                <div>
+                    <h5 class="text-xl font-semibold mb-6 flex items-center">
+                        <i class="fas fa-compass mr-2"></i>Navigation
+                    </h5>
+                    <ul class="space-y-3">
+                        <li>
+                            <a href="#" class="text-red-200 hover:text-white transition duration-300 flex items-center">
+                                <i class="fas fa-tachometer-alt mr-2 w-4"></i>Tableau de bord
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-red-200 hover:text-white transition duration-300 flex items-center">
+                                <i class="fas fa-gift mr-2 w-4"></i>Récompenses
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-red-200 hover:text-white transition duration-300 flex items-center">
+                                <i class="fas fa-cog mr-2 w-4"></i>Paramètres
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-xl font-semibold mb-6 flex items-center">
+                        <i class="fas fa-headset mr-2"></i>Support
+                    </h5>
+                    <ul class="space-y-3">
+                        <li>
+                            <a href="{% url 'accounts:contact' %}" class="text-red-200 hover:text-white transition duration-300 flex items-center">
+                                <i class="fas fa-envelope mr-2 w-4"></i>Contact
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'accounts:terms' %}" class="text-red-200 hover:text-white transition duration-300 flex items-center">
+                                <i class="fas fa-file-contract mr-2 w-4"></i>Conditions d'utilisation
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'accounts:about' %}" class="text-red-200 hover:text-white transition duration-300 flex items-center">
+                                <i class="fas fa-info-circle mr-2 w-4"></i>À propos
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-red-500 mt-10 pt-8 text-center">
+                <p class="text-red-100 flex items-center justify-center">
+                    <i class="fas fa-copyright mr-2"></i>
+                    2025 Echop. Tous droits réservés.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Decorative footer elements -->
+        <div class="absolute bottom-4 left-10 text-red-400 opacity-10">
+            <i class="fas fa-gift text-4xl floating-animation"></i>
+        </div>
+        <div class="absolute top-10 right-20 text-red-400 opacity-10">
+            <i class="fas fa-trophy text-3xl floating-animation" style="animation-delay: 2s;"></i>
         </div>
     </footer>
 </body>

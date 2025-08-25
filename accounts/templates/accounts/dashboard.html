@@ -1,29 +1,253 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
+    <meta charset="UTF-8">
     <title>Tableau de bord - Echop</title>
     {% load static %}
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="{% static 'accounts/dahboard.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-gradient {
+            background: linear-gradient(90deg, #e53e3e 0%, #c53030 100%);
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border-left: 4px solid #e53e3e;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .badge-premium {
+            background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e53e3e 0%, #c53030 100%);
+            border-radius: 4px;
+            transition: width 1s ease-in-out;
+        }
+        
+        .achievement-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: #f0f9ff;
+            color: #0ea5e9;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .floating-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto p-6">
-        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Tableau de bord</h1>
+<body class="min-h-screen py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+        <!-- En-tête -->
+        <div class="header-gradient text-white rounded-xl p-6 mb-8 flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold">Tableau de bord</h1>
+                <p class="opacity-90 mt-1">Gérez votre activité et suivez vos performances</p>
+            </div>
+            <div class="mt-4 md:mt-0">
+                <a href="{% url 'accounts:page_principale' %}" class="bg-white text-red-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors flex items-center">
+                    <i class="fas fa-arrow-left mr-2"></i> Retour à l'accueil
+                </a>
+            </div>
+        </div>
+
+        <!-- Messages -->
         {% if messages %}
-            {% for message in messages %}
-                <div class="bg-red-100 text-red-700 p-2 mb-4 rounded">{{ message }}</div>
-            {% endfor %}
+            <div class="mb-8">
+                {% for message in messages %}
+                    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-3">
+                        <p>{{ message }}</p>
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
-        <div class="card bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto">
-            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Bienvenue, {{ user.username }}!</h2>
-            <p class="text-gray-600 mb-4">Rôle: {{ user.role }}</p>
-            <p class="text-gray-600 mb-4">Nombre d'achats: {{ user.purchase_count }}</p>
-            <p class="text-gray-600 mb-4">Total cumulé des ventes: {{ user.total_sales|floatformat:2 }} FCFA</p>
-            {% if user.purchase_count >= 5 %} <!-- Exemple de seuil pour une réduction -->
-                <p class="text-green-600 font-bold">Félicitations ! Vous avez droit à une réduction de 10% après 5 achats.</p>
+
+        <!-- Carte de bienvenue -->
+        <div class="dashboard-card p-6 mb-8">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
+                    <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center floating-icon">
+                        <i class="fas fa-user text-red-600 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="flex-grow text-center md:text-left">
+                    <h2 class="text-2xl font-semibold text-gray-800">Bienvenue, {{ user.username }}!</h2>
+                    <p class="text-gray-600 mt-1">Nous sommes ravis de vous revoir. Voici un résumé de votre activité.</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <span class="badge-premium">
+                        <i class="fas fa-crown"></i> {{ user.role }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cartes de statistiques -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="stat-card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-700">Achats effectués</h3>
+                    <div class="bg-red-100 p-2 rounded-full">
+                        <i class="fas fa-shopping-cart text-red-600"></i>
+                    </div>
+                </div>
+                <p class="text-3xl font-bold text-gray-800">{{ user.purchase_count }}</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {% widthratio user.purchase_count 10 100 %}%;"></div>
+                </div>
+                <p class="text-sm text-gray-500 mt-2">{{ user.purchase_count }} sur 10 achats pour le prochain niveau</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-700">Total des ventes</h3>
+                    <div class="bg-green-100 p-2 rounded-full">
+                        <i class="fas fa-chart-line text-green-600"></i>
+                    </div>
+                </div>
+                <p class="text-3xl font-bold text-gray-800">{{ user.total_sales|floatformat:2 }} FCFA</p>
+                <p class="text-sm text-green-600 mt-2 flex items-center">
+                    <i class="fas fa-arrow-up mr-1"></i> Performance stable
+                </p>
+            </div>
+        </div>
+
+        <!-- Récompenses et badges -->
+        <div class="dashboard-card p-6 mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Vos récompenses</h2>
+            
+            {% if user.purchase_count >= 5 %}
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg mb-4 pulse">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-gift text-yellow-500 text-xl"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-yellow-800">Félicitations !</h3>
+                        <div class="mt-2 text-sm text-yellow-700">
+                            <p>Vous avez droit à une réduction de 10% après 5 achats.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {% endif %}
             
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="achievement-badge">
+                    <i class="fas fa-medal"></i>
+                    <span>Client régulier</span>
+                </div>
+                
+                {% if user.purchase_count >= 3 %}
+                <div class="achievement-badge">
+                    <i class="fas fa-star"></i>
+                    <span>3 achats complétés</span>
+                </div>
+                {% endif %}
+                
+                {% if user.total_sales > 50000 %}
+                <div class="achievement-badge">
+                    <i class="fas fa-trophy"></i>
+                    <span>Dépense > 50 000 FCFA</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Actions rapides -->
+        <div class="dashboard-card p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Actions rapides</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a href="{% url 'accounts:page_principale' %}" class="bg-red-500 text-white p-4 rounded-lg flex items-center justify-center hover:bg-red-600 transition-colors">
+                    <i class="fas fa-store mr-2"></i> Faire des achats
+                </a>
+                <a href="#" class="bg-gray-500 text-white p-4 rounded-lg flex items-center justify-center hover:bg-gray-600 transition-colors">
+                    <i class="fas fa-history mr-2"></i> Historique
+                </a>
+            </div>
         </div>
     </div>
+
+    <script>
+        // Animation de la barre de progression
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressBars = document.querySelectorAll('.progress-fill');
+            progressBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 300);
+            });
+        });
+    </script>
 </body>
 </html>

@@ -5,72 +5,475 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableau de bord - Livreurs - Echop</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .notification-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .floating-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .slide-up {
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 0.6s ease-out forwards;
+        }
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 font-sans min-h-screen">
     <!-- Header -->
-    <header class="bg-red-600 text-white p-4 shadow-md">
-        <div class="container mx-auto">
-            <h1 class="text-2xl font-bold">Echop - Tableau de bord Livreurs</h1>
+    <header class="bg-gradient-to-r from-red-600 to-red-700 text-white shadow-2xl">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-shipping-fast text-3xl"></i>
+                    <div>
+                        <h1 class="text-2xl font-bold">Echop - Tableau de bord Livreurs</h1>
+                        <p class="text-red-100 text-sm">Gestion des livraisons</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <!-- Notifications -->
+                    <div class="relative">
+                        <button id="notificationBtn" class="p-2 rounded-full hover:bg-red-500 transition-colors relative">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span class="notification-badge absolute -top-1 -right-1 bg-yellow-400 text-red-800 rounded-full w-5 h-5 text-xs flex items-center justify-center font-bold">3</span>
+                        </button>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-user-circle text-2xl"></i>
+                        <span class="text-sm">Livreur</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
     <!-- Navigation -->
-    <nav class="bg-gray-800 text-white p-4">
-        <div class="container mx-auto">
-            <a href="{% url 'accounts:delivery_dashboard' %}" class="mr-4 hover:text-red-300">Commandes</a>
-            <a href="{% url 'accounts:logout' %}" class="hover:text-red-300">Déconnexion</a>
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex space-x-1">
+                <a href="{% url 'accounts:delivery_orders' %}" class="nav-btn px-6 py-4 text-gray-600 hover:text-red-600 font-semibold" data-tab="orders">
+                    <i class="fas fa-box mr-2"></i>Commandes
+                </a>
+                <button class="nav-btn px-6 py-4 text-gray-600 hover:text-red-600 font-semibold" data-tab="history">
+                    <i class="fas fa-history mr-2"></i>Historique
+                </button>
+                <a href="{% url 'accounts:delivery_map' %}" class="nav-btn px-6 py-4 text-gray-600 hover:text-red-600 font-semibold" data-tab="routes">
+                    <i class="fas fa-route mr-2"></i>Itinéraires
+                </a>
+                <button class="nav-btn px-6 py-4 text-gray-600 hover:text-red-600 font-semibold" data-tab="contact">
+                    <i class="fas fa-comments mr-2"></i>Contact
+                </button>
+                <a href="{% url 'accounts:logout' %}" class="px-6 py-4 text-gray-600 hover:text-red-600 font-semibold ml-auto">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+                </a>
+            </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container mx-auto p-6 mt-6">
-        <h2 class="text-2xl font-bold mb-4">Commandes à effectuer</h2>
-        {% if orders_to_deliver %}
-            <div class="bg-white rounded-lg shadow-md p-4 mb-6">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="bg-gray-200">
-                            <th class="p-2">Client</th>
-                            <th class="p-2">Produit</th>
-                            <th class="p-2">Quantité</th>
-                            <th class="p-2">Total (FCFA)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for order in orders_to_deliver %}
-                            <tr class="border-b">
-                                <td class="p-2">{{ order.client }}</td>
-                                <td class="p-2">{{ order.product }}</td>
-                                <td class="p-2">{{ order.quantity }}</td>
-                                <td class="p-2">{{ order.total|floatformat:2 }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                <p class="mt-4 font-semibold">Total à livrer : {{ total_to_deliver|floatformat:2 }} FCFA</p>
+    <!-- Notifications Panel -->
+    <div id="notificationPanel" class="hidden fixed top-20 right-4 w-80 bg-white rounded-lg shadow-2xl border z-50 max-h-96 overflow-y-auto">
+        <div class="p-4 border-b bg-gray-50">
+            <h3 class="font-bold text-gray-800">Notifications</h3>
+        </div>
+        <div class="p-4 space-y-3">
+            <div class="flex items-start space-x-3 p-3 bg-blue-50 rounded-lg">
+                <i class="fas fa-info-circle text-blue-500 mt-1"></i>
+                <div class="flex-1">
+                    <p class="text-sm font-medium">Nouvelle commande assignée</p>
+                    <p class="text-xs text-gray-600">Il y a 5 minutes</p>
+                </div>
             </div>
-        {% else %}
-            <p class="text-gray-600">Aucune commande à livrer pour le moment.</p>
-        {% endif %}
+            <div class="flex items-start space-x-3 p-3 bg-green-50 rounded-lg">
+                <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                <div class="flex-1">
+                    <p class="text-sm font-medium">Livraison confirmée</p>
+                    <p class="text-xs text-gray-600">Il y a 15 minutes</p>
+                </div>
+            </div>
+            <div class="flex items-start space-x-3 p-3 bg-yellow-50 rounded-lg">
+                <i class="fas fa-exclamation-triangle text-yellow-500 mt-1"></i>
+                <div class="flex-1">
+                    <p class="text-sm font-medium">Délai de livraison ajusté</p>
+                    <p class="text-xs text-gray-600">Il y a 1 heure</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <!-- Discussion avec le gestionnaire -->
-        <h2 class="text-2xl font-bold mb-4 mt-8">Contacter le gestionnaire</h2>
-        {% if message_sent %}
-            <p class="text-green-600 mb-4">Message envoyé avec succès !</p>
-        {% endif %}
-        <form method="post" class="bg-white rounded-lg shadow-md p-4">
-            {% csrf_token %}
-            <div class="mb-4">
-                <label for="message" class="block text-gray-700 font-semibold">Votre message :</label>
-                <textarea id="message" name="message" rows="4" class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Tapez votre message ici..." required></textarea>
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6">
+        <!-- Tab: Commandes à effectuer -->
+        <div id="orders-tab" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Commandes à effectuer</h2>
+                <div class="flex items-center space-x-4 text-sm text-gray-600">
+                    <span><i class="fas fa-clock mr-1"></i>Aujourd'hui</span>
+                    <span><i class="fas fa-map-marker-alt mr-1"></i>Zone de livraison active</span>
+                </div>
             </div>
-            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Envoyer</button>
-        </form>
+
+            <!-- Orders Table -->
+            {% if orders_to_deliver %}
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden slide-up">
+                    <div class="p-6 bg-gradient-to-r from-gray-50 to-gray-100">
+                        <h3 class="text-xl font-bold text-gray-800">Liste des commandes</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
+                                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produit</th>
+                                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantité</th>
+                                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total (FCFA)</th>
+                                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                {% for order in orders_to_deliver %}
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <i class="fas fa-user-circle text-gray-400 text-xl mr-3"></i>
+                                                <div class="text-sm font-medium text-gray-900">{{ order.client }}</div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ order.product }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 text-sm font-medium bg-blue-100 text-blue-800 rounded-full">{{ order.quantity }}</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-green-600">{{ order.total|floatformat:2 }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                            <button class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition-colors">
+                                                <i class="fas fa-map-marker-alt mr-1"></i>Voir
+                                            </button>
+                                            <button class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600 transition-colors">
+                                                <i class="fas fa-check mr-1"></i>Livré
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="px-6 py-4 bg-gradient-to-r from-green-50 to-green-100 border-t">
+                        <p class="text-lg font-bold text-gray-800 flex items-center">
+                            <i class="fas fa-coins text-green-600 mr-2"></i>
+                            Total à livrer : <span class="text-green-600 ml-2">{{ total_to_deliver|floatformat:2 }} FCFA</span>
+                        </p>
+                    </div>
+                </div>
+            {% else %}
+                <div class="bg-white rounded-xl shadow-lg p-12 text-center">
+                    <i class="fas fa-box-open text-6xl text-gray-300 mb-4"></i>
+                    <p class="text-xl text-gray-600 mb-2">Aucune commande à livrer pour le moment</p>
+                    <p class="text-gray-500">Profitez de cette pause pour vous reposer !</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Tab: Historique -->
+        <div id="history-tab" class="tab-content hidden">
+            <div class="mb-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Historique des livraisons</h2>
+                <!-- Filtres -->
+                <div class="flex flex-wrap gap-4 mb-4">
+                    <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 bg-white shadow-sm">
+                        <option>Cette semaine</option>
+                        <option>Ce mois</option>
+                        <option>3 derniers mois</option>
+                    </select>
+                    <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 bg-white shadow-sm">
+                        <option>Toutes les livraisons</option>
+                        <option>Livrées</option>
+                        <option>Annulées</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produit</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <!-- Exemple de données historiques -->
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">23/08/2025</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Paul Mbarga</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">iPhone 14</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">400,000 FCFA</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        <i class="fas fa-check-circle mr-1"></i>Livré
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Itinéraires -->
+        <div id="routes-tab" class="tab-content hidden">
+            <div class="mb-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Itinéraires de livraison</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Carte factice -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-map mr-2 text-blue-500"></i>Visualisation des itinéraires
+                    </h3>
+                    <div class="bg-gradient-to-br from-blue-100 to-blue-200 h-64 rounded-lg flex items-center justify-center border-2 border-dashed border-blue-300">
+                        <div class="text-center">
+                            <i class="fas fa-map-marked-alt text-4xl text-blue-500 mb-2"></i>
+                            <p class="text-blue-700 font-semibold">Carte interactive des itinéraires</p>
+                            <p class="text-sm text-blue-600">Intégration avec service de cartographie</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Détails de l'itinéraire -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-route mr-2 text-green-500"></i>Itinéraire optimisé du jour
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3 p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                            <div class="flex-1">
+                                <p class="font-semibold">Départ - Entrepôt Echop</p>
+                                <p class="text-sm text-gray-600">Point de départ des livraisons</p>
+                            </div>
+                            <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">09:00</span>
+                        </div>
+                        {% if orders_to_deliver %}
+                            {% for order in orders_to_deliver %}
+                                <div class="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                                    <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                                    <div class="flex-1">
+                                        <p class="font-semibold">Livraison - {{ order.client }}</p>
+                                        <p class="text-sm text-gray-600">{{ order.product }}</p>
+                                    </div>
+                                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">{{ forloop.counter0|add:15 }}min</span>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center p-6 bg-gray-50 rounded-lg">
+                                <i class="fas fa-route text-3xl text-gray-400 mb-2"></i>
+                                <p class="text-gray-600">Aucun itinéraire planifié</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Contact -->
+        <div id="contact-tab" class="tab-content hidden">
+            <div class="mb-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Contacter le gestionnaire</h2>
+            </div>
+
+            {% if message_sent %}
+                <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-lg">
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                        <p class="text-green-700 font-semibold">Message envoyé avec succès !</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Formulaire de contact -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">
+                        <i class="fas fa-envelope mr-2 text-blue-500"></i>Envoyer un message
+                    </h3>
+                    <form method="post" class="space-y-4">
+                        {% csrf_token %}
+                        <div>
+                            <label for="message" class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-comment-alt mr-1"></i>Votre message :
+                            </label>
+                            <textarea id="message" name="message" rows="6" 
+                                class="w-full p-4 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all" 
+                                placeholder="Décrivez votre demande, problème ou question en détail..." required></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-3 px-6 rounded-lg font-semibold hover:from-red-700 hover:to-red-800 transform hover:scale-105 transition-all shadow-lg">
+                            <i class="fas fa-paper-plane mr-2"></i>Envoyer le message
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Contacts rapides -->
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">
+                            <i class="fas fa-phone mr-2 text-green-500"></i>Contacts d'urgence
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-4 border-2 rounded-lg hover:border-green-300 transition-colors">
+                                <div>
+                                    <p class="font-semibold text-gray-800">Support technique</p>
+                                    <p class="text-sm text-gray-600">Assistance 24h/7j</p>
+                                </div>
+                                <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
+                                    <i class="fas fa-phone mr-1"></i>Appeler
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-between p-4 border-2 rounded-lg hover:border-blue-300 transition-colors">
+                                <div>
+                                    <p class="font-semibold text-gray-800">Gestionnaire de zone</p>
+                                    <p class="text-sm text-gray-600">Supervision des livraisons</p>
+                                </div>
+                                <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                                    <i class="fab fa-whatsapp mr-1"></i>WhatsApp
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informations utiles -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">
+                            <i class="fas fa-info-circle mr-2 text-indigo-500"></i>Informations utiles
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex items-start space-x-2">
+                                <i class="fas fa-clock text-indigo-500 mt-1"></i>
+                                <div>
+                                    <p class="font-semibold">Heures de service</p>
+                                    <p class="text-gray-600">Lundi - Dimanche : 8h00 - 20h00</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-2">
+                                <i class="fas fa-headset text-indigo-500 mt-1"></i>
+                                <div>
+                                    <p class="font-semibold">Temps de réponse</p>
+                                    <p class="text-gray-600">Urgent: < 30 min, Normal: < 2h</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div class="floating-btn">
+        <button id="quickActions" class="bg-gradient-to-r from-red-600 to-red-700 text-white p-4 rounded-full shadow-2xl hover:shadow-3xl hover:scale-110 transform transition-all">
+            <i class="fas fa-plus text-xl"></i>
+        </button>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-red-600 text-white p-4 mt-6 text-center">
-        <p>© 2025 Echop. Tous droits réservés.</p>
+    <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white mt-12">
+        <div class="container mx-auto px-4 py-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-2 mb-4">
+                    <i class="fas fa-shipping-fast text-2xl text-red-500"></i>
+                    <span class="text-xl font-bold">Echop Delivery</span>
+                </div>
+                <p class="text-gray-300">© 2025 Echop. Tous droits réservés.</p>
+                <p class="text-sm text-gray-400 mt-2">Plateforme de livraison professionnelle</p>
+            </div>
+        </div>
     </footer>
+
+    <script>
+        // Navigation entre les onglets (exclure les liens qui redirigent)
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            if (button.tagName.toLowerCase() !== 'a' || 
+                (!button.getAttribute('href').includes('delivery_orders') && 
+                 !button.getAttribute('href').includes('delivery_map'))) { // Exclure Commandes et Itinéraires
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const tabName = button.getAttribute('data-tab');
+                    
+                    // Masquer tous les onglets
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        tab.classList.add('hidden');
+                    });
+                    
+                    // Afficher l'onglet sélectionné
+                    document.getElementById(tabName + '-tab').classList.remove('hidden');
+                    
+                    // Mettre à jour les styles de navigation
+                    document.querySelectorAll('.nav-btn').forEach(btn => {
+                        btn.classList.remove('active', 'text-red-600', 'border-b-2', 'border-red-600');
+                        btn.classList.add('text-gray-600');
+                    });
+                    
+                    button.classList.add('active', 'text-red-600', 'border-b-2', 'border-red-600');
+                    button.classList.remove('text-gray-600');
+                });
+            }
+        });
+
+        // Gestion du panneau de notifications
+        const notificationBtn = document.getElementById('notificationBtn');
+        const notificationPanel = document.getElementById('notificationPanel');
+        
+        notificationBtn.addEventListener('click', () => {
+            notificationPanel.classList.toggle('hidden');
+        });
+
+        // Fermer le panneau en cliquant ailleurs
+        document.addEventListener('click', (e) => {
+            if (!notificationBtn.contains(e.target) && !notificationPanel.contains(e.target)) {
+                notificationPanel.classList.add('hidden');
+            }
+        });
+
+        // Animation d'apparition des éléments
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('slide-up');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.slide-up').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>

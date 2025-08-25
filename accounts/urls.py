@@ -84,6 +84,9 @@ urlpatterns = [
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('verify-qr/<int:user_id>/', views.verify_qr, name='verify_qr'),
 
+    path('delivery_map/', views.delivery_map, name='delivery_map'),
+    path('delivery_orders/', views.delivery_orders, name='delivery_orders'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

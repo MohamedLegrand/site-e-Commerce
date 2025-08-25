@@ -137,7 +137,7 @@
                 
                 <a href="{% url 'accounts:dashboard' %}" 
                    class="w-full bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-700 transition-all duration-200 font-medium inline-block text-center">
-                    passer une commande
+                    Passer une commande
                 </a>
             </div>
         </div>
@@ -162,7 +162,7 @@
             <!-- Contenu de la facture -->
             <div id="invoiceContent" class="p-6">
                 <!-- État de chargement -->
-                <div id="loadingState" class="text-center py-12">
+                <div id="loadingState" class="text-center py-12 hidden">
                     <div class="loading-spinner mx-auto mb-4"></div>
                     <p class="text-gray-600">Chargement de votre facture...</p>
                 </div>
@@ -214,11 +214,14 @@
                 this.invoiceContent = null;
                 
                 this.initEventListeners();
+                // Charger les données initiales du contexte
+                this.loadInitialData();
             }
 
             initEventListeners() {
                 // Bouton d'ouverture
                 document.getElementById('viewInvoiceBtn').addEventListener('click', () => {
+                    console.log("Bouton 'Voir la facture' cliqué"); // Débogage
                     this.openModal();
                 });
 
@@ -233,7 +236,7 @@
 
                 // Bouton de retry
                 document.getElementById('retryBtn').addEventListener('click', () => {
-                    this.loadInvoice();
+                    this.loadInitialData();
                 });
 
                 // Fermeture en cliquant à l'extérieur
@@ -256,7 +259,9 @@
                 document.body.style.overflow = 'hidden';
                 
                 if (!this.isLoaded) {
-                    this.loadInvoice();
+                    this.loadInitialData();
+                } else {
+                    this.showInvoice(this.invoiceContent);
                 }
             }
 
@@ -285,37 +290,18 @@
                 this.isLoaded = true;
             }
 
-            async loadInvoice() {
+            loadInitialData() {
                 this.showLoading();
 
-                try {
-                    // Option 1: Charger une vue JSON dédiée (recommandé)
-                    const response = await fetch('{% url "accounts:invoice" %}', {
-                        headers: {
-                            'Accept': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    });
+                // Récupérer les données du contexte passé par le template
+                const invoiceData = {{ invoice_data|default:'{}'|safe }};
+                const qrCodeImage = "{{ qr_code_image|default:''|safe }}";
 
-                    if (!response.ok) {
-                        throw new Error(`Erreur ${response.status}: ${response.statusText}`);
-                    }
-
-                    const contentType = response.headers.get('content-type');
-                    
-                    if (contentType && contentType.includes('application/json')) {
-                        // Si la réponse est JSON
-                        const data = await response.json();
-                        this.renderInvoiceFromJSON(data);
-                    } else {
-                        // Si la réponse est HTML
-                        const html = await response.text();
-                        this.renderInvoiceFromHTML(html);
-                    }
-
-                } catch (error) {
-                    console.error('Erreur lors du chargement de la facture:', error);
+                if (Object.keys(invoiceData).length > 0 && qrCodeImage) {
+                    this.renderInvoiceFromJSON({ invoice_data: invoiceData, qr_code_image: qrCodeImage });
+                } else {
                     this.showError();
+                    console.log("Aucune donnée de facture disponible dans le contexte:", invoiceData, qrCodeImage);
                 }
             }
 
@@ -411,26 +397,10 @@
                 `;
 
                 this.showInvoice(invoiceHTML);
+                this.invoiceContent = invoiceHTML; // Stocker pour réutilisation
             }
 
-            renderInvoiceFromHTML(html) {
-                // Extraire seulement le contenu pertinent du HTML complet
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                
-                // Chercher les éléments pertinents
-                const content = doc.querySelector('.container') || doc.querySelector('body');
-                
-                if (content) {
-                    // Nettoyer le HTML (supprimer header, footer, etc.)
-                    const unwantedElements = content.querySelectorAll('header, footer, .no-print');
-                    unwantedElements.forEach(el => el.remove());
-                    
-                    this.showInvoice(content.innerHTML);
-                } else {
-                    this.showError();
-                }
-            }
+            // Supprimer renderInvoiceFromHTML car on n'utilise plus la requête AJAX
         }
 
         // Initialisation

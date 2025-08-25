@@ -5,122 +5,435 @@
     <meta charset="UTF-8">
     <title>Page de Paiement - Echop</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-        .input-field {
-            @apply w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200;
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
         }
+        
+        .payment-container {
+            max-width: 480px;
+            width: 100%;
+            margin: 2rem auto;
+        }
+        
+        .payment-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .payment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+        }
+        
+        .payment-header {
+            background: linear-gradient(90deg, #e53e3e 0%, #c53030 100%);
+            color: white;
+            padding: 1.75rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .payment-header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: #e53e3e;
+            transform: rotate(45deg);
+            z-index: 1;
+        }
+        
+        .payment-body {
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .amount-display {
+            background: linear-gradient(90deg, #e53e3e 0%, #c53030 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            text-align: center;
+            margin: 0 auto 2rem;
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.25);
+            max-width: 240px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background-color: #f9fafb;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #e53e3e;
+            box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.2);
+            background-color: white;
+        }
+        
+        .form-input:read-only {
+            background-color: #f3f4f6;
+            color: #6b7280;
+            cursor: not-allowed;
+        }
+        
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .payment-method {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 0.75rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .payment-method:hover {
+            border-color: #e53e3e;
+        }
+        
+        .payment-method.active {
+            border-color: #e53e3e;
+            background-color: #fef2f2;
+        }
+        
+        .payment-method i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .payment-method.orange i { color: #ff6600; }
+        .payment-method.mtn i { color: #ffcc00; }
+        .payment-method.carte i { color: #6366f1; }
+        
+        .btn-payment {
+            background: linear-gradient(90deg, #e53e3e 0%, #c53030 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        
+        .btn-payment:hover {
+            background: linear-gradient(90deg, #c53030 0%, #a42323 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(229, 62, 62, 0.35);
+        }
+        
+        .btn-payment:active {
+            transform: translateY(0);
+        }
+        
+        .security-badge {
+            background-color: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 2rem;
+            font-size: 0.875rem;
+        }
+        
+        .security-badge i {
+            color: #0ea5e9;
+            font-size: 1.25rem;
+        }
+        
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .message i {
+            font-size: 1.25rem;
+        }
+        
+        .success-message {
+            background-color: #f0fdf4;
+            border-left: 4px solid #10b981;
+            color: #065f46;
+        }
+        
         .error-message {
-            @apply text-red-600 text-sm mt-1;
+            background-color: #fef2f2;
+            border-left: 4px solid #ef4444;
+            color: #991b1b;
+        }
+        
+        .info-message {
+            background-color: #f0f9ff;
+            border-left: 4px solid #0ea5e9;
+            color: #1e40af;
+        }
+        
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .logo {
+            font-weight: 700;
+            font-size: 1.75rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo-icon {
+            background: white;
+            color: #e53e3e;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-10deg);
+        }
+        
+        @media (max-width: 500px) {
+            .payment-container {
+                padding: 1rem;
+            }
+            
+            .payment-body {
+                padding: 1.5rem;
+            }
+            
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-50 font-sans min-h-screen flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-white p-6 rounded-lg shadow-lg">
-        <div class="text-center mb-6">
-            <h2 class="text-2xl font-semibold text-red-700">Paiement de votre commande</h2>
-            <p class="text-gray-600 mt-1">Sécurisez votre achat en toute confiance</p>
-        </div>
-        <p class="text-gray-800 mb-6 text-center font-medium">Montant à payer : <span class="text-red-600 font-bold">{{ montant }} FCFA</span></p>
-
-        {% if messages %}
-            {% for message in messages %}
-                <div class="mb-4 p-2 text-center rounded {% if message.tags == 'success' %}bg-green-100{% else %}bg-red-100{% endif %}">
-                    {{ message }}
+<body>
+    <div class="payment-container">
+        <div class="payment-card">
+            <div class="payment-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <span>Echop</span>
                 </div>
-            {% endfor %}
-        {% endif %} 
-
-        <form method="POST" id="paymentForm" class="space-y-4">
-            {% csrf_token %}
-            <div>
-                <label for="nom" class="block text-sm font-medium text-gray-700">Nom complet</label>
-                <input type="text" id="nom" name="nom" required class="input-field" placeholder="Ex: Mohamed Legrand" value="{{ initial_data.nom }}" readonly>
+                <h1 class="text-2xl font-bold mt-2">Paiement sécurisé</h1>
+                <p class="mt-1 opacity-90">Finalisez votre achat en toute confiance</p>
             </div>
+            
+            <div class="payment-body">
+                <div class="amount-display">
+                    {{ montant }} FCFA
+                </div>
 
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Adresse Email</label>
-                <input type="email" id="email" name="email" required class="input-field" placeholder="Ex: exemple@email.com" value="{{ initial_data.email }}" readonly>
+                {% if messages %}
+                    <div class="messages-container">
+                        {% for message in messages %}
+                            <div class="{% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% else %}info-message{% endif %}">
+                                <i class="{% if message.tags == 'success' %}fas fa-check-circle{% elif message.tags == 'error' %}fas fa-exclamation-circle{% else %}fas fa-info-circle{% endif %}"></i>
+                                <span>{{ message }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %} 
+
+                <form method="POST" id="paymentForm">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="nom" class="form-label">Nom complet</label>
+                        <input type="text" id="nom" name="nom" required class="form-input" 
+                               value="{{ initial_data.nom }}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">Adresse Email</label>
+                        <input type="email" id="email" name="email" required class="form-input" 
+                               value="{{ initial_data.email }}" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Méthode de paiement</label>
+                        <div class="payment-methods">
+                            <div class="payment-method orange active" data-value="orange">
+                                <i class="fas fa-mobile-alt"></i>
+                                <span>Orange</span>
+                            </div>
+                            <div class="payment-method mtn" data-value="mtn">
+                                <i class="fas fa-sim-card"></i>
+                                <span>MTN</span>
+                            </div>
+                            <div class="payment-method carte" data-value="carte">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Carte</span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="type_paiement" name="type_paiement" value="orange">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="numero" class="form-label">Numéro de paiement</label>
+                        <input type="text" id="numero" name="numero" required class="form-input" 
+                               placeholder="Ex: 690123456" oninput="autoFillDetails()">
+                    </div>
+
+                    <button type="submit" class="btn-payment">
+                        <i class="fas fa-lock mr-2"></i> Payer maintenant
+                    </button>
+                    
+                    <div class="security-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Paiement 100% sécurisé - Cryptage SSL</span>
+                    </div>
+                </form>
             </div>
-
-            <div>
-                <label for="type_paiement" class="block text-sm font-medium text-gray-700">Méthode de paiement</label>
-                <select id="type_paiement" name="type_paiement" required class="input-field">
-                    <option value="orange">Orange Money</option>
-                    <option value="mtn">MTN Mobile Money</option>
-                    <option value="carte">Carte Bancaire</option>
-                </select>
-            </div>
-
-            <div>
-                <label for="numero" class="block text-sm font-medium text-gray-700">Numéro de paiement</label>
-                <input type="text" id="numero" name="numero" required class="input-field" placeholder="Ex: 690000000" oninput="autoFillDetails()">
-            </div>
-
-            <button 
-                type="submit" 
-                class="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition duration-200 font-medium">
-                Effectuer le paiement
-            </button>
-        </form>
-        <p class="text-center text-xs text-gray-500 mt-4">Paiement sécurisé. Vos données sont protégées.</p>
-
-        <script>
-            function autoFillDetails() {
-                const numero = document.getElementById('numero').value.trim();
-                const nom = document.getElementById('nom');
-                const email = document.getElementById('email');
-                const typePaiement = document.getElementById('type_paiement');
-
-                if (numero.length >= 9 && /^\d+$/.test(numero)) {
-                    let userData;
-                    switch (numero.substring(0, 3)) {
-                        case '690':
-                            userData = { nom: 'Mohamed Legrand', email: 'mohamed.legrand@orange.cm' };
-                            break;
-                        case '691':
-                            userData = { nom: 'Fatima Diallo', email: 'fatima.diallo@mtn.cm' };
-                            break;
-                        case '697':
-                            userData = { nom: 'Jean Dupont', email: 'jean.dupont@bank.cm' };
-                            break;
-                        default:
-                            userData = { nom: 'Utilisateur Inconnu', email: 'inconnu@echop.cm' };
-                    }
-
-                    nom.value = userData.nom;
-                    email.value = userData.email;
-                    // Ne pas modifier typePaiement, laisser l'utilisateur choisir
-                } else {
-                    nom.value = '{{ initial_data.nom }}'; // Rétablir la valeur initiale
-                    email.value = '{{ initial_data.email }}'; // Rétablir la valeur initiale
-                }
-            }
-
-            document.getElementById('paymentForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const formData = new FormData(document.getElementById('paymentForm'));
-                fetch(window.location.href, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                    }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        window.location.href = "{% url 'accounts:payment_confirmation' %}";
-                    } else {
-                        return response.json().then(data => {
-                            throw new Error(data.message || 'Erreur lors du paiement');
-                        });
-                    }
-                })
-                .catch(error => {
-                    alert(error.message);
-                    console.error('Erreur:', error);
-                });
-            });
-        </script>
+        </div>
     </div>
+
+    <script>
+        // Gestion de la sélection des méthodes de paiement
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', function() {
+                document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('type_paiement').value = this.getAttribute('data-value');
+            });
+        });
+        
+        function autoFillDetails() {
+            const numero = document.getElementById('numero').value.trim();
+            const nom = document.getElementById('nom');
+            const email = document.getElementById('email');
+            const typePaiement = document.getElementById('type_paiement');
+
+            if (numero.length >= 9 && /^\d+$/.test(numero)) {
+                let userData;
+                switch (numero.substring(0, 3)) {
+                    case '690':
+                        userData = { nom: 'Mohamed Legrand', email: 'mohamed.legrand@orange.cm' };
+                        break;
+                    case '691':
+                        userData = { nom: 'Fatima Diallo', email: 'fatima.diallo@mtn.cm' };
+                        break;
+                    case '697':
+                        userData = { nom: 'Jean Dupont', email: 'jean.dupont@bank.cm' };
+                        break;
+                    default:
+                        userData = { nom: 'Utilisateur Inconnu', email: 'inconnu@echop.cm' };
+                }
+
+                nom.value = userData.nom;
+                email.value = userData.email;
+            } else {
+                nom.value = '{{ initial_data.nom }}';
+                email.value = '{{ initial_data.email }}';
+            }
+        }
+
+        document.getElementById('paymentForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            // Afficher l'indicateur de chargement
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Traitement en cours...';
+            
+            const formData = new FormData(document.getElementById('paymentForm'));
+            fetch(window.location.href, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = "{% url 'accounts:payment_confirmation' %}";
+                } else {
+                    return response.json().then(data => {
+                        throw new Error(data.message || 'Erreur lors du paiement');
+                    });
+                }
+            })
+            .catch(error => {
+                // Créer un message d'erreur
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${error.message}`;
+                
+                // Insérer le message d'erreur
+                const form = document.getElementById('paymentForm');
+                if (document.querySelector('.messages-container')) {
+                    document.querySelector('.messages-container').prepend(errorDiv);
+                } else {
+                    const messagesContainer = document.createElement('div');
+                    messagesContainer.className = 'messages-container';
+                    messagesContainer.appendChild(errorDiv);
+                    form.parentNode.insertBefore(messagesContainer, form);
+                }
+            })
+            .finally(() => {
+                // Restaurer le bouton
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            });
+        });
+    </script>
 </body>
 </html>

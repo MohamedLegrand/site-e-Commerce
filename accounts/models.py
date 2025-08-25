@@ -86,16 +86,23 @@ class Order(models.Model):
     status = models.CharField(max_length=20, choices=(('en_attente', 'En attente'), ('en_livraison', 'En livraison'), ('livree', 'Livrée')), default='en_attente')
     created_at = models.DateTimeField(auto_now_add=True)
     delivery_person = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='deliveries')
+    client_address = models.CharField(max_length=255, default='Adresse par défaut')
+
+    def assign_delivery_person(self):
+        from django.db.models import Q
+        available_delivery_person = CustomUser.objects.filter(role='livreur', is_active=True).first()
+        if available_delivery_person and not self.delivery_person:
+            self.delivery_person = available_delivery_person
+            self.save()
 
     def __str__(self):
         return f"Commande {self.id} de {self.user.username}"
-    
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(max_digits=10, decimal_places=2)  # prix au moment de l'achat
+    price = models.DecimalField(max_digits=10, decimal_places=2)  # prix au moment de l'achat   
 
     def __str__(self):
         return f"{self.quantity} x {self.product.name} (Commande {self.order.id})"
