@@ -262,7 +262,19 @@
                 <p class="text-gray-600 text-sm font-medium">Accédez à votre compte Echop</p>
             </div>
 
-            <!-- Messages d'erreur -->
+            <!-- Messages de succès ou erreur -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert-slide bg-gradient-to-r from-green-50 to-green-100 border border-green-200 text-green-800 p-3 mb-4 rounded-lg flex items-center text-sm" style="display: flex;" id="success-message">
+                        <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="font-medium">{{ message }}</span>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Messages d'erreur spécifiques -->
             <div id="error-message" class="alert-slide bg-gradient-to-r from-red-50 to-red-100 border border-red-200 text-red-800 p-3 mb-4 rounded-lg flex items-center text-sm" style="display: none;">
                 <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>

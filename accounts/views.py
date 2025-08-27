@@ -399,26 +399,29 @@ def payment_page(request):
     return render(request, 'accounts/payment_page.html', {'montant': total, 'initial_data': initial_data})
 
 
+
+@login_required
 def invoice_view(request):
     invoice_data = request.session.get('invoice_data', {})
     qr_code_image = request.session.get('qr_code_image', '')
+    
     if not invoice_data or not qr_code_image:
         messages.error(request, "Aucune donnée de facture disponible.")
-        return redirect('accounts:dashboard')
+        return redirect('accounts:payment_confirmation')
 
     context = {
         'invoice_data': invoice_data,
         'qr_code_image': qr_code_image
     }
-    del request.session['invoice_data']
-    del request.session['qr_code_image']
-    return render(request, 'accounts/invoice.html', context)
+    
+    # Rendre la page d'abord, puis nettoyer la session après
+    response = render(request, 'accounts/view_invoice.html', context)
+    return redirect('accounts:clear_invoice_session')
 
+    
 def payment_confirmation(request):
     dernier_montant = request.session.get('dernier_montant', 0)
-    # NOUVEAU : Vérifier si les données de facture sont disponibles
     has_invoice_data = bool(request.session.get('invoice_data'))
-    
     return render(request, 'accounts/payment_confirmation.html', {
         'montant': dernier_montant,
         'has_invoice_data': has_invoice_data

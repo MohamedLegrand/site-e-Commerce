@@ -450,8 +450,8 @@
     <!-- Inclure Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Initialiser la carte avec une position par défaut (Yaoundé) en attendant la géolocalisation
-        var map = L.map('map').setView([3.8480, 11.5020], 12); // Coordonnées de Yaoundé
+        // Initialiser la carte avec une position par défaut proche d'Awae
+        var map = L.map('map').setView([3.9333, 11.5167], 12); // Coordonnées approximatives d'Awae
 
         // Variables pour les couches de tuiles
         let currentTileLayer;
@@ -472,8 +472,8 @@
         // Ajouter la couche par défaut
         currentTileLayer = osmLayer.addTo(map);
 
-        // Variable pour stocker le marqueur du livreur
-        let driverMarker;
+        // Variable pour stocker le marqueur de l'utilisateur
+        let userMarker;
 
         // Fonction pour masquer le loading
         function hideLoading() {
@@ -487,25 +487,37 @@
             }, 1000);
         }
 
-        // Obtenir la position actuelle du livreur
+        // Obtenir la position actuelle de l'utilisateur
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function(position) {
                     const lat = position.coords.latitude;
                     const lon = position.coords.longitude;
 
-                    // Mettre à jour la vue de la carte avec la position réelle
+                    // Vérifier si la position est proche d'Awae (approximation)
+                    const awaeLat = 3.9333;
+                    const awaeLon = 11.5167;
+                    const distance = Math.sqrt(Math.pow(lat - awaeLat, 2) + Math.pow(lon - awaeLon, 2)) * 111; // Distance en km (approximation)
+                    if (distance > 10) {
+                        console.warn("Position détectée loin d'Awae, vérifiez votre localisation.");
+                    }
+
+                    // Mettre à jour la vue de la carte avec la position réelle de l'utilisateur
                     map.setView([lat, lon], 13);
 
-                    // Ajouter ou mettre à jour le marqueur
-                    if (driverMarker) {
-                        map.removeLayer(driverMarker);
+                    // Ajouter ou mettre à jour le marqueur de l'utilisateur
+                    if (userMarker) {
+                        map.removeLayer(userMarker);
                     }
-                    driverMarker = L.marker([lat, lon], {
-                        title: "Position du livreur"
+                    userMarker = L.marker([lat, lon], {
+                        title: "Ma position",
+                        icon: L.divIcon({
+                            className: 'custom-marker',
+                            iconSize: [40, 40]
+                        })
                     }).addTo(map);
 
-                    // Ajouter un popup avec les détails (récupérés via reverse geocoding)
+                    // Ajouter un popup avec les détails (via reverse geocoding)
                     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1`, {
                         headers: {
                             "User-Agent": "EchopDeliveryApp/1.0 (mohamed.legrand@example.com)" // Remplace par ton email
@@ -517,10 +529,10 @@
                         const popupContent = `
                             <div class="popup-header">
                                 <div class="popup-icon">
-                                    <i class="fas fa-user-check"></i>
+                                    <i class="fas fa-user"></i>
                                 </div>
                                 <div>
-                                    <div class="popup-title">Position du livreur</div>
+                                    <div class="popup-title">Ma Position</div>
                                 </div>
                             </div>
                             <div class="popup-address">
@@ -534,11 +546,11 @@
                                 </div>
                                 <div class="status-badge">
                                     <i class="fas fa-check"></i>
-                                    En ligne
+                                    Actuel
                                 </div>
                             </div>
                         `;
-                        driverMarker.bindPopup(popupContent).openPopup();
+                        userMarker.bindPopup(popupContent).openPopup();
                         hideLoading();
                     })
                     .catch(error => {
@@ -546,10 +558,10 @@
                         const popupContent = `
                             <div class="popup-header">
                                 <div class="popup-icon">
-                                    <i class="fas fa-user-check"></i>
+                                    <i class="fas fa-user"></i>
                                 </div>
                                 <div>
-                                    <div class="popup-title">Position du livreur</div>
+                                    <div class="popup-title">Ma Position</div>
                                 </div>
                             </div>
                             <div class="popup-address">
@@ -563,17 +575,18 @@
                                 </div>
                                 <div class="status-badge">
                                     <i class="fas fa-check"></i>
-                                    En ligne
+                                    Actuel
                                 </div>
                             </div>
                         `;
-                        driverMarker.bindPopup(popupContent).openPopup();
+                        userMarker.bindPopup(popupContent).openPopup();
                         hideLoading();
                     });
                 },
                 function(error) {
                     console.error("Erreur de géolocalisation :", error);
-                    alert("Impossible d'accéder à votre position. Utilisation de la position par défaut (Yaoundé).");
+                    alert("Impossible d'accéder à votre position. Utilisation de la position par défaut proche d'Awae.");
+                    map.setView([3.9333, 11.5167], 12); // Position par défaut d'Awae
                     hideLoading();
                 }
             );
@@ -590,9 +603,9 @@
 
         // Contrôles personnalisés
         document.getElementById('centerBtn').addEventListener('click', function() {
-            if (driverMarker) {
-                map.setView(driverMarker.getLatLng(), 15);
-                driverMarker.openPopup();
+            if (userMarker) {
+                map.setView(userMarker.getLatLng(), 15);
+                userMarker.openPopup();
             }
         });
 
@@ -625,15 +638,15 @@
         });
 
         document.getElementById('shareBtn').addEventListener('click', function() {
-            if (driverMarker && navigator.share) {
-                const position = driverMarker.getLatLng();
+            if (userMarker && navigator.share) {
+                const position = userMarker.getLatLng();
                 navigator.share({
-                    title: 'Position du livreur',
+                    title: 'Ma Position',
                     text: 'Voici ma position actuelle',
                     url: `https://www.openstreetmap.org/?mlat=${position.lat}&mlon=${position.lng}&zoom=15`
                 });
-            } else if (driverMarker) {
-                const position = driverMarker.getLatLng();
+            } else if (userMarker) {
+                const position = userMarker.getLatLng();
                 const url = `https://www.openstreetmap.org/?mlat=${position.lat}&mlon=${position.lng}&zoom=15`;
                 navigator.clipboard.writeText(url).then(() => {
                     alert('Lien de position copié dans le presse-papier !');
