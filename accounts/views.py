@@ -26,29 +26,52 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
 import requests
 
-
 def user_login(request):
-    if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+    if request.method == 'POST':
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        
         username = request.POST.get('username', '').strip()
         password = request.POST.get('password', '').strip()
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
             login(request, user)
             qr_data = f"UserID:{user.id},Points:{getattr(user, 'loyalty_points', 0)},Date:{timezone.now()}"
             generate_qr_code(qr_data, user, 'qr_code')
-            role = getattr(user, 'role', 'client')  # Gère le cas où role n'existe pas
-            return JsonResponse({
-                'success': True,
-                'role': role,
-                'message': 'Connexion réussie'
-            })
+            role = getattr(user, 'role', 'client')
+            print(f"Utilisateur connecté : {username}, Rôle : {role}")  # Débogage
+
+            if is_ajax:
+                return JsonResponse({
+                    'success': True,
+                    'role': role,
+                    'message': f'Connexion réussie en tant que {role}.'
+                })
+            else:
+                if role == 'client':
+                    print("Redirection vers page_principale.html")
+                    return render(request, 'accounts/page_principale.html', {'message': 'Bienvenue, client !'})
+                elif role == 'livreur':
+                    print("Redirection vers delivery_dashboard.html")
+                    return render(request, 'accounts/delivery_dashboard.html', {'message': 'Bienvenue, livreur !'})
+                elif role == 'gestionnaire':
+                    print("Redirection vers manager_dashboard.html")
+                    return render(request, 'accounts/manager_dashboard.html', {'message': 'Bienvenue, gestionnaire !'})
+                else:
+                    print("Rôle non reconnu")
+                    return render(request, 'accounts/login.html', {'error': 'Rôle non reconnu.'})
         else:
-            return JsonResponse({
-                'success': False,
-                'message': 'Identifiants incorrects.'
-            })
-    # Gère les requêtes GET pour afficher le formulaire
+            if is_ajax:
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Identifiants incorrects.'
+                })
+            else:
+                return render(request, 'accounts/login.html', {'error': 'Identifiants incorrects.'})
+
     return render(request, 'accounts/login.html')
+
+
 
 def register(request):
     if request.method == 'POST':
@@ -56,6 +79,7 @@ def register(request):
         email = request.POST.get('email', '').strip()
         password = request.POST.get('password', '').strip()
         role = request.POST.get('role', 'client')
+        print(f"Inscription - Username: {username}, Email: {email}, Role: {role}")  # Débogage
         if CustomUser.objects.filter(username=username).exists():
             messages.error(request, "Ce nom d'utilisateur est déjà pris.")
         else:
@@ -172,7 +196,7 @@ def add_to_cart(request, product_id):
         print(f"Produit trouvé : {product}")
         data = json.loads(request.body.decode('utf-8')) if request.body else {}
         print(f"Données reçues : {data}")
-        action = data.get('action', 'add')  # 'add', 'update', ou 'remove'
+        action = data.get('action', 'add')  
         quantity = int(data.get('quantity', 1))
 
         if quantity < 0:
@@ -279,7 +303,7 @@ def profil_view(request):
 def product_autocomplete(request):
     if 'term' in request.GET:
         query = request.GET.get('term', '').strip()
-        products = Product.objects.filter(name__icontains=query)[:10]  # Limite à 10 suggestions
+        products = Product.objects.filter(name__icontains=query)[:10]  
         suggestions = [
             {
                 'label': product.name,
@@ -392,6 +416,7 @@ def payment_page(request):
 
         print(f"Invoice data: {request.session.get('invoice_data')}")
         print(f"QR code image: {request.session.get('qr_code_image')}")
+        print(f"Avant redirection - Session: {request.session.items()}")  # Débogage ajouté
 
         # CHANGEMENT : Rediriger vers payment_confirmation au lieu de invoice
         return redirect('accounts:payment_confirmation')
@@ -400,7 +425,6 @@ def payment_page(request):
 
 
 
-@login_required
 def invoice_view(request):
     invoice_data = request.session.get('invoice_data', {})
     qr_code_image = request.session.get('qr_code_image', '')
@@ -413,17 +437,19 @@ def invoice_view(request):
         'invoice_data': invoice_data,
         'qr_code_image': qr_code_image
     }
-    
-    # Rendre la page d'abord, puis nettoyer la session après
-    response = render(request, 'accounts/view_invoice.html', context)
-    return redirect('accounts:clear_invoice_session')
+    return render(request, 'accounts/view_invoice.html', context)  # Supprime la redirection
 
     
 def payment_confirmation(request):
     dernier_montant = request.session.get('dernier_montant', 0)
-    has_invoice_data = bool(request.session.get('invoice_data'))
+    invoice_data = request.session.get('invoice_data', {})
+    qr_code_image = request.session.get('qr_code_image', '')
+    has_invoice_data = bool(invoice_data)
+    print(f"Contexte payment_confirmation - Session: {request.session.items()}")  # Débogage ajouté
     return render(request, 'accounts/payment_confirmation.html', {
         'montant': dernier_montant,
+        'invoice_data': invoice_data,
+        'qr_code_image': qr_code_image,
         'has_invoice_data': has_invoice_data
     })
 
@@ -838,3 +864,43 @@ def delivery_orders(request):
         'current_date': current_date
     }
     return render(request, 'accounts/delivery_orders.html', context)
+
+
+
+
+@login_required
+def edit_user(request, user_id):
+    if request.user.role != 'gestionnaire':
+        return render(request, 'accounts/access_denied.html', {'message': "Vous n'avez pas l'autorisation d'accéder à cette page."})
+    
+    user = get_object_or_404(CustomUser, id=user_id)
+    if request.method == 'POST':
+        username = request.POST.get('username', user.username).strip()
+        email = request.POST.get('email', user.email).strip()
+        role = request.POST.get('role', user.role)
+        password = request.POST.get('password', '').strip()
+
+        if CustomUser.objects.filter(username=username).exclude(id=user_id).exists():
+            messages.error(request, "Ce nom d'utilisateur est déjà pris.")
+        else:
+            user.username = username
+            user.email = email
+            user.role = role
+            if password:
+                user.set_password(password)
+            user.save()
+            messages.success(request, "Utilisateur mis à jour avec succès.")
+            return redirect('accounts:manage_accounts')
+    return render(request, 'accounts/edit_user.html', {'user': user})
+
+@login_required
+def delete_user(request, user_id):
+    if request.user.role != 'gestionnaire':
+        return render(request, 'accounts/access_denied.html', {'message': "Vous n'avez pas l'autorisation d'accéder à cette page."})
+    
+    user = get_object_or_404(CustomUser, id=user_id)
+    if request.method == 'POST':
+        user.delete()
+        messages.success(request, "Utilisateur supprimé avec succès.")
+        return redirect('accounts:manage_accounts')
+    return redirect('accounts:manage_accounts')

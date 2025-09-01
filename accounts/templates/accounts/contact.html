@@ -6,168 +6,321 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conversations - Echop</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/contact.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .chat-bubble-user {
-            background: linear-gradient(135deg, #dc2626, #b91c1c);
+        /* [Vos styles existants] */
+        
+        /* Nouveaux styles */
+        .message-sending {
+            opacity: 0.7;
         }
-        .chat-bubble-other {
-            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+        .new-message-notification {
+            animation: newMessage 0.5s ease-in-out;
         }
-        .message-input:focus {
-            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        @keyframes newMessage {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans">
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 font-sans min-h-screen">
 
-    <!-- Header -->
-    <header class="bg-red-600 text-white p-6 shadow-lg">
-        <div class="container mx-auto flex justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-bold">Echop - Conversations</h1>
-                <p class="mt-2 text-lg">Discutez avec la communauté !</p>
-            </div>
-            <div class="flex items-center space-x-4">
-                <div class="bg-yellow-400 text-gray-800 px-3 py-1 rounded-full text-sm font-semibold">
-                    En ligne
-                </div>
-            </div>                
-        </div>
-    </header>
+    <!-- [Votre header et navigation existants] -->
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-6">
-        <!-- Chat Container -->
-        <div class="max-w-4xl mx-auto">
+    <div class="container mx-auto px-4 py-4">
+        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden slide-up chat-container">
             <!-- Chat Header -->
-            <div class="bg-white rounded-t-lg border-b border-gray-200 p-4">
-                <h2 class="text-xl font-semibold text-red-700">Discussion générale</h2>
-                <p class="text-gray-600 text-sm mt-1">Échangez avec les autres membres de la communauté Echop</p>
+            <div class="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="relative">
+                        <div class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="online-indicator"></div>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-800">Discussion générale</h2>
+                        <p class="text-gray-500 text-xs"><span id="online-count">12</span> membres en ligne • Échangez avec la communauté Echop</p>
+                    </div>
+                </div>
+                <div class="flex space-x-2">
+                    <button class="p-2 text-gray-500 hover:text-red-600 rounded-full hover:bg-gray-100">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="p-2 text-gray-500 hover:text-red-600 rounded-full hover:bg-gray-100">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- Messages Area -->
-            <div class="bg-white h-96 overflow-y-auto p-4 border-l border-r border-gray-200" id="messages-container">
-                <!-- Example messages (these would come from your backend) -->
-                <div class="mb-4">
-                    <div class="flex items-start space-x-3">
-                        <div class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center text-white text-sm font-semibold">
-                            U
-                        </div>
-                        <div class="flex-1">
-                            <div class="chat-bubble-other text-gray-800 px-4 py-2 rounded-lg max-w-xs">
-                                Bonjour tout le monde ! Comment ça va aujourd'hui ?
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">Utilisateur123 • Il y a 10 min</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <div class="flex items-start space-x-3 justify-end">
-                        <div class="flex-1 text-right">
-                            <div class="chat-bubble-user text-white px-4 py-2 rounded-lg max-w-xs ml-auto">
-                                Salut ! Ça va très bien, merci. Et toi ?
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">Vous • Il y a 8 min</p>
-                        </div>
-                        <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
-                            V
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <div class="flex items-start space-x-3">
-                        <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
-                            M
-                        </div>
-                        <div class="flex-1">
-                            <div class="chat-bubble-other text-gray-800 px-4 py-2 rounded-lg max-w-xs">
-                                Super ! J'ai une question sur les nouveaux produits Echop. Quelqu'un peut m'aider ?
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">Marie_Cam • Il y a 5 min</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="messages-container overflow-y-auto p-4 bg-gray-50 relative" id="messages-container">
+                <!-- Les messages seront chargés dynamiquement -->
             </div>
 
             <!-- Message Form -->
-            <form method="POST" class="bg-white rounded-b-lg border-t border-gray-200 p-4">
+            <form id="message-form" class="bg-white border-t border-gray-200 p-4">
                 {% csrf_token %}
-                <div class="flex items-center space-x-3">
-                    <input type="hidden" name="name" value="Utilisateur_Actuel">
-                    <input type="hidden" name="email" value="user@echop.com">
-                    <input type="hidden" name="subject" value="Message de conversation">
-                    
-                    <textarea 
-                        name="message" 
-                        rows="1" 
-                        class="message-input flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 resize-none" 
-                        placeholder="Tapez votre message ici..."
-                        required
-                    ></textarea>
-                    
+                <div class="flex items-end space-x-3">
+                    <button type="button" class="p-2 text-gray-500 hover:text-red-600 rounded-full hover:bg-gray-100 flex-shrink-0">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    <button type="button" class="p-2 text-gray-500 hover:text-red-600 rounded-full hover:bg-gray-100 flex-shrink-0">
+                        <i class="far fa-smile"></i>
+                    </button>
+                    <div class="flex-1 relative">
+                        <textarea 
+                            name="message" 
+                            id="message-input"
+                            rows="1" 
+                            class="message-input w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 resize-none" 
+                            placeholder="Tapez votre message ici..."
+                            required
+                        ></textarea>
+                    </div>
                     <button 
                         type="submit" 
-                        class="btn-submit bg-yellow-400 text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-yellow-500 transition-colors flex items-center space-x-2" 
-                        aria-label="Envoyer le message"
+                        id="send-button"
+                        class="bg-gradient-to-r from-red-600 to-red-700 text-white p-3 rounded-lg font-semibold hover:from-red-700 hover:to-red-800 transform hover:scale-105 transition-all shadow flex items-center justify-center flex-shrink-0"
                     >
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                        </svg>
-                        <span>Envoyer</span>
+                        <i class="fas fa-paper-plane"></i>
                     </button>
                 </div>
             </form>
         </div>
-
-        <!-- Sidebar with online users (optional) -->
-        <div class="max-w-4xl mx-auto mt-6">
-            <div class="bg-white rounded-lg shadow-lg p-6">
-                <h3 class="text-lg font-semibold text-red-700 mb-4">Membres en ligne</h3>
-                <div class="flex flex-wrap gap-2">
-                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Utilisateur123</span>
-                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Marie_Cam</span>
-                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Paul_237</span>
-                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Sophie_YDE</span>
-                    <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm">+12 autres</span>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-red-600 text-white text-center py-6 mt-10">
-        <p>© 2025 Echop. Tous droits réservés.</p>
-        <div class="mt-2">
-            <a href="#" class="text-yellow-300 hover:underline mx-2">À propos</a>
-            <a href="#" class="text-yellow-300 hover:underline mx-2">Contact</a>
-            <a href="#" class="text-yellow-300 hover:underline mx-2">Conditions d'utilisation</a>
-        </div>
-        <p class="mt-1">Contact : <a href="mailto:support@echop.com" class="text-yellow-300 hover:underline">support@echop.com</a> | Téléphone : +237 6 77 24 69 00</p>
-    </footer>
+    </div>
 
     <script>
-        // Auto-scroll to bottom of messages
-        const messagesContainer = document.getElementById('messages-container');
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        // Configuration
+        const currentUser = {
+            id: "{{ user.id }}",
+            username: "{{ user.username }}",
+            initials: "{{ user.initials }}"
+        };
+        const chatRoomId = "general"; // ID de la salle de discussion
 
-        // Auto-resize textarea
-        const textarea = document.querySelector('textarea[name="message"]');
-        textarea.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+        // Éléments DOM
+        const messagesContainer = document.getElementById('messages-container');
+        const messageForm = document.getElementById('message-form');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const onlineCountElement = document.getElementById('online-count');
+
+        // WebSocket connection
+        let chatSocket = null;
+
+        // Fonction pour se connecter au WebSocket
+        function connect() {
+            // En production, utilisez wss:// au lieu de ws://
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}/ws/chat/${chatRoomId}/`;
+            
+            chatSocket = new WebSocket(wsUrl);
+
+            chatSocket.onopen = function(e) {
+                console.log('Connexion WebSocket établie');
+                // Charger les messages précédents
+                loadMessages();
+            };
+
+            chatSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                handleWebSocketMessage(data);
+            };
+
+            chatSocket.onclose = function(e) {
+                console.log('WebSocket déconnecté, tentative de reconnexion...');
+                setTimeout(function() {
+                    connect();
+                }, 2000);
+            };
+
+            chatSocket.onerror = function(err) {
+                console.error('Erreur WebSocket:', err);
+            };
+        }
+
+        // Fonction pour charger les messages précédents
+        function loadMessages() {
+            fetch(`/api/chat/${chatRoomId}/messages/`)
+                .then(response => response.json())
+                .then(messages => {
+                    messagesContainer.innerHTML = '';
+                    messages.forEach(message => {
+                        appendMessage(message);
+                    });
+                    scrollToBottom();
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des messages:', error);
+                });
+        }
+
+        // Fonction pour gérer les messages WebSocket
+        function handleWebSocketMessage(data) {
+            switch(data.type) {
+                case 'chat_message':
+                    appendMessage(data.message);
+                    break;
+                case 'user_join':
+                    showSystemMessage(`${data.username} a rejoint la conversation`);
+                    updateOnlineCount(data.online_count);
+                    break;
+                case 'user_leave':
+                    showSystemMessage(`${data.username} a quitté la conversation`);
+                    updateOnlineCount(data.online_count);
+                    break;
+                case 'typing':
+                    showTypingIndicator(data.user_id, data.username);
+                    break;
+                case 'stop_typing':
+                    hideTypingIndicator(data.user_id);
+                    break;
+            }
+        }
+
+        // Fonction pour ajouter un message à l'interface
+        function appendMessage(message) {
+            const isCurrentUser = message.user_id == currentUser.id;
+            
+            const messageElement = document.createElement('div');
+            messageElement.className = `mb-4 flex items-start space-x-3 ${isCurrentUser ? 'justify-end' : ''} new-message-notification`;
+            
+            if (isCurrentUser) {
+                messageElement.innerHTML = `
+                    <div class="flex flex-col items-end max-w-xs">
+                        <div class="chat-bubble-user text-white px-4 py-2">
+                            ${escapeHtml(message.content)}
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">${formatTime(message.timestamp)}</p>
+                    </div>
+                    <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">
+                        ${currentUser.initials}
+                    </div>
+                `;
+            } else {
+                messageElement.innerHTML = `
+                    <div class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">
+                        ${message.user_initials}
+                    </div>
+                    <div class="flex flex-col max-w-xs">
+                        <div class="text-xs text-gray-500 mb-1">${escapeHtml(message.username)}</div>
+                        <div class="chat-bubble-other text-gray-800 px-4 py-2">
+                            ${escapeHtml(message.content)}
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1 text-right">${formatTime(message.timestamp)}</p>
+                    </div>
+                `;
+            }
+            
+            messagesContainer.appendChild(messageElement);
+            scrollToBottom();
+        }
+
+        // Fonction pour envoyer un message
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            // Afficher le message immédiatement (optimistic UI)
+            const tempMessage = {
+                user_id: currentUser.id,
+                username: currentUser.username,
+                user_initials: currentUser.initials,
+                content: message,
+                timestamp: new Date().toISOString()
+            };
+            
+            appendMessage(tempMessage);
+            
+            // Désactiver le champ et le bouton d'envoi
+            messageInput.disabled = true;
+            sendButton.disabled = true;
+            
+            // Envoyer le message via WebSocket
+            chatSocket.send(JSON.stringify({
+                type: 'chat_message',
+                message: message,
+                room_id: chatRoomId
+            }));
+            
+            // Réinitialiser le champ de saisie
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            
+            // Réactiver le champ et le bouton d'envoi
+            messageInput.disabled = false;
+            sendButton.disabled = false;
+            messageInput.focus();
+        }
+
+        // Écouteur d'événement pour le formulaire
+        messageForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            sendMessage();
         });
 
-        // Submit form on Enter (but not Shift+Enter)
-        textarea.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                this.closest('form').submit();
+        // Fonction pour faire défiler vers le bas
+        function scrollToBottom() {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Fonctions utilitaires
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function showSystemMessage(text) {
+            const systemMessage = document.createElement('div');
+            systemMessage.className = 'text-center my-2';
+            systemMessage.innerHTML = `<span class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">${escapeHtml(text)}</span>`;
+            messagesContainer.appendChild(systemMessage);
+            scrollToBottom();
+        }
+
+        function updateOnlineCount(count) {
+            if (onlineCountElement) {
+                onlineCountElement.textContent = count;
             }
+        }
+
+        // Détection de frappe
+        let typing = false;
+        let typingTimeout;
+
+        function stopTyping() {
+            typing = false;
+            chatSocket.send(JSON.stringify({
+                type: 'stop_typing',
+                room_id: chatRoomId
+            }));
+        }
+
+        messageInput.addEventListener('input', function() {
+            if (!typing) {
+                typing = true;
+                chatSocket.send(JSON.stringify({
+                    type: 'typing',
+                    room_id: chatRoomId
+                }));
+            }
+            
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(stopTyping, 1000);
+        });
+
+        // Se connecter au WebSocket lorsque la page est chargée
+        document.addEventListener('DOMContentLoaded', function() {
+            connect();
         });
     </script>
-
 </body>
 </html>

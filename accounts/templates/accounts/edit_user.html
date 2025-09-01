@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier Utilisateur - Echop</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-sans">
+    <main class="container mx-auto px-4 py-8">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Modifier l'utilisateur : {{ user.username }}</h2>
+        {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+            <div class="p-4 bg-{{ message.tags == 'success' | yesno:'green-100,red-100' }} text-{{ message.tags == 'success' | yesno:'green-800,red-800' }} rounded-lg">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-5">
+                <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Nom d'utilisateur</label>
+                <input type="text" id="username" name="username" value="{{ user.username }}" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" required>
+            </div>
+            <div class="mb-5">
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Adresse email</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" required>
+            </div>
+            <div class="mb-5">
+                <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Rôle</label>
+                <select id="role" name="role" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" required>
+                    <option value="client" {% if user.role == 'client' %}selected{% endif %}>Client</option>
+                    <option value="gestionnaire" {% if user.role == 'gestionnaire' %}selected{% endif %}>Gestionnaire</option>
+                    <option value="delivery" {% if user.role == 'delivery' %}selected{% endif %}>Livreur</option>
+                </select>
+            </div>
+            <div class="mb-6">
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Nouveau mot de passe (laisser vide pour ne pas changer)</label>
+                <input type="password" id="password" name="password" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+            </div>
+            <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-3 px-4 rounded-lg font-medium hover:from-red-700 hover:to-red-800 transition shadow-md hover:shadow-lg">
+                <i class="fas fa-save mr-2"></i> Sauvegarder les modifications
+            </button>
+        </form>
+    </main>
+</body>
+</html>

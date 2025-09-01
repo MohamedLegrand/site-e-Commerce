@@ -86,6 +86,8 @@ urlpatterns = [
 
     path('delivery_map/', views.delivery_map, name='delivery_map'),
     path('delivery_orders/', views.delivery_orders, name='delivery_orders'),
+    path('edit_user/<int:user_id>/', views.edit_user, name='edit_user'),  # Nouvelle URL
+    path('delete_user/<int:user_id>/', views.delete_user, name='delete_user'),  # Nouvelle URL
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

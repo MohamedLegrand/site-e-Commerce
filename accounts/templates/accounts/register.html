@@ -4,65 +4,183 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription - Echop</title>
-    {% load static %}
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="{% static 'accounts/register.css' %}" rel="stylesheet">
-</head>
-<body class="bg-gray-50 font-sans relative overflow-hidden">
-    <!-- Conteneur pour les bulles animées -->
-    <div class="bubbles">
-        <span style="--i:11;"></span>
-        <span style="--i:12;"></span>
-        <span style="--i:24;"></span>
-        <span style="--i:10;"></span>
-        <span style="--i:14;"></span>
-        <!-- Ajoute tes bulles ici, par exemple : -->
-        <!-- <span style="--i:15;"></span> -->
-        <!-- <span style="--i:17;"></span> -->
-        <!-- <span style="--i:20;"></span> -->
-    </div>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(-45deg, #dc2626, #b91c1c, #991b1b, #7f1d1d);
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
 
-    <!-- Contenu principal -->
-    <div class="container mx-auto p-6 flex items-center justify-center min-h-screen">
-        <div class="card bg-white rounded-lg shadow-xl p-8 max-w-md w-full transform hover:scale-105 transition duration-300">
-            <h1 class="text-3xl font-bold text-gray-800 text-center mb-6">Inscription</h1>
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="bg-red-100 text-red-700 p-3 mb-4 rounded-lg text-center">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-            <form method="post">
-                {% csrf_token %}
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-1">Nom d'utilisateur</label>
-                    <input type="text" name="username" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200" required>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-1">Email</label>
-                    <input type="email" name="email" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200" required>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-1">Mot de passe</label>
-                    <input type="password" name="password" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200" required>
-                </div>
-                <div class="mb-6">
-                    <label class="block text-gray-700 font-semibold mb-1">Rôle</label>
-                    <select name="role" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200" required>
-                        <option value="client">Client</option>
-                        <option value="seller">Commerçant</option>
-                        <option value="delivery">Livreur</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
-                <button type="submit" class="w-full bg-red-600 text-white px-4 py-3 rounded-lg hover:bg-red-700 hover:shadow-lg transform hover:translate-y-[-2px] transition duration-200">
-                    S'inscrire
-                </button>
-            </form>
-            <p class="mt-4 text-center text-gray-600">
-                Déjà un compte ? <a href="{% url 'accounts:login' %}" class="text-red-600 hover:text-red-800 font-semibold transition duration-200">Se connecter</a>
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+        }
+
+        .input-field:focus-within label {
+            color: #dc2626;
+        }
+
+        .input-field input:focus, .input-field select:focus {
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+            border-color: #dc2626;
+        }
+
+        .btn-modern {
+            transition: all 0.3s ease;
+            background: linear-gradient(to right, #dc2626, #b91c1c);
+        }
+
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(220, 38, 38, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-card p-5 w-full max-w-md">
+        <!-- Logo et titre -->
+        <div class="text-center mb-4">
+            <div class="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-br from-red-500 to-red-700 rounded-xl mb-2">
+                <span class="text-white font-bold text-base">E</span>
+            </div>
+            <h1 class="text-xl font-bold text-gray-900 mb-1">Inscription</h1>
+            <p class="text-gray-600 text-xs">Créez votre compte Echop</p>
+        </div>
+
+        <!-- Formulaire compact -->
+        <form method="post" class="space-y-3">
+            {% csrf_token %}
+            
+            <!-- Champ nom d'utilisateur -->
+            <div class="input-field">
+                <label class="block text-gray-700 font-medium mb-1 text-xs">
+                    Nom d'utilisateur
+                </label>
+                <input 
+                    type="text" 
+                    name="username" 
+                    class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none transition duration-200 text-xs" 
+                    placeholder="Votre nom d'utilisateur"
+                    required
+                >
+            </div>
+
+            <!-- Champ email -->
+            <div class="input-field">
+                <label class="block text-gray-700 font-medium mb-1 text-xs">
+                    Email
+                </label>
+                <input 
+                    type="email" 
+                    name="email" 
+                    class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none transition duration-200 text-xs" 
+                    placeholder="Votre adresse email"
+                    required
+                >
+            </div>
+
+            <!-- Champ numéro de téléphone -->
+            <div class="input-field">
+                <label class="block text-gray-700 font-medium mb-1 text-xs">
+                    Téléphone
+                </label>
+                <input 
+                    type="tel" 
+                    name="phone_number" 
+                    class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none transition duration-200 text-xs" 
+                    placeholder="Ex: +237 677 24 69 00"
+                    required
+                >
+            </div>
+
+            <!-- Champ adresse -->
+            <div class="input-field">
+                <label class="block text-gray-700 font-medium mb-1 text-xs">
+                    Adresse
+                </label>
+                <input 
+                    type="text" 
+                    name="address" 
+                    class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none transition duration-200 text-xs" 
+                    placeholder="Ex: Rue 1.234, Yaoundé"
+                    required
+                >
+            </div>
+
+            <!-- Champ mot de passe -->
+            <div class="input-field">
+                <label class="block text-gray-700 font-medium mb-1 text-xs">
+                    Mot de passe
+                </label>
+                <input 
+                    type="password" 
+                    name="password" 
+                    class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none transition duration-200 text-xs" 
+                    placeholder="Créez un mot de passe"
+                    required
+                >
+            </div>
+
+            <!-- Champ rôle -->
+            <div class="input-field">
+                <label class="block text-gray-700 font-medium mb-1 text-xs">
+                    Rôle
+                </label>
+                <select 
+                    name="role" 
+                    class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none transition duration-200 text-xs" 
+                    required
+                >
+                    <option value="client">Client</option>
+                    <option value="delivery">Livreur</option>
+                    <option value="gestionnaire">Gestionnaire</option>
+                </select>
+            </div>
+
+            <!-- Bouton d'inscription -->
+            <button 
+                type="submit" 
+                class="btn-modern w-full text-white px-3 py-2 rounded-lg font-semibold text-xs mt-2"
+            >
+                S'inscrire
+            </button>
+        </form>
+
+        <!-- Lien de connexion -->
+        <div class="text-center mt-4 pt-3 border-t border-gray-200">
+            <p class="text-gray-600 text-xs">
+                Déjà un compte ? 
+                <a href="{% url 'accounts:login' %}" class="text-red-600 hover:text-red-800 font-semibold">
+                    Se connecter
+                </a>
             </p>
         </div>
     </div>
+
+    <script>
+        // Focus sur le premier champ
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstInput = document.querySelector('input[name="username"]');
+            if (firstInput) {
+                setTimeout(() => firstInput.focus(), 100);
+            }
+        });
+    </script>
 </body>
 </html>

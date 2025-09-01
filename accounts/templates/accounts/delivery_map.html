@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carte des Livraisons - {{ city_name }}</title>
+    <title>Carte des Livraisons - Localisation Précise</title>
     <!-- Inclure Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <!-- Font Awesome pour les icônes -->
@@ -90,36 +90,46 @@
             50% { transform: scale(1.05); }
         }
 
-        .header-stats {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-        }
-
-        .stat-item {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.15);
+        .precision-info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
             padding: 15px 20px;
             border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 250px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s ease;
         }
 
-        .stat-item:hover {
-            transform: translateY(-2px);
+        .precision-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
         }
 
-        .stat-number {
-            font-size: 1.8rem;
-            font-weight: 700;
-            display: block;
+        .precision-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
         }
 
-        .stat-label {
+        .precision-indicator.excellent { background: #10b981; }
+        .precision-indicator.good { background: #f59e0b; }
+        .precision-indicator.poor { background: #ef4444; }
+
+        .precision-text {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .precision-details {
             font-size: 0.85rem;
-            opacity: 0.9;
-            font-weight: 500;
+            color: #6b7280;
+            line-height: 1.4;
         }
 
         .map-container {
@@ -216,7 +226,6 @@
             color: #6b7280;
         }
 
-        /* Styles personnalisés pour les popups Leaflet */
         .custom-popup .leaflet-popup-content-wrapper {
             border-radius: 16px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
@@ -231,13 +240,7 @@
             line-height: 1.6;
             font-family: 'Inter', sans-serif;
             padding: 20px;
-            min-width: 250px;
-        }
-
-        .custom-popup .leaflet-popup-tip {
-            background: white;
-            box-shadow: none;
-            border: none;
+            min-width: 280px;
         }
 
         .popup-header {
@@ -268,120 +271,125 @@
             margin: 0;
         }
 
-        .popup-address {
-            color: #6b7280;
-            font-size: 0.9rem;
-            margin-top: 8px;
-            line-height: 1.5;
+        .popup-coordinates {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #374151;
         }
 
-        .popup-footer {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #f3f4f6;
+        .popup-accuracy {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .popup-accuracy.excellent {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .popup-accuracy.good {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .popup-accuracy.poor {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .location-info-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            max-width: 350px;
+            display: none;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .info-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f3f4f6;
         }
 
-        .popup-time {
-            font-size: 0.85rem;
-            color: #6b7280;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .status-badge {
-            background: #10b981;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 20px;
-            font-size: 0.75rem;
+        .info-title {
             font-weight: 600;
+            color: #1f2937;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 8px;
         }
 
-        /* Styles pour les marqueurs personnalisés */
-        .custom-marker {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            width: 40px;
-            height: 40px;
-            border-radius: 50% 50% 50% 0;
-            transform: rotate(-45deg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-            border: 3px solid white;
+        .close-btn {
+            background: none;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 4px;
+            border-radius: 4px;
+            transition: color 0.2s;
         }
 
-        .custom-marker::after {
-            content: '';
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            transform: rotate(45deg);
+        .close-btn:hover {
+            color: #374151;
         }
 
-        /* Media queries pour responsive */
+        .info-item {
+            margin-bottom: 12px;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: #6b7280;
+            font-weight: 500;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
+            .precision-info {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin: 20px;
+                min-width: auto;
             }
 
-            .header {
-                padding: 20px;
-            }
-
-            .header-title h1 {
-                font-size: 1.6rem;
-            }
-
-            .header-title .icon {
-                font-size: 2rem;
-                padding: 12px;
-            }
-
-            .header-stats {
-                gap: 15px;
-            }
-
-            .stat-item {
-                padding: 10px 15px;
-            }
-
-            .stat-number {
-                font-size: 1.4rem;
+            .location-info-panel {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                margin: 20px;
+                max-width: none;
             }
 
             .map-controls {
                 top: 10px;
                 right: 10px;
-            }
-
-            #map {
-                height: 500px;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .header-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .header-stats {
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-
-            .custom-popup .leaflet-popup-content {
-                padding: 15px;
-                min-width: 220px;
             }
         }
     </style>
@@ -394,52 +402,61 @@
                     <div class="icon">
                         <i class="fas fa-map-marked-alt"></i>
                     </div>
-                    <h1>Carte des Livraisons - {{ city_name }}</h1>
-                </div>
-                <div class="header-stats">
-                    <div class="stat-item">
-                        <span class="stat-number">
-                            <i class="fas fa-truck"></i>
-                        </span>
-                        <span class="stat-label">En livraison</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">
-                            <i class="fas fa-clock"></i>
-                        </span>
-                        <span class="stat-label">Temps réel</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">
-                            <i class="fas fa-route"></i>
-                        </span>
-                        <span class="stat-label">Optimisé</span>
-                    </div>
+                    <h1>Géolocalisation Précise</h1>
                 </div>
             </div>
         </div>
 
         <div class="map-container">
+            <div class="precision-info" id="precisionInfo" style="display: none;">
+                <div class="precision-status">
+                    <div class="precision-indicator" id="precisionIndicator"></div>
+                    <div class="precision-text" id="precisionText"></div>
+                </div>
+                <div class="precision-details" id="precisionDetails"></div>
+            </div>
+
             <div class="map-controls">
-                <button class="control-btn" title="Centrer sur ma position" id="centerBtn">
+                <button class="control-btn" title="Recentrer position" id="recenterBtn">
                     <i class="fas fa-crosshairs"></i>
+                </button>
+                <button class="control-btn" title="Haute précision" id="highAccuracyBtn">
+                    <i class="fas fa-bullseye"></i>
+                </button>
+                <button class="control-btn" title="Infos du lieu" id="infoBtn">
+                    <i class="fas fa-info-circle"></i>
                 </button>
                 <button class="control-btn" title="Mode satellite" id="satelliteBtn">
                     <i class="fas fa-satellite"></i>
                 </button>
-                <button class="control-btn" title="Plein écran" id="fullscreenBtn">
-                    <i class="fas fa-expand"></i>
+                <button class="control-btn" title="Suivi continu" id="watchBtn">
+                    <i class="fas fa-broadcast-tower"></i>
                 </button>
-                <button class="control-btn" title="Partager position" id="shareBtn">
-                    <i class="fas fa-share-alt"></i>
-                </button>
+            </div>
+
+            <div class="location-info-panel" id="locationInfoPanel">
+                <div class="info-header">
+                    <div class="info-title">
+                        <i class="fas fa-map-marked-alt"></i>
+                        Détails du lieu
+                    </div>
+                    <button class="close-btn" onclick="toggleInfoPanel()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div id="locationDetails">
+                    <div class="info-item">
+                        <div class="info-label">Chargement...</div>
+                        <div class="info-value">Récupération des informations</div>
+                    </div>
+                </div>
             </div>
 
             <div class="loading-overlay" id="loadingOverlay">
                 <div class="loading-content">
                     <div class="spinner"></div>
-                    <div class="loading-text">Localisation en cours...</div>
-                    <div class="loading-subtitle">Recherche de votre position</div>
+                    <div class="loading-text" id="loadingText">Recherche de position haute précision...</div>
+                    <div class="loading-subtitle" id="loadingSubtitle">Activation du GPS en cours</div>
                 </div>
             </div>
 
@@ -447,229 +464,560 @@
         </div>
     </div>
 
-    <!-- Inclure Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Initialiser la carte avec une position par défaut proche d'Awae
-        var map = L.map('map').setView([3.9333, 11.5167], 12); // Coordonnées approximatives d'Awae
+        // Configuration avancée de géolocalisation
+        const highAccuracyOptions = {
+            enableHighAccuracy: true,
+            timeout: 30000,           // 30 secondes
+            maximumAge: 0             // Pas de cache
+        };
 
-        // Variables pour les couches de tuiles
+        const standardOptions = {
+            enableHighAccuracy: false,
+            timeout: 15000,
+            maximumAge: 300000        // Cache de 5 minutes
+        };
+
+        // Initialisation de la carte
+        let map = L.map('map').setView([3.848, 11.502], 13);
         let currentTileLayer;
         let satelliteMode = false;
+        let userMarker = null;
+        let accuracyCircle = null;
+        let watchId = null;
+        let isWatching = false;
 
-        // Couche OpenStreetMap par défaut
+        // Couches de tuiles
         const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            attribution: '&copy; OpenStreetMap contributors'
         });
 
-        // Couche satellite (Esri)
         const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             maxZoom: 18,
-            attribution: '&copy; <a href="https://www.esri.com/">Esri</a> &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+            attribution: '&copy; Esri'
         });
 
-        // Ajouter la couche par défaut
         currentTileLayer = osmLayer.addTo(map);
 
-        // Variable pour stocker le marqueur de l'utilisateur
-        let userMarker;
+        // Fonction pour mettre à jour l'indicateur de précision
+        function updatePrecisionInfo(accuracy, method) {
+            const precisionInfo = document.getElementById('precisionInfo');
+            const indicator = document.getElementById('precisionIndicator');
+            const text = document.getElementById('precisionText');
+            const details = document.getElementById('precisionDetails');
+
+            precisionInfo.style.display = 'block';
+
+            let status, className, description;
+            
+            if (accuracy <= 10) {
+                status = 'Excellente précision';
+                className = 'excellent';
+                description = `±${accuracy.toFixed(1)}m • ${method} • Idéal pour navigation`;
+            } else if (accuracy <= 50) {
+                status = 'Bonne précision';
+                className = 'good';
+                description = `±${accuracy.toFixed(1)}m • ${method} • Suffisant pour localisation`;
+            } else {
+                status = 'Précision limitée';
+                className = 'poor';
+                description = `±${accuracy.toFixed(1)}m • ${method} • Position approximative`;
+            }
+
+            indicator.className = `precision-indicator ${className}`;
+            text.textContent = status;
+            details.textContent = description;
+        }
+
+        // Fonction pour créer le popup détaillé avec informations complètes du lieu
+        function createDetailedPopup(lat, lng, accuracy, timestamp, locationData = null) {
+            const accuracyClass = accuracy <= 10 ? 'excellent' : accuracy <= 50 ? 'good' : 'poor';
+            const accuracyText = accuracy <= 10 ? 'Excellente' : accuracy <= 50 ? 'Bonne' : 'Limitée';
+            const accuracyIcon = accuracy <= 10 ? 'check-circle' : accuracy <= 50 ? 'exclamation-circle' : 'times-circle';
+
+            let locationInfo = '';
+            if (locationData) {
+                locationInfo = `
+                    <div style="margin-top: 15px;">
+                        <div style="font-weight: 600; color: #1f2937; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-info-circle" style="color: #3b82f6;"></i>
+                            Informations du lieu
+                        </div>
+                        
+                        ${locationData.address ? `
+                            <div style="margin-bottom: 8px; padding: 8px 10px; background: #f1f5f9; border-radius: 6px; font-size: 0.85rem;">
+                                <i class="fas fa-map-marker-alt" style="color: #ef4444; margin-right: 6px;"></i>
+                                <strong>Adresse:</strong><br>
+                                ${locationData.address.road || ''} ${locationData.address.house_number || ''}<br>
+                                ${locationData.address.neighbourhood || locationData.address.suburb || ''}<br>
+                                ${locationData.address.city || locationData.address.town || 'Yaoundé'}, ${locationData.address.postcode || ''}
+                            </div>
+                        ` : ''}
+                        
+                        ${locationData.address && locationData.address.neighbourhood ? `
+                            <div style="margin-bottom: 8px; padding: 8px 10px; background: #ecfdf5; border-radius: 6px; font-size: 0.85rem;">
+                                <i class="fas fa-home" style="color: #10b981; margin-right: 6px;"></i>
+                                <strong>Quartier:</strong> ${locationData.address.neighbourhood}
+                            </div>
+                        ` : ''}
+                        
+                        ${locationData.address && locationData.address.amenity ? `
+                            <div style="margin-bottom: 8px; padding: 8px 10px; background: #fff7ed; border-radius: 6px; font-size: 0.85rem;">
+                                <i class="fas fa-building" style="color: #f59e0b; margin-right: 6px;"></i>
+                                <strong>Type:</strong> ${locationData.address.amenity}
+                            </div>
+                        ` : ''}
+                        
+                        ${locationData.address && (locationData.address.state || locationData.address.region) ? `
+                            <div style="margin-bottom: 8px; padding: 8px 10px; background: #ede9fe; border-radius: 6px; font-size: 0.85rem;">
+                                <i class="fas fa-map" style="color: #8b5cf6; margin-right: 6px;"></i>
+                                <strong>Région:</strong> ${locationData.address.state || locationData.address.region}
+                            </div>
+                        ` : ''}
+                        
+                        <div style="margin-top: 12px; padding: 8px 10px; background: #f8fafc; border-radius: 6px; font-size: 0.8rem; color: #6b7280; border-left: 3px solid #3b82f6;">
+                            <i class="fas fa-database" style="margin-right: 6px;"></i>
+                            Source: OpenStreetMap • ${locationData.type || 'Point d\'intérêt'}
+                        </div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="popup-header">
+                    <div class="popup-icon">
+                        <i class="fas fa-location-arrow"></i>
+                    </div>
+                    <div>
+                        <div class="popup-title">Ma Position</div>
+                        <div style="font-size: 0.8rem; color: #6b7280;">
+                            ${new Date(timestamp).toLocaleString('fr-FR')}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="popup-coordinates">
+                    <strong>Coordonnées GPS:</strong><br>
+                    Latitude: ${lat.toFixed(6)}°<br>
+                    Longitude: ${lng.toFixed(6)}°
+                </div>
+                
+                <div class="popup-accuracy ${accuracyClass}">
+                    <i class="fas fa-${accuracyIcon}"></i>
+                    <span><strong>Précision ${accuracyText}:</strong> ±${accuracy.toFixed(1)} mètres</span>
+                </div>
+                
+                ${locationInfo}
+                
+                <div style="margin-top: 15px; padding-top: 12px; border-top: 1px solid #e5e7eb;">
+                    <div style="display: flex; gap: 8px;">
+                        <button onclick="shareLocation(${lat}, ${lng})" style="
+                            flex: 1; 
+                            background: #3b82f6; 
+                            color: white; 
+                            border: none; 
+                            padding: 8px 12px; 
+                            border-radius: 6px; 
+                            font-size: 0.8rem; 
+                            cursor: pointer;
+                            transition: background 0.2s;
+                        " onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
+                            <i class="fas fa-share-alt"></i> Partager
+                        </button>
+                        <button onclick="copyCoordinates('${lat.toFixed(6)}, ${lng.toFixed(6)}')" style="
+                            flex: 1; 
+                            background: #10b981; 
+                            color: white; 
+                            border: none; 
+                            padding: 8px 12px; 
+                            border-radius: 6px; 
+                            font-size: 0.8rem; 
+                            cursor: pointer;
+                            transition: background 0.2s;
+                        " onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">
+                            <i class="fas fa-copy"></i> Copier
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Fonction pour mettre à jour les détails de localisation dans le panneau
+        function updateLocationDetails(locationData) {
+            const details = document.getElementById('precisionDetails');
+            const locationDetails = document.getElementById('locationDetails');
+            
+            if (locationData && locationData.address) {
+                const addr = locationData.address;
+                const location = `${addr.neighbourhood || addr.suburb || 'Zone'} • ${addr.city || 'Yaoundé'}`;
+                details.textContent = details.textContent.split(' • ')[0] + ' • ' + location;
+                
+                // Remplir le panneau d'informations détaillées
+                let detailsHTML = '';
+                
+                if (addr.road || addr.house_number) {
+                    detailsHTML += `
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-road"></i> Adresse
+                            </div>
+                            <div class="info-value">
+                                ${addr.house_number || ''} ${addr.road || 'Rue non identifiée'}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                if (addr.neighbourhood || addr.suburb) {
+                    detailsHTML += `
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-home"></i> Quartier
+                            </div>
+                            <div class="info-value">
+                                ${addr.neighbourhood || addr.suburb}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                if (addr.city || addr.town) {
+                    detailsHTML += `
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-city"></i> Ville
+                            </div>
+                            <div class="info-value">
+                                ${addr.city || addr.town}${addr.postcode ? ' (' + addr.postcode + ')' : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                if (addr.state || addr.region) {
+                    detailsHTML += `
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-map"></i> Région
+                            </div>
+                            <div class="info-value">
+                                ${addr.state || addr.region}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                if (locationData.type) {
+                    detailsHTML += `
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-tag"></i> Type de lieu
+                            </div>
+                            <div class="info-value">
+                                ${locationData.type.charAt(0).toUpperCase() + locationData.type.slice(1)}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                if (locationData.osm_type && locationData.osm_id) {
+                    detailsHTML += `
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-database"></i> Référence OSM
+                            </div>
+                            <div class="info-value">
+                                ${locationData.osm_type} #${locationData.osm_id}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                locationDetails.innerHTML = detailsHTML || `
+                    <div class="info-item">
+                        <div class="info-label">Information</div>
+                        <div class="info-value">Informations détaillées non disponibles pour cette zone</div>
+                    </div>
+                `;
+            } else {
+                locationDetails.innerHTML = `
+                    <div class="info-item">
+                        <div class="info-label">Statut</div>
+                        <div class="info-value">Impossible de récupérer les informations du lieu</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Fonction pour basculer l'affichage du panneau d'informations
+        window.toggleInfoPanel = function() {
+            const panel = document.getElementById('locationInfoPanel');
+            const btn = document.getElementById('infoBtn');
+            
+            if (panel.style.display === 'none' || panel.style.display === '') {
+                panel.style.display = 'block';
+                btn.classList.add('active');
+            } else {
+                panel.style.display = 'none';
+                btn.classList.remove('active');
+            }
+        };
+
+        // Fonctions globales pour les boutons du popup
+        window.shareLocation = function(lat, lng) {
+            const url = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}&zoom=16`;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Ma Position',
+                    text: 'Voici ma position actuelle',
+                    url: url
+                }).catch(err => console.log('Erreur partage:', err));
+            } else {
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Lien de position copié dans le presse-papier!');
+                }).catch(err => {
+                    prompt('Copiez ce lien:', url);
+                });
+            }
+        };
+
+        window.copyCoordinates = function(coords) {
+            navigator.clipboard.writeText(coords).then(() => {
+                alert('Coordonnées copiées: ' + coords);
+            }).catch(err => {
+                prompt('Copiez ces coordonnées:', coords);
+            });
+        };
+        function updateLocationMarker(lat, lng, accuracy, timestamp) {
+            // Supprimer les anciens marqueurs
+            if (userMarker) map.removeLayer(userMarker);
+            if (accuracyCircle) map.removeLayer(accuracyCircle);
+
+            // Cercle de précision
+            accuracyCircle = L.circle([lat, lng], {
+                radius: accuracy,
+                color: accuracy <= 10 ? '#10b981' : accuracy <= 50 ? '#f59e0b' : '#ef4444',
+                fillColor: accuracy <= 10 ? '#10b981' : accuracy <= 50 ? '#f59e0b' : '#ef4444',
+                fillOpacity: 0.1,
+                weight: 2,
+                opacity: 0.8
+            }).addTo(map);
+
+            // Marqueur principal
+            userMarker = L.marker([lat, lng], {
+                icon: L.divIcon({
+                    className: 'custom-location-marker',
+                    html: `
+                        <div style="
+                            width: 20px; 
+                            height: 20px; 
+                            background: ${accuracy <= 10 ? '#10b981' : accuracy <= 50 ? '#f59e0b' : '#ef4444'}; 
+                            border: 3px solid white; 
+                            border-radius: 50%; 
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                            animation: pulse 2s infinite;
+                        "></div>
+                    `,
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                })
+            }).addTo(map);
+
+            // Géocodage inverse pour obtenir les informations détaillées du lieu
+            Promise.all([
+                // Nominatim pour l'adresse détaillée
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&accept-language=fr&zoom=18`, {
+                    headers: { "User-Agent": "DeliveryApp/1.0" }
+                }).then(r => r.json()),
+                
+                // Recherche des points d'intérêt à proximité
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&lat=${lat}&lon=${lng}&addressdetails=1&limit=3&radius=100&accept-language=fr`, {
+                    headers: { "User-Agent": "DeliveryApp/1.0" }
+                }).then(r => r.json()).catch(() => [])
+            ])
+            .then(([locationData, nearbyPOIs]) => {
+                const popupContent = createDetailedPopup(lat, lng, accuracy, timestamp, locationData);
+                userMarker.bindPopup(popupContent, {
+                    maxWidth: 380,
+                    className: 'custom-popup'
+                });
+                
+                // Ajouter les informations dans le panneau de précision
+                updateLocationDetails(locationData);
+            })
+            .catch(error => {
+                console.error("Erreur de géocodage:", error);
+                const popupContent = createDetailedPopup(lat, lng, accuracy, timestamp);
+                userMarker.bindPopup(popupContent, {
+                    maxWidth: 320,
+                    className: 'custom-popup'
+                });
+            });
+
+            // Centrer la carte si c'est la première localisation
+            if (!map.hasLayer(userMarker) || map.getZoom() < 15) {
+                map.setView([lat, lng], 16);
+            }
+        }
+
+        // Fonction de succès de géolocalisation améliorée
+        function onLocationSuccess(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            const accuracy = position.coords.accuracy;
+            const timestamp = position.timestamp;
+            
+            // Déterminer la méthode utilisée
+            const method = accuracy <= 30 ? 'GPS' : accuracy <= 100 ? 'WiFi/Réseau' : 'Approximation IP';
+            
+            updatePrecisionInfo(accuracy, method);
+            updateLocationMarker(lat, lng, accuracy, timestamp);
+            
+            document.getElementById('loadingText').textContent = 'Position trouvée !';
+            document.getElementById('loadingSubtitle').textContent = `Précision: ±${accuracy.toFixed(1)}m`;
+            
+            setTimeout(hideLoading, 1500);
+        }
+
+        // Fonction d'erreur améliorée
+        function onLocationError(error) {
+            let message = 'Erreur de géolocalisation: ';
+            let subtitle = '';
+            
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    message = "Accès à la localisation refusé";
+                    subtitle = "Veuillez autoriser la géolocalisation";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    message = "Position indisponible";
+                    subtitle = "Vérifiez votre connexion et GPS";
+                    break;
+                case error.TIMEOUT:
+                    message = "Délai de localisation dépassé";
+                    subtitle = "Tentative avec précision standard...";
+                    
+                    // Essayer avec des paramètres moins stricts
+                    setTimeout(() => {
+                        navigator.geolocation.getCurrentPosition(
+                            onLocationSuccess,
+                            onLocationError,
+                            standardOptions
+                        );
+                    }, 1000);
+                    return;
+                default:
+                    message = "Erreur de localisation inconnue";
+                    subtitle = "Utilisation de la position par défaut";
+                    break;
+            }
+            
+            document.getElementById('loadingText').textContent = message;
+            document.getElementById('loadingSubtitle').textContent = subtitle;
+            
+            setTimeout(hideLoading, 3000);
+            console.error('Erreur de géolocalisation:', error);
+        }
 
         // Fonction pour masquer le loading
         function hideLoading() {
             const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.opacity = '0';
+            loadingOverlay.style.transition = 'opacity 0.5s ease';
             setTimeout(() => {
-                loadingOverlay.style.opacity = '0';
-                loadingOverlay.style.transition = 'opacity 0.5s ease';
-                setTimeout(() => {
-                    loadingOverlay.style.display = 'none';
-                }, 500);
-            }, 1000);
+                loadingOverlay.style.display = 'none';
+            }, 500);
         }
 
-        // Obtenir la position actuelle de l'utilisateur
-        if (navigator.geolocation) {
+        // Fonction pour obtenir la position avec haute précision
+        function getHighAccuracyLocation() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            document.getElementById('loadingOverlay').style.opacity = '1';
+            document.getElementById('loadingText').textContent = 'Localisation haute précision...';
+            document.getElementById('loadingSubtitle').textContent = 'Activation du GPS en cours';
+            
             navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-
-                    // Vérifier si la position est proche d'Awae (approximation)
-                    const awaeLat = 3.9333;
-                    const awaeLon = 11.5167;
-                    const distance = Math.sqrt(Math.pow(lat - awaeLat, 2) + Math.pow(lon - awaeLon, 2)) * 111; // Distance en km (approximation)
-                    if (distance > 10) {
-                        console.warn("Position détectée loin d'Awae, vérifiez votre localisation.");
-                    }
-
-                    // Mettre à jour la vue de la carte avec la position réelle de l'utilisateur
-                    map.setView([lat, lon], 13);
-
-                    // Ajouter ou mettre à jour le marqueur de l'utilisateur
-                    if (userMarker) {
-                        map.removeLayer(userMarker);
-                    }
-                    userMarker = L.marker([lat, lon], {
-                        title: "Ma position",
-                        icon: L.divIcon({
-                            className: 'custom-marker',
-                            iconSize: [40, 40]
-                        })
-                    }).addTo(map);
-
-                    // Ajouter un popup avec les détails (via reverse geocoding)
-                    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1`, {
-                        headers: {
-                            "User-Agent": "EchopDeliveryApp/1.0 (mohamed.legrand@example.com)" // Remplace par ton email
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        const address = data.display_name || "Lieu inconnu";
-                        const popupContent = `
-                            <div class="popup-header">
-                                <div class="popup-icon">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <div>
-                                    <div class="popup-title">Ma Position</div>
-                                </div>
-                            </div>
-                            <div class="popup-address">
-                                <i class="fas fa-map-marker-alt" style="color: #ff6b6b; margin-right: 8px;"></i>
-                                ${address}
-                            </div>
-                            <div class="popup-footer">
-                                <div class="popup-time">
-                                    <i class="fas fa-clock"></i>
-                                    ${new Date().toLocaleTimeString('fr-FR')}
-                                </div>
-                                <div class="status-badge">
-                                    <i class="fas fa-check"></i>
-                                    Actuel
-                                </div>
-                            </div>
-                        `;
-                        userMarker.bindPopup(popupContent).openPopup();
-                        hideLoading();
-                    })
-                    .catch(error => {
-                        console.error("Erreur de géocodage inverse :", error);
-                        const popupContent = `
-                            <div class="popup-header">
-                                <div class="popup-icon">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <div>
-                                    <div class="popup-title">Ma Position</div>
-                                </div>
-                            </div>
-                            <div class="popup-address">
-                                <i class="fas fa-map-marker-alt" style="color: #ff6b6b; margin-right: 8px;"></i>
-                                Position actuelle
-                            </div>
-                            <div class="popup-footer">
-                                <div class="popup-time">
-                                    <i class="fas fa-clock"></i>
-                                    ${new Date().toLocaleTimeString('fr-FR')}
-                                </div>
-                                <div class="status-badge">
-                                    <i class="fas fa-check"></i>
-                                    Actuel
-                                </div>
-                            </div>
-                        `;
-                        userMarker.bindPopup(popupContent).openPopup();
-                        hideLoading();
-                    });
-                },
-                function(error) {
-                    console.error("Erreur de géolocalisation :", error);
-                    alert("Impossible d'accéder à votre position. Utilisation de la position par défaut proche d'Awae.");
-                    map.setView([3.9333, 11.5167], 12); // Position par défaut d'Awae
-                    hideLoading();
-                }
+                onLocationSuccess,
+                onLocationError,
+                highAccuracyOptions
             );
-        } else {
-            alert("La géolocalisation n'est pas prise en charge par votre navigateur.");
-            hideLoading();
         }
 
-        // Afficher le popup au survol
-        map.on('popupopen', function(e) {
-            const popup = e.popup;
-            popup.getElement().classList.add('custom-popup');
-        });
+        // Fonction pour démarrer le suivi continu
+        function startWatching() {
+            if (isWatching) {
+                navigator.geolocation.clearWatch(watchId);
+                document.getElementById('watchBtn').classList.remove('active');
+                document.getElementById('watchBtn').innerHTML = '<i class="fas fa-broadcast-tower"></i>';
+                isWatching = false;
+            } else {
+                watchId = navigator.geolocation.watchPosition(
+                    onLocationSuccess,
+                    onLocationError,
+                    highAccuracyOptions
+                );
+                document.getElementById('watchBtn').classList.add('active');
+                document.getElementById('watchBtn').innerHTML = '<i class="fas fa-stop"></i>';
+                isWatching = true;
+            }
+        }
 
-        // Contrôles personnalisés
-        document.getElementById('centerBtn').addEventListener('click', function() {
+        // Événements des boutons
+        document.getElementById('recenterBtn').addEventListener('click', function() {
             if (userMarker) {
-                map.setView(userMarker.getLatLng(), 15);
+                map.setView(userMarker.getLatLng(), 16);
                 userMarker.openPopup();
             }
         });
 
+        document.getElementById('highAccuracyBtn').addEventListener('click', getHighAccuracyLocation);
+
+        document.getElementById('infoBtn').addEventListener('click', toggleInfoPanel);
+
         document.getElementById('satelliteBtn').addEventListener('click', function() {
-            const btn = this;
             if (!satelliteMode) {
                 map.removeLayer(currentTileLayer);
                 currentTileLayer = satelliteLayer.addTo(map);
-                btn.classList.add('active');
-                btn.innerHTML = '<i class="fas fa-map"></i>';
+                this.classList.add('active');
+                this.innerHTML = '<i class="fas fa-map"></i>';
                 satelliteMode = true;
             } else {
                 map.removeLayer(currentTileLayer);
                 currentTileLayer = osmLayer.addTo(map);
-                btn.classList.remove('active');
-                btn.innerHTML = '<i class="fas fa-satellite"></i>';
+                this.classList.remove('active');
+                this.innerHTML = '<i class="fas fa-satellite"></i>';
                 satelliteMode = false;
             }
         });
 
-        document.getElementById('fullscreenBtn').addEventListener('click', function() {
-            const mapContainer = document.querySelector('.container');
-            if (!document.fullscreenElement) {
-                mapContainer.requestFullscreen();
-                this.innerHTML = '<i class="fas fa-compress"></i>';
-            } else {
-                document.exitFullscreen();
-                this.innerHTML = '<i class="fas fa-expand"></i>';
-            }
-        });
+        document.getElementById('watchBtn').addEventListener('click', startWatching);
 
-        document.getElementById('shareBtn').addEventListener('click', function() {
-            if (userMarker && navigator.share) {
-                const position = userMarker.getLatLng();
-                navigator.share({
-                    title: 'Ma Position',
-                    text: 'Voici ma position actuelle',
-                    url: `https://www.openstreetmap.org/?mlat=${position.lat}&mlon=${position.lng}&zoom=15`
-                });
-            } else if (userMarker) {
-                const position = userMarker.getLatLng();
-                const url = `https://www.openstreetmap.org/?mlat=${position.lat}&mlon=${position.lng}&zoom=15`;
-                navigator.clipboard.writeText(url).then(() => {
-                    alert('Lien de position copié dans le presse-papier !');
-                });
-            }
-        });
+        // Démarrage automatique de la géolocalisation
+        if (navigator.geolocation) {
+            getHighAccuracyLocation();
+        } else {
+            document.getElementById('loadingText').textContent = 'Géolocalisation non supportée';
+            document.getElementById('loadingSubtitle').textContent = 'Votre navigateur ne supporte pas cette fonctionnalité';
+            setTimeout(hideLoading, 3000);
+        }
 
-        // Gestion du plein écran
-        document.addEventListener('fullscreenchange', function() {
-            const fullscreenBtn = document.getElementById('fullscreenBtn');
-            if (document.fullscreenElement) {
-                fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i>';
-            } else {
-                fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+        // Style CSS supplémentaire pour l'animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0%, 100% { 
+                    transform: scale(1); 
+                    opacity: 1; 
+                }
+                50% { 
+                    transform: scale(1.2); 
+                    opacity: 0.7; 
+                }
             }
-            // Redimensionner la carte après changement de mode
-            setTimeout(() => map.invalidateSize(), 200);
-        });
-
-        // Redimensionner la carte lors du redimensionnement de la fenêtre
-        window.addEventListener('resize', function() {
-            map.invalidateSize();
-        });
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>

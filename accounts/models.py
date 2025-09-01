@@ -18,6 +18,8 @@ class CustomUser(AbstractUser):
     purchase_count = models.PositiveIntegerField(default=0)  # Nouveau champ pour le nombre d'achats
     total_sales = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Nouveau champ pour le total cumulé
     qr_code = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)  # Nouveau champ pour le numéro de téléphone
+    address = models.CharField(max_length=255, blank=True, null=True)      # Nouveau champ pour l'adresse
 
     groups = models.ManyToManyField(
         'auth.Group',
@@ -77,8 +79,6 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-    
-
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')

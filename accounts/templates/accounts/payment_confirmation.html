@@ -293,9 +293,11 @@
             loadInitialData() {
                 this.showLoading();
 
-                // Récupérer les données du contexte passé par le template
+                // Récupérer les données du contexte passé par le template avec débogage
+                console.log("Contexte initial brut:", "{{ invoice_data|default:'{}'|safe }}", "{{ qr_code_image|default:''|safe }}");
                 const invoiceData = {{ invoice_data|default:'{}'|safe }};
                 const qrCodeImage = "{{ qr_code_image|default:''|safe }}";
+                console.log("Contexte parsé:", invoiceData, qrCodeImage);
 
                 if (Object.keys(invoiceData).length > 0 && qrCodeImage) {
                     this.renderInvoiceFromJSON({ invoice_data: invoiceData, qr_code_image: qrCodeImage });
