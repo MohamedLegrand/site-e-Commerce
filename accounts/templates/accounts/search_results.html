@@ -289,7 +289,7 @@
                         <h1 class="text-2xl md:text-3xl font-bold tracking-wide">
                             <a href="{% url 'accounts:page_principale' %}" class="text-white hover:text-yellow-300 transition-colors">Echop</a>
                         </h1>
-                        <p class="text-red-100 text-xs md:text-sm font-medium">Votre marketplace de confiance</p>
+                        <p class="text-red-100 text-xs md:text-sm font-medium">Votre plateforme de confiance</p>
                     </div>
                 </div>
                 
@@ -441,7 +441,7 @@
                             </div>
                             <div>
                                 <h3 class="text-2xl font-bold">Echop</h3>
-                                <p class="text-gray-300 text-sm">Votre marketplace de confiance</p>
+                                <p class="text-gray-300 text-sm">Votre plateforme de confiance</p>
                             </div>
                         </div>
                         <p class="text-gray-300 leading-relaxed mb-6">
@@ -465,4 +465,126 @@
                         </div>
                     </div>
 
-                    <!-- Ré
+                    <!-- Liens rapides -->
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4 text-red-300">Liens rapides</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-chevron-right text-red-300 text-xs"></i>
+                                <a href="{% url 'accounts:page_principale' %}" class="text-gray-300 hover:text-white transition-colors">Accueil</a>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-chevron-right text-red-300 text-xs"></i>
+                                <a href="{% url 'accounts:cart_detail' %}" class="text-gray-300 hover:text-white transition-colors">Panier</a>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-chevron-right text-red-300 text-xs"></i>
+                                <a href="#" class="text-gray-300 hover:text-white transition-colors">À propos</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Séparateur -->
+                <div class="border-t border-gray-700 my-8"></div>
+
+                <!-- Copyright et réseaux sociaux -->
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                        © 2025 Echop. Tous droits réservés.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification -->
+    <div id="notification" class="notification hidden">
+        <div class="flex items-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span id="notification-message"></span>
+        </div>
+    </div>
+
+    <script>
+        // Fonction pour afficher les notifications
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const messageElement = document.getElementById('notification-message');
+            
+            // Configurer le message et le type
+            messageElement.textContent = message;
+            notification.className = `notification ${type}`;
+            
+            // Afficher la notification
+            notification.classList.remove('hidden');
+            notification.classList.add('show');
+            
+            // Cacher après 3 secondes
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.classList.add('hidden');
+                }, 300);
+            }, 3000);
+        }
+
+        // Gestion de l'ajout au panier
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.getAttribute('data-product-id');
+                const loadingIndicator = this.querySelector('.loading');
+                
+                // Afficher l'indicateur de chargement
+                loadingIndicator.classList.remove('hidden');
+                loadingIndicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                
+                // Simuler l'appel AJAX (à remplacer par votre code réel)
+                setTimeout(() => {
+                    // Cacher l'indicateur de chargement
+                    loadingIndicator.classList.add('hidden');
+                    
+                    // Afficher la notification de succès
+                    showNotification('Produit ajouté au panier avec succès!', 'success');
+                    
+                    // Animation du bouton
+                    this.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                    setTimeout(() => {
+                        this.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+                    }, 1000);
+                }, 1000);
+            });
+        });
+
+        // Animation des bulles
+        document.addEventListener('DOMContentLoaded', function() {
+            const bubblesContainer = document.querySelector('.bubbles');
+            
+            // Créer plus de bulles
+            for (let i = 0; i < 15; i++) {
+                const bubble = document.createElement('span');
+                bubble.style.setProperty('--i', Math.floor(Math.random() * 30) + 5);
+                bubble.style.left = Math.random() * 100 + '%';
+                bubble.style.width = Math.random() * 30 + 10 + 'px';
+                bubble.style.height = bubble.style.width;
+                bubble.style.animationDelay = Math.random() * 5 + 's';
+                bubblesContainer.appendChild(bubble);
+            }
+        });
+    </script>
+</body>
+</html>

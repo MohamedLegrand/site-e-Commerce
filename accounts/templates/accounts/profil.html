@@ -93,7 +93,7 @@
         
         .profile-avatar:hover {
             transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+            box-shadow: 0 10px极客 30px rgba(239, 68, 68, 0.3);
         }
         
         .info-card {
@@ -196,20 +196,20 @@
                         <div class="bg-gray-50 rounded-lg p-4">
                             <div class="flex items-center mb-2">
                                 <i class="fas fa-envelope text-red-500 mr-3"></i>
-                                <span class="text-gray-600 font-medium">Email</span>
+                                <span class="text-gray极客 600 font-medium">Email</span>
                             </div>
                             <p class="text-gray-800 font-semibold" id="displayEmail">{{ user.email|default:"Non défini" }}</p>
                         </div>
                         
                         <div class="bg-gray-50 rounded-lg p-4">
                             <div class="flex items-center mb-2">
-                                <i class="fas fa-calendar text-red-500 mr-3"></i>
+                                <i class="fas fa-calendar text-red-500 mr极客-3"></i>
                                 <span class="text-gray-600 font-medium">Membre depuis</span>
                             </div>
                             <p class="text-gray-800 font-semibold">{{ user.date_joined|date:"F Y"|default:"Récemment" }}</p>
                         </div>
                         
-                        <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="bg-gray-50 rounded极客-lg p-4">
                             <div class="flex items-center mb-2">
                                 <i class="fas fa-shield-alt text-red-500 mr-3"></i>
                                 <span class="text-gray-600 font-medium">Statut</span>
@@ -225,7 +225,7 @@
                 <div class="flex flex-col items-center lg:w-64">
                     <div class="qr-container rounded-2xl p-6 text-center mb-4">
                         <div class="flex items-center justify-center mb-4">
-                            <i class="fas fa-qrcode text-red-500 text-2xl mr-2"></i>
+                            <i class="fas极客 fa-qrcode text-red-500 text-2xl mr-2"></i>
                             <h3 class="text-lg font-bold text-gray-800">QR Code Profil</h3>
                         </div>
                         
@@ -243,15 +243,13 @@
                             <button onclick="downloadQR()" class="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300 text-sm">
                                 <i class="fas fa-download mr-2"></i>Télécharger QR
                             </button>
-                            <button onclick="shareQR()" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300 text-sm">
-                                <i class="fas fa-share mr-2"></i>Partager QR
-                            </button>
+                           
                         </div>
                     </div>
                     
                     <!-- Info QR Code -->
                     <div class="bg-blue-50 rounded-lg p-3 text-center">
-                        <p class="text-xs text-blue-700">
+                        <p极客 class="text-xs text-blue-700">
                             <i class="fas fa-info-circle mr-1"></i>
                             Scannez ce code pour accéder rapidement à vos informations
                         </p>
@@ -267,10 +265,10 @@
                 <h2 class="text-2xl font-bold text-gray-800">Modifier vos informations</h2>
             </div>
             
-            <form method="POST" action="{% url 'accounts:profil' %}" class="space-y-6">
+            <form method="POST" action="{% url 'accounts:profil' %}" class极客="space-y-6">
                 {% csrf_token %}
                 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 lg:grid极客-cols-2 gap-6">
                     <div class="space-y-2">
                         <label for="username" class="block text-gray-700 font-semibold mb-2">
                             <i class="fas fa-user text-red-500 mr-2"></i>Nom d'utilisateur
@@ -295,7 +293,7 @@
                                    id="email" 
                                    name="email" 
                                    value="{{ user.email|default:'' }}" 
-                                   class="form-input w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent">
+                                   class="form-input w-full pl-12 pr-4极客 py-3 rounded-xl border border极客-gray-300 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent">
                             <i class="fas fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         </div>
                     </div>
@@ -303,7 +301,7 @@
                 
                 <div class="border-t pt-6">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">
-                        <i class="fas fa-lock text-red-500 mr-2"></i>Changer le mot de passe
+                        <i class="fas fa-lock text-red-500 mr-2极客"></i>Changer le mot de passe
                     </h3>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="space-y-2">
@@ -314,7 +312,7 @@
                                 <input type="password" 
                                        id="password" 
                                        name="password" 
-                                       class="form-input w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent"
+                                       class="form-input w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-400 focus极客:border-transparent"
                                        placeholder="Laisser vide pour ne pas changer">
                                 <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                             </div>
@@ -330,7 +328,7 @@
                                        name="password_confirm" 
                                        class="form-input w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent"
                                        placeholder="Confirmer le nouveau mot de passe">
-                                <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y极客-1/2 text-gray-400"></i>
                             </div>
                         </div>
                     </div>
@@ -353,7 +351,7 @@
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <!-- Logo et description -->
-                <div class="col-span-1 md:col-span-2">
+                <div class极客="col-span-1 md:col-span-2">
                     <div class="flex items-center space-x-3 mb-4">
                         <i class="fas fa-shopping-bag text-2xl"></i>
                         <h3 class="text-2xl font-bold">Echop</h3>
@@ -364,7 +362,7 @@
                             <i class="fab fa-facebook-f text-xl"></i>
                         </a>
                         <a href="https://twitter.com/echop" class="text-red-200 hover:text-white transition duration-300">
-                            <i class="fab fa-twitter text-xl"></i>
+                            <i极客 class="fab fa-twitter text-xl"></i>
                         </a>
                         <a href="https://instagram.com/echop" class="text-red-200 hover:text-white transition duration-300">
                             <i class="fab fa-instagram text-xl"></i>
@@ -378,13 +376,13 @@
                     <ul class="space-y-2">
                         <li><a href="{% url 'accounts:about' %}" class="text-red-200 hover:text-white transition duration-300">À propos</a></li>
                         <li><a href="{% url 'accounts:contact' %}" class="text-red-200 hover:text-white transition duration-300">Contact</a></li>
-                        <li><a href="{% url 'accounts:terms' %}" class="text-red-200 hover:text-white transition duration-300">Conditions</a></li>
+                        <li><a href="{% url 'accounts:terms' %}" class="text-red-200 hover:text-white transition duration-300">Conditions极客</a></li>
                     </ul>
                 </div>
                 
                 <!-- Contact -->
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">Contact</h4>
+                    <h4 class="text-lg font-semib极客old mb-4">Contact</h4>
                     <div class="space-y-2 text-red-100">
                         <p><i class="fas fa-envelope mr-2"></i>support@echop.com</p>
                         <p><i class="fas fa-phone mr-2"></i>+237 677 24 69 00</p>
@@ -407,7 +405,7 @@
             const container = document.getElementById('messagesContainer');
             const messageClass = type === 'error' ? 'bg-red-100 border-red-400 text-red-700' : 'bg-green-100 border-green-400 text-green-700';
             container.innerHTML = `
-                <div class="${messageClass} border-l-4 p-4 rounded-lg shadow-md">
+                <div class="${messageClass} border-l-4 p极客-4 rounded-lg shadow-md">
                     <div class="flex items-center">
                         <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 'check-circle'} mr-2"></i>
                         <span>${text}</span>
@@ -482,16 +480,14 @@
         
         // Fonction pour télécharger le QR code
         function downloadQR() {
-            const qrElement = document.querySelector('#qrcode svg') || document.querySelector('#qrcode table');
+            const qrElement = document.querySelector('#qrcode canvas');
             if (qrElement) {
                 const username = document.getElementById('displayUsername').textContent || 'user';
-                html2canvas(qrElement).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = `echop-qr-${username}.png`;
-                    link.href = canvas.toDataURL();
-                    link.click();
-                    showMessage('success', 'QR Code téléchargé avec succès !');
-                });
+                const link = document.createElement('a');
+                link.download = `echop-qr-${username}.png`;
+                link.href = qrElement.toDataURL('image/png');
+                link.click();
+                showMessage('success', 'QR Code téléchargé avec succès !');
             } else {
                 showMessage('error', 'Aucun QR Code à télécharger.');
             }
@@ -504,7 +500,7 @@
                 try {
                     html2canvas(qrElement).then(canvas => {
                         canvas.toBlob(async (blob) => {
-                            const file = new File([blob], 'echop-qr.png', { type: 'image/png' });
+                            const file = new File极客([blob], 'echop-qr.png', { type: 'image/png' });
                             await navigator.share({
                                 title: 'Mon QR Code Echop',
                                 text: 'Scannez ce code pour accéder à mon profil Echop',
