@@ -44,6 +44,7 @@ class Product(models.Model):
     stock = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='products/', null=True, blank=True)  # Nouveau champ pour l'image
+    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True, related_name='products')
     
     def __str__(self):
         return self.name

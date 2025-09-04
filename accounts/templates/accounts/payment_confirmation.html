@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paiement confirmé - Echop</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Ajout de la bibliothèque jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         /* Animation pour la modale */
         .modal {
@@ -85,10 +88,40 @@
         @media print {
             .no-print { display: none !important; }
             .modal-content { box-shadow: none !important; }
+            .modal { position: static; background: none; }
+            body { background: none; }
+        }
+
+        /* Style pour la version PDF */
+        .invoice-pdf {
+            padding: 20px;
+            background-color: white;
+            color: black;
+        }
+        
+        /* Style pour l'indicateur de génération PDF */
+        .pdf-loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 10000;
+            text-align: center;
         }
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen flex items-center justify-center p-4">
+    <!-- Indicateur de génération PDF -->
+    <div id="pdfLoading" class="pdf-loading">
+        <div class="loading-spinner mx-auto mb-4"></div>
+        <p class="text-gray-700 font-medium">Génération du PDF en cours...</p>
+    </div>
+
     <!-- Page principale de confirmation -->
     <div class="max-w-lg w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
         <!-- En-tête avec animation de succès -->
@@ -183,14 +216,17 @@
 
                 <!-- Contenu réel de la facture -->
                 <div id="invoiceData" class="hidden"></div>
+                
+                <!-- Version cachée pour le PDF -->
+                <div id="pdfContent" style="display: none;"></div>
             </div>
 
             <!-- Actions de la modale -->
             <div class="bg-gray-50 p-6 flex space-x-4 no-print">
-                <a href="{% url 'accounts:download_invoice' %}" 
+                <button id="downloadPdfBtn" 
                    class="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-center font-medium">
                     📄 Télécharger PDF
-                </a>
+                </button>
                 <button onclick="window.print()" 
                         class="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
                     🖨️ Imprimer
@@ -204,14 +240,30 @@
     </div>
 
     <script>
+        // Initialisation de jsPDF
+        const { jsPDF } = window.jspdf;
+
+        // Fonction pour valider les images
+        function validateImage(dataUrl) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => reject(new Error('Image corrompue ou invalide'));
+                img.src = dataUrl;
+            });
+        }
+
         class InvoiceModal {
             constructor() {
                 this.modal = document.getElementById('invoiceModal');
                 this.loadingState = document.getElementById('loadingState');
                 this.errorState = document.getElementById('errorState');
                 this.invoiceData = document.getElementById('invoiceData');
+                this.pdfContent = document.getElementById('pdfContent');
+                this.pdfLoading = document.getElementById('pdfLoading');
                 this.isLoaded = false;
                 this.invoiceContent = null;
+                this.invoiceJSON = null;
                 
                 this.initEventListeners();
                 // Charger les données initiales du contexte
@@ -221,7 +273,7 @@
             initEventListeners() {
                 // Bouton d'ouverture
                 document.getElementById('viewInvoiceBtn').addEventListener('click', () => {
-                    console.log("Bouton 'Voir la facture' cliqué"); // Débogage
+                    console.log("Bouton 'Voir la facture' cliqué");
                     this.openModal();
                 });
 
@@ -237,6 +289,11 @@
                 // Bouton de retry
                 document.getElementById('retryBtn').addEventListener('click', () => {
                     this.loadInitialData();
+                });
+
+                // Bouton de téléchargement PDF
+                document.getElementById('downloadPdfBtn').addEventListener('click', () => {
+                    this.generatePDF();
                 });
 
                 // Fermeture en cliquant à l'extérieur
@@ -288,19 +345,22 @@
                 this.invoiceData.classList.remove('hidden');
                 this.invoiceData.innerHTML = content;
                 this.isLoaded = true;
+                
+                // Mettre à jour également le contenu PDF
+                this.updatePdfContent();
             }
 
             loadInitialData() {
                 this.showLoading();
 
-                // Récupérer les données du contexte passé par le template avec débogage
-                console.log("Contexte initial brut:", "{{ invoice_data|default:'{}'|safe }}", "{{ qr_code_image|default:''|safe }}");
+                // Récupérer les données du contexte passé par le template
                 const invoiceData = {{ invoice_data|default:'{}'|safe }};
                 const qrCodeImage = "{{ qr_code_image|default:''|safe }}";
                 console.log("Contexte parsé:", invoiceData, qrCodeImage);
 
-                if (Object.keys(invoiceData).length > 0 && qrCodeImage) {
-                    this.renderInvoiceFromJSON({ invoice_data: invoiceData, qr_code_image: qrCodeImage });
+                if (Object.keys(invoiceData).length > 0) {
+                    this.invoiceJSON = { invoice_data: invoiceData, qr_code_image: qrCodeImage };
+                    this.renderInvoiceFromJSON(this.invoiceJSON);
                 } else {
                     this.showError();
                     console.log("Aucune donnée de facture disponible dans le contexte:", invoiceData, qrCodeImage);
@@ -384,14 +444,15 @@
                             </table>
                         </div>
 
-                        <!-- QR Code -->
+                        <!-- QR Code avec gestion d'erreur -->
                         ${qr_code_image ? `
                             <div class="text-center">
                                 <h4 class="font-semibold text-gray-700 mb-3">Code QR de vérification</h4>
                                 <div class="bg-white p-4 rounded-lg border border-gray-200 inline-block">
                                     <img src="data:image/png;base64,${qr_code_image}" 
                                          alt="QR Code" 
-                                         class="w-32 h-32 mx-auto">
+                                         class="w-32 h-32 mx-auto"
+                                         onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'text-red-500 py-4\'>QR Code non disponible</div>';">
                                 </div>
                             </div>
                         ` : ''}
@@ -399,10 +460,172 @@
                 `;
 
                 this.showInvoice(invoiceHTML);
-                this.invoiceContent = invoiceHTML; // Stocker pour réutilisation
+                this.invoiceContent = invoiceHTML;
             }
 
-            // Supprimer renderInvoiceFromHTML car on n'utilise plus la requête AJAX
+            updatePdfContent() {
+                // Créer une version simplifiée pour le PDF
+                const { invoice_data, qr_code_image } = this.invoiceJSON;
+                
+                let productsHTML = '';
+                let total = 0;
+
+                if (invoice_data.products && invoice_data.products.length > 0) {
+                    productsHTML = invoice_data.products.map(product => {
+                        const lineTotal = product.quantity * product.price;
+                        total += lineTotal;
+                        return `
+                            <tr>
+                                <td>${product.name}</td>
+                                <td style="text-align: center;">${product.quantity}</td>
+                                <td style="text-align: right;">${product.price.toFixed(0)} FCFA</td>
+                                <td style="text-align: right; font-weight: bold;">${lineTotal.toFixed(0)} FCFA</td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+
+                const pdfHTML = `
+                    <div class="invoice-pdf">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <h1 style="color: #dc2626; font-size: 24px; margin-bottom: 5px;">Echop</h1>
+                            <h2 style="font-size: 20px; margin-bottom: 15px;">Facture</h2>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px; padding: 10px; background-color: #f9fafb; border-radius: 5px;">
+                            <table style="width: 100%; font-size: 14px;">
+                                <tr>
+                                    <td><strong>Date:</strong> ${invoice_data.date}</td>
+                                    <td><strong>Heure:</strong> ${invoice_data.time}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Client:</strong> ${invoice_data.user}</td>
+                                    <td><strong>N° Facture:</strong> #${invoice_data.invoice_number || 'N/A'}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                            <thead>
+                                <tr style="background-color: #f3f4f6;">
+                                    <th style="text-align: left; padding: 8px; border: 1px solid #e5e7eb;">Produit</th>
+                                    <th style="text-align: center; padding: 8px; border: 1px solid #e5e7eb;">Quantité</th>
+                                    <th style="text-align: right; padding: 8px; border: 1px solid #e5e7eb;">Prix unitaire</th>
+                                    <th style="text-align: right; padding: 8px; border: 1px solid #e5e7eb;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${productsHTML}
+                            </tbody>
+                            <tfoot>
+                                <tr style="background-color: #fef2f2; font-weight: bold;">
+                                    <td colspan="3" style="padding: 12px; border: 1px solid #e5e7eb; font-size: 16px;">Total général</td>
+                                    <td style="text-align: right; padding: 12px; border: 1px solid #e5e7eb; font-size: 16px; color: #dc2626;">
+                                        ${(invoice_data.total || total).toFixed(0)} FCFA
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        
+                        ${qr_code_image ? `
+                            <div style="text-align: center; margin-top: 25px;">
+                                <h4 style="font-size: 16px; margin-bottom: 10px;">Code QR de vérification</h4>
+                                <div id="pdfQrCode">
+                                    <img src="data:image/png;base64,${qr_code_image}" 
+                                         alt="QR Code" 
+                                         style="width: 120px; height: 120px;"
+                                         onerror="this.style.display='none'; document.getElementById('pdfQrCode').innerHTML='<div style=\'color: #dc2626; padding: 15px;\'>QR Code non disponible</div>';">
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #e5e7eb; text-align: center; font-size: 12px; color: #6b7280;">
+                            <p>Merci pour votre achat !</p>
+                            <p>Echop &copy; ${new Date().getFullYear()}</p>
+                        </div>
+                    </div>
+                `;
+                
+                this.pdfContent.innerHTML = pdfHTML;
+            }
+
+            async generatePDF() {
+                this.updatePdfContent();
+                
+                // Afficher l'indicateur de chargement
+                this.pdfLoading.style.display = 'block';
+                
+                // Désactiver le bouton pendant la génération
+                const downloadBtn = document.getElementById('downloadPdfBtn');
+                const originalText = downloadBtn.textContent;
+                downloadBtn.textContent = 'Génération en cours...';
+                downloadBtn.disabled = true;
+                
+                try {
+                    // Valider l'image QR code avant de procéder
+                    const qrCodeImage = this.invoiceJSON.qr_code_image;
+                    if (qrCodeImage) {
+                        try {
+                            await validateImage(`data:image/png;base64,${qrCodeImage}`);
+                        } catch (error) {
+                            console.warn("QR Code invalide, utilisation d'un fallback:", error);
+                            // Remplacer l'image corrompue par un message textuel
+                            const qrContainer = this.pdfContent.querySelector('#pdfQrCode');
+                            if (qrContainer) {
+                                qrContainer.innerHTML = '<div style="color: #dc2626; padding: 15px; border: 1px solid #fca5a5; background-color: #fef2f2; border-radius: 4px;">QR Code non disponible</div>';
+                            }
+                        }
+                    }
+                    
+                    // Utiliser html2canvas pour capturer le contenu
+                    const canvas = await html2canvas(this.pdfContent, {
+                        scale: 2,
+                        useCORS: true,
+                        logging: false,
+                        onclone: function(clonedDoc) {
+                            // S'assurer que tous les éléments sont visibles pour la capture
+                            const pdfContent = clonedDoc.getElementById('pdfContent');
+                            if (pdfContent) {
+                                pdfContent.style.display = 'block';
+                                pdfContent.style.width = '210mm';
+                                pdfContent.style.padding = '20px';
+                            }
+                        }
+                    });
+                    
+                    const imgData = canvas.toDataURL('image/jpeg', 0.9); // Utiliser JPEG pour éviter les problèmes PNG
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const imgWidth = 210;
+                    const pageHeight = 297;
+                    const imgHeight = canvas.height * imgWidth / canvas.width;
+                    let heightLeft = imgHeight;
+                    let position = 0;
+
+                    pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+
+                    // Ajouter des pages supplémentaires si nécessaire
+                    while (heightLeft >= 0) {
+                        position = heightLeft - imgHeight;
+                        pdf.addPage();
+                        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+                        heightLeft -= pageHeight;
+                    }
+
+                    // Télécharger le PDF
+                    const fileName = `facture-echop-${this.invoiceJSON.invoice_data.invoice_number || new Date().getTime()}.pdf`;
+                    pdf.save(fileName);
+                    
+                } catch (error) {
+                    console.error('Erreur lors de la génération du PDF:', error);
+                    alert('Erreur lors de la génération du PDF. Veuillez réessayer ou utiliser la fonction d\'impression.');
+                } finally {
+                    // Restaurer le bouton et cacher l'indicateur
+                    downloadBtn.textContent = originalText;
+                    downloadBtn.disabled = false;
+                    this.pdfLoading.style.display = 'none';
+                }
+            }
         }
 
         // Initialisation

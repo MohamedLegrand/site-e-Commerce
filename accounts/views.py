@@ -904,3 +904,114 @@ def delete_user(request, user_id):
         messages.success(request, "Utilisateur supprimé avec succès.")
         return redirect('accounts:manage_accounts')
     return redirect('accounts:manage_accounts')
+
+@login_required
+def recommandations(request):
+    # Remplace par ta vraie clé API
+    API_KEY = "AIzaSyB_xs42vFrvhcd8vtUGR8Lqgltu605vXUo"
+    URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+
+    # Récupérer les produits (exemple : les 10 premiers)
+    products = Product.objects.all()[:10]
+    product_list = [f"{p.name} ({p.category.name if p.category else 'Sans catégorie'}, {p.price} FCFA)" for p in products]
+
+    # Historique d'achats de l'utilisateur
+    user = request.user
+    purchase_history = [item.product.name for item in Cart.objects.filter(user=user)]  # Ajuster selon ton modèle
+    if not purchase_history:
+        purchase_history = ["aucun achat récent"]
+
+    # Construire la requête pour Gemini
+    data = {
+        "contents": [
+            {
+                "parts": [
+                    {
+                        "text": f"Recommande 10 produits parmi la liste suivante en fonction des préférences d'un utilisateur qui a acheté : {', '.join(purchase_history)}. Liste des produits : {', '.join(product_list)}. Retourne uniquement les noms des produits recommandés, séparés par des virgules."
+                    }
+                ]
+            }
+        ]
+    }
+
+    # En-têtes HTTP
+    headers = {
+        "Content-Type": "application/json",
+        "X-goog-api-key": API_KEY
+    }
+
+    # Requête POST
+    try:
+        response = requests.post(URL, headers=headers, data=json.dumps(data), timeout=10)
+        response.raise_for_status()  # Lève une exception pour les codes d'erreur HTTP
+
+        result = response.json()
+        recommended_products_names = result["candidates"][0]["content"]["parts"][0]["text"].split(", ")
+        
+        # Récupérer les objets Product correspondants
+        recommended_products = Product.objects.filter(name__in=recommended_products_names)
+        
+        return render(request, 'accounts/recommandations.html', {
+            'recommended_products': recommended_products
+        })
+    except requests.exceptions.RequestException as e:
+        return render(request, 'accounts/recommandations.html', {
+            'error_message': f"Erreur lors de la génération des recommandations : {str(e)}"
+        })
+
+
+@login_required
+def recommend_products(request):
+    import requests
+    import json
+
+    API_KEY = "AIzaSyB_xs42vFrvhcd8vtUGR8Lqgltu605vXUo"
+    URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+
+    # Récupérer les produits (exemple : les 10 premiers)
+    products = Product.objects.all()[:10]
+    product_list = [f"{p.name} ({p.category.name if p.category else 'Sans catégorie'}, {p.price} FCFA)" for p in products]
+
+    # Historique d'achats de l'utilisateur
+    user = request.user
+    purchase_history = [item.product.name for item in Cart.objects.filter(user=user)]
+    if not purchase_history:
+        purchase_history = ["aucun achat récent"]
+
+    # Construire la requête pour Gemini
+    data = {
+        "contents": [
+            {
+                "parts": [
+                    {
+                        "text": f"Recommande 3 produits parmi la liste suivante en fonction des préférences d'un utilisateur qui a acheté : {', '.join(purchase_history)}. Liste des produits : {', '.join(product_list)}. Retourne uniquement les noms des produits recommandés, séparés par des virgules."
+                    }
+                ]
+            }
+        ]
+    }
+
+    headers = {
+        "Content-Type": "application/json",
+        "X-goog-api-key": API_KEY
+    }
+
+    try:
+        response = requests.post(URL, headers=headers, data=json.dumps(data), timeout=10)
+        response.raise_for_status()
+
+        result = response.json()
+        recommended_names = result["candidates"][0]["content"]["parts"][0]["text"].split(", ")
+
+        # Récupérer les produits recommandés et s'assurer qu'on a l'image
+        recommended_products = Product.objects.filter(name__in=recommended_names).values(
+            'id', 'name', 'price', 'category__name', 'image'
+        )
+
+        return render(request, 'accounts/recommandations.html', {
+            'recommended_products': recommended_products
+        })
+    except requests.exceptions.RequestException as e:
+        return render(request, 'accounts/recommandations.html', {
+            'error_message': f"Erreur lors de la génération des recommandations : {str(e)}"
+        })
