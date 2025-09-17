@@ -1,0 +1,214 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommandations Personnalisées - Echop</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #dc2626;
+            --primary-dark: #b91c1c;
+            --primary-light: #fef2f2;
+            --secondary: #2563eb;
+            --light-bg: #f8fafc;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-card {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cart-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .cart-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        
+        .ai-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .recommendation-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            color: white;
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+        
+        .footer-links a:hover {
+            color: #e5e7eb;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="header text-white py-4 px-6">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center mb-4 md:mb-0">
+                <div class="bg-white p-2 rounded-full mr-3">
+                    <i class="fas fa-store text-red-600 text-xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold">Echop</h1>
+            </div>
+            
+           
+            
+            <div class="flex items-center space-x-4">
+                <button class="bg-white text-red-600 px-4 py-2 rounded-full font-semibold hover:bg-gray-100 transition">
+                    <i class="fas fa-search mr-1"></i> Rechercher
+                </button>
+                <div class="relative">
+                    <i class="fas fa-shopping-cart text-2xl"></i>
+                    <span class="absolute -top-2 -right-2 bg-white text-red-600 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">3</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-6 container mx-auto">
+        <!-- Recommendation Header -->
+        <div class="recommendation-header p-6 mb-8">
+            <div class="flex items-center">
+                <div class="bg-white p-3 rounded-full mr-4">
+                    <i class="fas fa-robot text-purple-600 text-2xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold">Recommandations personnalisées</h2>
+                    <p class="opacity-90">Découvrez une sélection de produits spécialement choisis pour vous par notre intelligence artificielle</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Recommendations -->
+        {% if error_message %}
+            <div class="text-center text-red-500 p-4 bg-red-100 rounded-lg">
+                {{ error_message }}
+            </div>
+        {% else %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for product in recommended_products %}
+                    <div class="product-card relative">
+                        <div class="ai-badge">IA</div>
+                        <h3 class="text-lg font-semibold p-4">{{ product.name }}</h3>
+                        <p class="text-gray-600 p-4">
+                            Catégorie :
+                            {% if product.category %}
+                                {{ product.category.name }}
+                            {% else %}
+                                Sans catégorie
+                            {% endif %}
+                        </p>
+                        <p class="text-green-600 font-bold p-4">{{ product.price }} FCFA</p>
+                        <button class="cart-btn bg-red-600 text-white px-4 py-2 rounded-full mx-4 mb-4 hover:bg-red-700">
+                            <i class="fas fa-cart-plus mr-2"></i> Ajouter au panier
+                        </button>
+                    </div>
+                {% empty %}
+                    <p class="text-center text-gray-500">Aucune recommandation disponible pour le moment.</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Load More Button -->
+        <div class="text-center mt-10">
+            <button id="load-more-btn" class="bg-red-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-red-700 transition">
+                <i class="fas fa-redo mr-2"></i> Charger plus de recommandations
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer py-10 mt-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Echop</h3>
+                    <p class="opacity-90">Votre marketplace de confiance pour tous vos besoins shopping.</p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-white text-xl"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-white text-xl"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white text-xl"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white text-xl"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">Liens Rapides</h4>
+                    <ul class="footer-links space-y-2">
+                        <li><a href="#" class="block opacity-90 hover:opacity-100">À propos de nous</a></li>
+                        <li><a href="#" class="block opacity-90 hover:opacity-100">Nos services</a></li>
+                        <li><a href="#" class="block opacity-90 hover:opacity-100">FAQ</a></li>
+                        <li><a href="#" class="block opacity-90 hover:opacity-100">Blog</a></li>
+                    </ul>
+                </div>
+                
+              
+                
+               
+            </div>
+            
+            <div class="border-t border-red-500 mt-8 pt-6 text-center opacity-90">
+                <p>&copy; 2025 Echop. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Exemple de gestion basique du bouton "Charger plus" (à implémenter plus tard avec AJAX)
+        document.getElementById('load-more-btn').addEventListener('click', function() {
+            alert('Fonctionnalité en développement : Charger plus de recommandations.');
+        });
+
+        // Ajout au panier (simulation)
+        document.querySelectorAll('.cart-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const productName = this.parentElement.querySelector('h3').textContent;
+                alert(`Produit "${productName}" ajouté au panier !`);
+                // À implémenter : appel à add_to_cart via AJAX
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Commandes - Echop</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Thème rouge Echop */
+        .echop-bg-primary { background-color: #dc2626; } /* Rouge vif */
+        .echop-bg-secondary { background-color: #b91c1c; } /* Rouge foncé */
+        .echop-bg-light { background-color: #fef2f2; } /* Rouge très clair */
+        .echop-text-primary { color: #dc2626; }
+        .echop-border-primary { border-color: #dc2626; }
+        .echop-hover:hover { background-color: #b91c1c; }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        }
+        .sidebar {
+            background: linear-gradient(180deg, #7f1d1d, #991b1b);
+        }
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
+        }
+        .status-en_attente { background-color: #fef3c7; color: #92400e; }
+        .status-en_livraison { background-color: #dbeafe; color: #1e40af; }
+        .status-livree { background-color: #d1fae5; color: #065f46; }
+        
+        .echop-footer {
+            background: linear-gradient(135deg, #7f1d1d, #991b1b);
+        }
+        
+        .echop-card {
+            border-left: 4px solid #dc2626;
+            transition: all 0.3s ease;
+        }
+        
+        .echop-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(220, 38, 38, 0.1);
+        }
+        
+        .echop-btn-primary {
+            background-color: #dc2626;
+            color: white;
+        }
+        
+        .echop-btn-primary:hover {
+            background-color: #b91c1c;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Sidebar -->
+    <div class="fixed inset-y-0 left-0 w-64 sidebar shadow-2xl z-50">
+        <div class="flex flex-col h-full">
+            <!-- Logo -->
+            <div class="flex items-center justify-center h-16 bg-black bg-opacity-20">
+                <h1 class="text-2xl font-bold text-white">
+                    <i class="fas fa-shopping-bag mr-2"></i>Echop
+                </h1>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="{% url 'accounts:manager_dashboard' %}" class="nav-item flex items-center px-4 py-3 text-white rounded-lg transition-all duration-300">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    <span>Tableau de Bord</span>
+                </a>
+                <a href="{% url 'accounts:manage_accounts' %}" class="nav-item flex items-center px-4 py-3 text-white rounded-lg transition-all duration-300">
+                    <i class="fas fa-users mr-3"></i>
+                    <span>Gestion des Comptes</span>
+                </a>
+                <a href="{% url 'accounts:manage_products' %}" class="nav-item flex items-center px-4 py-3 text-white rounded-lg transition-all duration-300">
+                    <i class="fas fa-box mr-3"></i>
+                    <span>Gestion des Produits</span>
+                </a>
+                <a href="{% url 'accounts:order_list' %}" class="nav-item flex items-center px-4 py-3 text-white bg-white bg-opacity-20 rounded-lg transition-all duration-300">
+                    <i class="fas fa-list mr-3"></i>
+                    <span>Liste des commandes</span>
+                </a>
+                <a href="{% url 'accounts:manage_questions' %}" class="nav-item flex items-center px-4 py-3 text-white rounded-lg transition-all duration-300">
+                    <i class="fas fa-question-circle mr-3"></i>
+                    <span>Traiter demandes utilisateurs</span>
+                </a>
+            </nav>
+            
+            <!-- User Profile -->
+            <div class="p-4 bg-black bg-opacity-20">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-red-600 font-bold">
+                        {{ request.user.username|slice:":2"|upper }}
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-white">{{ request.user.username }}</p>
+                        <p class="text-xs text-gray-300">Gestionnaire</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 min-h-screen">
+        <!-- Top Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="flex items-center justify-between px-8 py-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Liste des Commandes</h2>
+                    <p class="text-gray-600">Gestion et suivi des commandes clients</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Rechercher une commande..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Commandes -->
+        <div class="p-8">
+            {% if messages %}
+            <div class="mb-6">
+                {% for message in messages %}
+                <div class="p-4 rounded-md {% if message.tags == 'success' %}bg-green-100 text-green-800 border-l-4 border-green-500{% else %}bg-red-100 text-red-800 border-l-4 border-red-500{% endif %}">
+                    <div class="flex items-center">
+                        <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %} mr-2"></i>
+                        {{ message }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden echop-card">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Commande #</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produits</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for order_data in orders %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">#{{ order_data.order.id }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ order_data.order.user.username }}</div>
+                                    <div class="text-sm text-gray-500">{{ order_data.order.user.email }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ order_data.order.created_at|date:"d/m/Y" }}</div>
+                                    <div class="text-sm text-gray-500">{{ order_data.order.created_at|time:"H:i" }}</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-900">
+                                        {% for item in order_data.items %}
+                                        {{ item.product.name }} (x{{ item.quantity }})<br>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">{{ order_data.total|floatformat:2 }} FCFA</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full status-{{ order_data.order.status }}">
+                                        {{ order_data.status_display }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex space-x-2">
+                                        <button class="text-blue-600 hover:text-blue-900" onclick="viewOrderDetails({{ order_data.order.id }})">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900" onclick="updateOrderStatus({{ order_data.order.id }})">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
+                                    <i class="fas fa-box-open text-2xl text-gray-300 mb-2 block"></i>
+                                    Aucune commande trouvée.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            {% if orders.has_other_pages %}
+            <div class="mt-6 flex items-center justify-between">
+                <div class="text-sm text-gray-700">
+                    Affichage de {{ orders.start_index }} à {{ orders.end_index }} sur {{ orders.paginator.count }} commandes
+                </div>
+                <div class="flex space-x-2">
+                    {% if orders.has_previous %}
+                    <a href="?page={{ orders.previous_page_number }}" class="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                        Précédent
+                    </a>
+                    {% endif %}
+                    
+                    {% for num in orders.paginator.page_range %}
+                    {% if orders.number == num %}
+                    <span class="px-3 py-1 rounded-md border border-red-300 bg-red-100 text-sm font-medium text-red-700">
+                        {{ num }}
+                    </span>
+                    {% else %}
+                    <a href="?page={{ num }}" class="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                        {{ num }}
+                    </a>
+                    {% endif %}
+                    {% endfor %}
+                    
+                    {% if orders.has_next %}
+                    <a href="?page={{ orders.next_page_number }}" class="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                        Suivant
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Modale de détails de commande -->
+    <div id="orderDetailsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">Détails de la commande</h3>
+                    <button onclick="closeModal('orderDetailsModal')" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div id="orderDetailsContent">
+                    <!-- Le contenu sera chargé dynamiquement -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale de modification de statut -->
+    <div id="statusModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Modifier le statut</h3>
+                <form id="statusForm" method="post" action="{% url 'accounts:update_order_status' %}">
+                    {% csrf_token %}
+                    <input type="hidden" id="order_id" name="order_id">
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nouveau statut</label>
+                        <select name="status" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                            {% for value, label in status_choices %}
+                            <option value="{{ value }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" onclick="closeModal('statusModal')" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            Annuler
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+                            Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Echop -->
+    <footer class="ml-64 echop-footer text-white">
+        <div class="container mx-auto px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-shopping-bag mr-2"></i>Echop
+                    </h3>
+                    <p class="text-red-100">Votre plateforme de gestion et livraison préférée.</p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-red-100 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-red-100 hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-red-100 hover:text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-red-100 hover:text-white"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Liens Rapides</h4>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'accounts:manager_dashboard' %}" class="text-red-100 hover:text-white transition">Tableau de bord</a></li>
+                        <li><a href="{% url 'accounts:manage_accounts' %}" class="text-red-100 hover:text-white transition">Gestion des comptes</a></li>
+                        <li><a href="{% url 'accounts:manage_products' %}" class="text-red-100 hover:text-white transition">Gestion des produits</a></li>
+                        <li><a href="{% url 'accounts:order_list' %}" class="text-red-100 hover:text-white transition">Liste des commandes</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-red-100 hover:text-white transition">Centre d'aide</a></li>
+                        <li><a href="#" class="text-red-100 hover:text-white transition">FAQ</a></li>
+                        <li><a href="#" class="text-red-100 hover:text-white transition">Contact technique</a></li>
+                        <li><a href="#" class="text-red-100 hover:text-white transition">Statut des services</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Contact</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-red-200"></i>
+                            <span class="text-red-100">123 Rue Echop, Ville</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone mr-2 text-red-200"></i>
+                            <span class="text-red-100">+33 1 23 45 67 89</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-2 text-red-200"></i>
+                            <span class="text-red-100">contact@echop.fr</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-red-700 mt-8 pt-6 text-center">
+                <p class="text-red-200">© 2025 Echop. Tous droits réservés. | <a href="#" class="hover:text-white">Mentions légales</a> | <a href="#" class="hover:text-white">Politique de confidentialité</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Fonction pour afficher les détails d'une commande
+        function viewOrderDetails(orderId) {
+            fetch(`/api/order-details/${orderId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    const content = `
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-semibold">Informations de la commande</h4>
+                                <p>Commande #${data.order_id}</p>
+                                <p>Client: ${data.client_name} (${data.client_email})</p>
+                                <p>Date: ${data.order_date}</p>
+                                <p>Statut: ${data.status_display}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">Produits</h4>
+                                ${data.items.map(item => `
+                                    <div class="flex justify-between py-2 border-b">
+                                        <div>${item.product_name} x${item.quantity}</div>
+                                        <div>${item.price} FCFA</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="border-t pt-2">
+                                <div class="flex justify-between font-semibold">
+                                    <span>Total:</span>
+                                    <span>${data.total} FCFA</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('orderDetailsContent').innerHTML = content;
+                    document.getElementById('orderDetailsModal').classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert('Erreur lors du chargement des détails de la commande');
+                });
+        }
+
+        // Fonction pour modifier le statut d'une commande
+        function updateOrderStatus(orderId) {
+            document.getElementById('order_id').value = orderId;
+            document.getElementById('statusModal').classList.remove('hidden');
+        }
+
+        // Fonction pour fermer les modales
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // Fermer les modales en cliquant à l'extérieur
+        window.addEventListener('click', function(event) {
+            if (event.target.id === 'orderDetailsModal') {
+                closeModal('orderDetailsModal');
+            }
+            if (event.target.id === 'statusModal') {
+                closeModal('statusModal');
+            }
+        });
+    </script>
+</body>
+</html>
