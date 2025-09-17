@@ -96,7 +96,7 @@ class AuthenticationTestCase(TestCase):
         self.client.post(self.login_url, data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         user = CustomUser.objects.get(username='testuser')
         self.assertIsNotNone(user.qr_code)
-        # Vérifier que le fichier existe (simulation)
+        
         with default_storage.open(user.qr_code.name, 'rb') as f:
             self.assertTrue(len(f.read()) > 0)
 
@@ -149,7 +149,7 @@ class IntegrationTestCase(TestCase):
         user = CustomUser.objects.get(username='clientuser')
         self.assertIsNotNone(user.qr_code)
 
-        # Simuler la redirection (via JavaScript dans login.html)
+        
         # Vérifier la redirection vers page_principale pour un client
         response = self.client.get(self.page_principale_url)
         self.assertEqual(response.status_code, 200)
@@ -196,7 +196,7 @@ class PerformanceTestCase(TestCase):
     def test_add_to_cart_performance(self):
         """Mesure le temps d'exécution de l'ajout au panier."""
         start_time = time.time()
-        for _ in range(100):  # Simuler 100 requêtes
+        for _ in range(100):  
             response = self.client.post(
                 self.add_to_cart_url,
                 json.dumps({'action': 'add', 'quantity': 1}),
@@ -209,7 +209,7 @@ class PerformanceTestCase(TestCase):
         requests_per_second = 100 / total_time
         print(f"Temps total pour 100 requêtes : {total_time:.2f} secondes")
         print(f"Requêtes par seconde : {requests_per_second:.2f}")
-        self.assertLess(total_time, 10.0)  # Limite arbitraire de 10 secondes pour 100 requêtes
+        self.assertLess(total_time, 10.0)  
 
     def tearDown(self):
         """Nettoyage après chaque test."""

@@ -25,6 +25,8 @@ class CustomUser(AbstractUser):
         default=0.00
     )
     qr_code = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)  # Nouveau champ pour le numéro de téléphone
+    address = models.CharField(max_length=255, blank=True, null=True)      # Nouveau champ pour l'adresse
 
     groups = models.ManyToManyField(
         'auth.Group',
@@ -56,6 +58,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+<<<<<<< HEAD
     image = models.ImageField(
         upload_to='products/',
         null=True,
@@ -68,6 +71,11 @@ class Product(models.Model):
         blank=True
     )
 
+=======
+    image = models.ImageField(upload_to='products/', null=True, blank=True)  # Nouveau champ pour l'image
+    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True, related_name='products')
+    
+>>>>>>> origin/master
     def __str__(self):
         return self.name
 
@@ -102,6 +110,14 @@ def generate_qr_code(data, model_instance, field_name):
     model_instance.__setattr__(field_name, File(buffer, name=file_name))
     model_instance.save()
 
+<<<<<<< HEAD
+=======
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+>>>>>>> origin/master
 
 class Order(models.Model):
     STATUS_CHOICES = (

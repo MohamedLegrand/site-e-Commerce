@@ -9,7 +9,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> origin/master
         :root {
             --primary: #dc2626;
             --primary-dark: #b91c1c;
@@ -17,18 +21,30 @@
             --secondary: #2563eb;
             --light-bg: #f8fafc;
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> origin/master
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
             min-height: 100vh;
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> origin/master
         .header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> origin/master
         .product-card {
             transition: all 0.3s ease;
             border-radius: 12px;
@@ -36,21 +52,37 @@
             background: white;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> origin/master
         .product-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
+<<<<<<< HEAD
         
         .cart-btn {
             transition: all 0.3s ease;
         }
         
+=======
+
+        .cart-btn {
+            transition: all 0.3s ease;
+        }
+
+>>>>>>> origin/master
         .cart-btn:hover {
             background: var(--primary-dark);
             transform: scale(1.05);
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> origin/master
         .ai-badge {
             position: absolute;
             top: 10px;
@@ -62,18 +94,30 @@
             border-radius: 20px;
             font-weight: 600;
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> origin/master
         .recommendation-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 12px;
             color: white;
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> origin/master
         .footer {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> origin/master
         .footer-links a:hover {
             color: #e5e7eb;
             text-decoration: underline;
@@ -91,9 +135,12 @@
                 </div>
                 <h1 class="text-2xl font-bold">Echop</h1>
             </div>
+<<<<<<< HEAD
             
            
             
+=======
+>>>>>>> origin/master
             <div class="flex items-center space-x-4">
                 <button class="bg-white text-red-600 px-4 py-2 rounded-full font-semibold hover:bg-gray-100 transition">
                     <i class="fas fa-search mr-1"></i> Rechercher
@@ -108,6 +155,10 @@
 
     <!-- Main Content -->
     <main class="flex-grow p-6 container mx-auto">
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
         <!-- Recommendation Header -->
         <div class="recommendation-header p-6 mb-8">
             <div class="flex items-center">
@@ -131,9 +182,23 @@
                 {% for product in recommended_products %}
                     <div class="product-card relative">
                         <div class="ai-badge">IA</div>
+<<<<<<< HEAD
                         <h3 class="text-lg font-semibold p-4">{{ product.name }}</h3>
                         <p class="text-gray-600 p-4">
                             Catégorie :
+=======
+
+                        <!-- Image du produit -->
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="rounded mb-4 w-full h-56 object-cover">
+                        {% else %}
+                            <img src="{% static 'images/default_product.webp' %}" alt="Produit par défaut" class="rounded mb-4 w-full h-56 object-cover">
+                        {% endif %}
+
+                        <h3 class="text-lg font-semibold p-4">{{ product.name }}</h3>
+                        <p class="text-gray-600 p-4">
+                            Catégorie : 
+>>>>>>> origin/master
                             {% if product.category %}
                                 {{ product.category.name }}
                             {% else %}
@@ -165,7 +230,11 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
                     <h3 class="text-xl font-bold mb-4">Echop</h3>
+<<<<<<< HEAD
                     <p class="opacity-90">Votre marketplace de confiance pour tous vos besoins shopping.</p>
+=======
+                    <p class="opacity-90">Votre plateforme de confiance pour tous vos besoins shopping.</p>
+>>>>>>> origin/master
                     <div class="flex space-x-4 mt-4">
                         <a href="#" class="text-white text-xl"><i class="fab fa-facebook"></i></a>
                         <a href="#" class="text-white text-xl"><i class="fab fa-twitter"></i></a>
@@ -173,7 +242,11 @@
                         <a href="#" class="text-white text-xl"><i class="fab fa-linkedin"></i></a>
                     </div>
                 </div>
+<<<<<<< HEAD
                 
+=======
+
+>>>>>>> origin/master
                 <div>
                     <h4 class="font-semibold text-lg mb-4">Liens Rapides</h4>
                     <ul class="footer-links space-y-2">
@@ -183,12 +256,28 @@
                         <li><a href="#" class="block opacity-90 hover:opacity-100">Blog</a></li>
                     </ul>
                 </div>
+<<<<<<< HEAD
                 
               
                 
                
             </div>
             
+=======
+
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">Newsletter</h4>
+                    <p class="opacity-90 mb-4">Inscrivez-vous pour recevoir nos offres exclusives</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Votre email" class="px-4 py-2 rounded-l-lg w-full text-gray-800">
+                        <button class="bg-white text-red-600 px-4 py-2 rounded-r-lg font-semibold">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+>>>>>>> origin/master
             <div class="border-t border-red-500 mt-8 pt-6 text-center opacity-90">
                 <p>&copy; 2025 Echop. Tous droits réservés.</p>
             </div>
@@ -196,7 +285,11 @@
     </footer>
 
     <script>
+<<<<<<< HEAD
         // Exemple de gestion basique du bouton "Charger plus" (à implémenter plus tard avec AJAX)
+=======
+        // Gestion du bouton "Charger plus"
+>>>>>>> origin/master
         document.getElementById('load-more-btn').addEventListener('click', function() {
             alert('Fonctionnalité en développement : Charger plus de recommandations.');
         });

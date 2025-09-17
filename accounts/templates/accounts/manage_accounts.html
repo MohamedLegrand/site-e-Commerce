@@ -22,9 +22,7 @@
         }
         .role-client { background-color: #EFF6FF; color: #1E40AF; }
         .role-gestionnaire { background-color: #F0F9FF; color: #0C4A6E; }
-        .role-seller { background-color: #FDF2F8; color: #9D174D; }
         .role-delivery { background-color: #ECFDF5; color: #065F46; }
-        .role-admin { background-color: #FEF3C7; color: #92400E; }
         
         .role-section {
             border-left: 4px solid;
@@ -33,9 +31,7 @@
         }
         .role-section.client { border-left-color: #3B82F6; }
         .role-section.gestionnaire { border-left-color: #0EA5E9; }
-        .role-section.seller { border-left-color: #EC4899; }
         .role-section.delivery { border-left-color: #10B981; }
-        .role-section.admin { border-left-color: #F59E0B; }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
@@ -173,12 +169,27 @@
                             </div>
                             <div class="flex items-center space-x-2">
                                 <span class="role-badge role-{{ user.role }}">{{ user.role }}</span>
+<<<<<<< HEAD
                                 <button class="text-blue-600 hover:text-blue-900 edit-user" data-user-id="{{ user.id }}" data-username="{{ user.username }}" data-email="{{ user.email }}" data-role="{{ user.role }}">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="text-red-600 hover:text-red-900 delete-user" data-user-id="{{ user.id }}" data-username="{{ user.username }}">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
+=======
+                                <form method="post" action="{% url 'accounts:edit_user' user.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="text-blue-600 hover:text-blue-900">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </form>
+                                <form method="post" action="{% url 'accounts:delete_user' user.id %}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="text-red-600 hover:text-red-900">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+>>>>>>> origin/master
                             </div>
                         </div>
                         {% endif %}
@@ -206,12 +217,27 @@
                             </div>
                             <div class="flex items-center space-x-2">
                                 <span class="role-badge role-{{ user.role }}">{{ user.role }}</span>
+<<<<<<< HEAD
                                 <button class="text-sky-600 hover:text-sky-900 edit-user" data-user-id="{{ user.id }}" data-username="{{ user.username }}" data-email="{{ user.email }}" data-role="{{ user.role }}">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="text-red-600 hover:text-red-900 delete-user" data-user-id="{{ user.id }}" data-username="{{ user.username }}">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
+=======
+                                <form method="post" action="{% url 'accounts:edit_user' user.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="text-sky-600 hover:text-sky-900">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </form>
+                                <form method="post" action="{% url 'accounts:delete_user' user.id %}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="text-red-600 hover:text-red-900">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+>>>>>>> origin/master
                             </div>
                         </div>
                         {% endif %}
@@ -239,19 +265,38 @@
                             </div>
                             <div class="flex items-center space-x-2">
                                 <span class="role-badge role-{{ user.role }}">{{ user.role }}</span>
+<<<<<<< HEAD
                                 <button class="text-green-600 hover:text-green-900 edit-user" data-user-id="{{ user.id }}" data-username="{{ user.username }}" data-email="{{ user.email }}" data-role="{{ user.role }}">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="text-red-600 hover:text-red-900 delete-user" data-user-id="{{ user.id }}" data-username="{{ user.username }}">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
+=======
+                                <form method="post" action="{% url 'accounts:edit_user' user.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="text-green-600 hover:text-green-900">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </form>
+                                <form method="post" action="{% url 'accounts:delete_user' user.id %}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="text-red-600 hover:text-red-900">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+>>>>>>> origin/master
                             </div>
                         </div>
                         {% endif %}
                         {% endfor %}
                     </div>
                 </div>
+<<<<<<< HEAD
                 
+=======
+
+>>>>>>> origin/master
                 <div class="mt-4 flex items-center justify-between">
                     <div class="text-sm text-gray-700">
                         Affichage de <span class="font-medium">{{ users|length }}</span> utilisateurs

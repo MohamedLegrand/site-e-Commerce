@@ -3,211 +3,518 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Echop - Accueil</title>
-    {% load static %}
+    <title>Echop - Plateforme E-commerce Premium</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="{% static 'accounts/home.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary-red: #991B1B;
+            --primary-red-light: #DC2626;
+            --primary-red-dark: #7F1D1D;
+            --accent-gold: #D97706;
+            --accent-gold-light: #F59E0B;
+            --accent-gold-lighter: #FDE68A;
+        }
+        
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #FAFAFA;
+            overflow-x: hidden;
         }
 
-        /* Gradient animé pour le hero */
-        .hero-gradient {
-            background: linear-gradient(-45deg, #dc2626, #b91c1c, #991b1b, #7f1d1d);
-            background-size: 400% 400%;
-            animation: gradientShift 8s ease infinite;
+        /* Design minimaliste avec espaces généreux */
+        .section-spacing {
+            padding: 5rem 0;
         }
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* Hero section améliorée */
+        .hero-container {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Particules flottantes modernes */
-        .floating-shapes {
+        .hero-pattern {
+            opacity: 0.03;
+            background-image: radial-gradient(var(--accent-gold-light) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Animation de particules flottantes améliorée */
+        .floating-particles {
             position: absolute;
             width: 100%;
             height: 100%;
-            overflow: hidden;
             top: 0;
             left: 0;
+            overflow: hidden;
+            z-index: 1;
         }
-
-        .shape {
+        
+        .particle {
             position: absolute;
-            opacity: 0.1;
-            animation: float 20s infinite linear;
-        }
-
-        .shape:nth-child(1) { 
-            width: 80px; 
-            height: 80px; 
-            background: #fbbf24; 
-            border-radius: 20px;
-            top: 20%; 
-            left: 10%; 
-            animation-delay: 0s;
-            transform: rotate(45deg);
-        }
-
-        .shape:nth-child(2) { 
-            width: 60px; 
-            height: 60px; 
-            background: #f59e0b; 
+            background: linear-gradient(135deg, var(--accent-gold-light) 0%, var(--accent-gold-lighter) 100%);
             border-radius: 50%;
-            top: 60%; 
-            left: 80%; 
-            animation-delay: 5s;
-        }
-
-        .shape:nth-child(3) { 
-            width: 100px; 
-            height: 100px; 
-            background: #d97706; 
-            border-radius: 15px;
-            top: 40%; 
-            left: 70%; 
-            animation-delay: 10s;
-            transform: rotate(-30deg);
-        }
-
-        .shape:nth-child(4) { 
-            width: 40px; 
-            height: 40px; 
-            background: #92400e; 
-            border-radius: 50%;
-            top: 80%; 
-            left: 20%; 
-            animation-delay: 15s;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px) rotate(0deg); }
-            33% { transform: translateY(-20px) rotate(120deg); }
-            66% { transform: translateY(20px) rotate(240deg); }
-            100% { transform: translateY(0px) rotate(360deg); }
-        }
-
-        /* Animations modernes */
-        .fade-in-up {
-            animation: fadeInUp 1s ease-out forwards;
+            animation: float 8s infinite ease-in-out;
             opacity: 0;
-            transform: translateY(30px);
+            box-shadow: 0 0 15px rgba(253, 230, 138, 0.5);
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100px) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg) scale(1.2);
+                opacity: 0;
+            }
         }
 
-        .fade-in-up.delay-1 { animation-delay: 0.2s; }
-        .fade-in-up.delay-2 { animation-delay: 0.4s; }
-        .fade-in-up.delay-3 { animation-delay: 0.6s; }
+        /* Cartes avec effet d'élévation subtil amélioré */
+        .feature-card {
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 20px;
+            overflow: hidden;
+            transform: translateY(50px);
+            opacity: 0;
+            background: linear-gradient(145deg, #ffffff, #f5f5f5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 1;
+        }
 
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(217, 119, 6, 0.1) 0%, rgba(153, 27, 27, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: -1;
+        }
+
+        .feature-card.animated {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Design responsive pour tous les écrans */
+        @media (max-width: 768px) {
+            .hero-content {
+                text-align: center;
+                padding: 2rem 1rem;
+            }
+            
+            .section-spacing {
+                padding: 3rem 0;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+        }
+
+        /* Animation subtile pour les éléments améliorée */
         @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* Cards avec effet glassmorphism */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .animate-fade-in-up {
+            animation: fadeInUp 1s ease-out forwards;
         }
 
-        /* Boutons modernes */
-        .btn-modern {
+        /* Animation de texte dégradé améliorée */
+        .gradient-text {
+            background: linear-gradient(135deg, #F59E0B 0%, #FCD34D 50%, #FEF3C7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            display: inline-block;
+            background-size: 200% auto;
+            animation: textShine 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textShine {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .gradient-text::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(135deg, #F59E0B 0%, #FCD34D 100%);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.5s ease;
+        }
+
+        .gradient-text:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* Boutons avec design cohérent améliorés */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-light) 100%);
+            color: white;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(217, 119, 6, 0.2);
+            border: none;
         }
 
-        .btn-modern::before {
+        .btn-primary::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.6s;
         }
 
-        .btn-modern:hover::before {
+        .btn-primary:hover::before {
             left: 100%;
         }
 
-        /* Navbar avec effet blur */
-        .navbar-blur {
-            backdrop-filter: blur(10px);
-            background: rgba(220, 38, 38, 0.95);
-            transition: all 0.3s ease;
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(217, 119, 6, 0.4);
         }
 
-        .navbar-blur.scrolled {
-            background: rgba(255, 255, 255, 0.95);
-            color: #1f2937;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        .btn-outline {
+            border: 2px solid white;
+            color: white;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+            overflow: hidden;
+            background: transparent;
         }
 
-        /* Stats counter animation */
-        .stats-number {
-            font-variant-numeric: tabular-nums;
+        .btn-outline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.6s;
         }
 
-        /* Hover effects pour les cartes de catégories */
-        .category-card {
-            transition: all 0.3s ease;
-            cursor: pointer;
+        .btn-outline:hover::before {
+            left: 100%;
         }
 
-        .category-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary-red);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.2);
         }
 
-        /* Loading shimmer effect */
-        .shimmer {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 2s infinite;
+        /* Indicateur de scroll amélioré */
+        .scroll-indicator {
+            animation: bounce 2s infinite;
         }
 
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-15px);
+            }
+            60% {
+                transform: translateY(-7px);
+            }
+        }
+
+        /* Animation des statistiques améliorée */
+        .stat-item {
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.8s ease;
+            background: linear-gradient(145deg, #ffffff, #f8f8f8);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-red), var(--accent-gold));
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .stat-item.animated {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .stat-item.animated::before {
+            opacity: 1;
+        }
+
+        /* Animation d'icônes améliorée */
+        .icon-wrapper {
+            transition: all 0.5s ease;
+            background: linear-gradient(145deg, #f5f5f5, #e0e0e0) !important;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1), -5px -5px 15px rgba(255, 255, 255, 0.7);
+        }
+
+        .feature-card:hover .icon-wrapper {
+            transform: rotateY(180deg) scale(1.1);
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--accent-gold) 100%) !important;
+            box-shadow: 0 10px 20px rgba(153, 27, 27, 0.2);
+        }
+
+        /* Animation d'image améliorée */
+        .image-container {
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            transform: perspective(1000px) rotateX(5deg) rotateY(-5deg);
+            transition: all 0.7s ease;
+        }
+
+        .image-container:hover {
+            transform: perspective(1000px) rotateX(0) rotateY(0) scale(1.03);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .image-container img {
+            transition: all 0.8s ease;
+            transform: scale(1.05);
+        }
+
+        .image-container:hover img {
+            transform: scale(1.15);
+        }
+
+        /* Animation de vague améliorée */
+        .wave-divider {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            transform: rotate(180deg);
+        }
+
+        .wave-divider svg {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 56px;
+        }
+
+        .wave-divider .shape-fill {
+            fill: #FFFFFF;
+        }
+
+        /* Animation de progression améliorée */
+        @keyframes progress {
+            0% {
+                width: 0%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        .progress-bar {
+            height: 4px;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary-red) 0%, var(--accent-gold) 50%, var(--primary-red) 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            animation: progress auto linear;
+            animation-timeline: scroll(root block);
+            background-size: 200% auto;
+            animation: progress auto linear, gradientShift 2s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Animation de révélation au scroll améliorée */
+        .reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Nouveaux effets visuels */
+        .glow-effect {
+            position: relative;
+        }
+
+        .glow-effect::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(217, 119, 6, 0.1) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .glow-effect:hover::after {
+            opacity: 1;
+        }
+
+        /* Effet de parallaxe */
+        .parallax-element {
+            transition: transform 0.3s ease-out;
+        }
+
+        /* Effet de morphing */
+        .morphing-background {
+            background: linear-gradient(45deg, var(--primary-red), var(--accent-gold), var(--primary-red-dark), var(--accent-gold-light));
+            background-size: 400% 400%;
+            animation: gradientMorph 15s ease infinite;
+        }
+
+        @keyframes gradientMorph {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Effet de flou au survol */
+        .hover-blur:hover {
+            filter: blur(1px);
+            transition: filter 0.3s ease;
+        }
+
+        /* Effet de lumière */
+        .light-effect {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .light-effect::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+
+        .light-effect:hover::before {
+            opacity: 1;
+            top: 0;
+            left: 0;
         }
     </style>
 </head>
-<body class="bg-gray-50 font-sans antialiased">
+<body class="font-sans antialiased text-gray-900">
 
-    <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-gray-100">
+    <!-- Barre de progression -->
+    <div class="progress-bar"></div>
+
+    <!-- Header simplifié amélioré -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 light-effect">
         <div class="container mx-auto px-4 py-4">
             <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-2">
-                    <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-red-700 rounded-lg flex items-center justify-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-red-600 to-red-800 rounded-lg flex items-center justify-center transform hover:rotate-180 transition-transform duration-700 glow-effect">
                         <span class="text-white font-bold text-xl">E</span>
                     </div>
                     <h1 class="text-2xl font-bold text-gray-900">Echop</h1>
                 </div>
-                <div class="flex items-center space-x-6">
+                <div class="flex items-center space-x-4">
                     {% if user.is_authenticated %}
                         <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                            <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center transition-transform duration-300 hover:scale-110 glow-effect">
                                 <span class="text-red-600 font-medium text-sm">{{ user.username|first|upper }}</span>
                             </div>
-                            <span class="text-gray-700 font-medium">{{ user.username }}</span>
-                            <a href="{% url 'accounts:logout' %}" 
-                               class="text-gray-500 hover:text-red-600 transition duration-200 font-medium">
-                                Déconnexion
-                            </a>
+                            <span class="text-gray-700 font-medium hidden md:block">{{ user.username }}</span>
                         </div>
                     {% else %}
                         <a href="{% url 'accounts:login' %}" 
-                           class="text-gray-700 hover:text-red-600 transition duration-200 font-medium">
+                           class="text-gray-700 hover:text-red-600 transition duration-300 font-medium relative group">
                             Connexion
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
                         </a>
                         <a href="{% url 'accounts:register' %}" 
-                           class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition duration-200 font-medium btn-modern">
+                           class="btn-primary px-4 py-2 rounded-lg font-medium transform hover:scale-105">
                             Inscription
                         </a>
                     {% endif %}
@@ -216,251 +523,324 @@
         </div>
     </header>
 
-    <!-- Navbar -->
-    <nav class="navbar-blur sticky top-0 z-50 border-b border-red-700/20" id="navbar">
-        <div class="container mx-auto px-4 py-3">
-            <div class="flex justify-between items-center">
-                <!-- Dropdown Catégories -->
-                <div class="relative group">
-                    <button class="flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-white/10 text-white font-medium transition duration-200">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                        
+    <!-- Hero Section redessinée améliorée -->
+    <section class="hero-container min-h-screen flex items-center justify-center relative">
+        <!-- Particules flottantes améliorées -->
+        <div class="floating-particles" id="particles"></div>
+        
+        <div class="hero-pattern absolute inset-0"></div>
+        
+        <div class="container mx-auto px-4 hero-content relative z-10">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="animate-fade-in-up">
+                    <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight reveal">
+                        <span class="gradient-text">Echop</span><br>Votre expérience<br>e-commerce réinventée
+                    </h1>
+                    <p class="text-xl text-red-100 mb-8 leading-relaxed reveal">
+                        Découvrez une plateforme premium alliant technologie avancée et système de fidélisation intelligent pour transformer chaque achat en expérience exceptionnelle.
+                    </p>
+                    <div class="flex flex-wrap gap-4 reveal">
+                        <a href="{% url 'accounts:products' %}" class="btn-primary px-8 py-4 rounded-full font-semibold text-lg">
+                            Explorer les produits
+                        </a>
+                        <a href="{% url 'accounts:register' %}" class="btn-outline px-8 py-4 rounded-full font-semibold text-lg">
+                            Créer un compte
+                        </a>
                     </div>
                 </div>
-
-                <!-- Recherche moderne -->
-                <div class="flex-1 max-w-md mx-8">
-                    <div class="relative">
-                        <input type="text" 
-                               placeholder="Rechercher un produit..." 
-                               class="w-full pl-12 pr-4 py-3 rounded-xl border border-white/20 bg-white/10 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/30 focus:bg-white/20 transition duration-200">
-                        <svg class="w-5 h-5 text-white/70 absolute left-4 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </div>
-                </div>
-
-                <!-- Navigation links -->
                 
+                <div class="animate-fade-in-up" style="animation-delay: 0.3s;">
+                    <div class="bg-white rounded-2xl p-6 shadow-2xl transform hover:scale-105 transition duration-700 image-container parallax-element">
+                        <div class="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1180&q=80" 
+                                 alt="Interface moderne d'Echop montrant le système de fidélisation" 
+                                 class="w-full h-full object-cover rounded-xl">
+                        </div>
+                        <div class="mt-6 text-center">
+                            <p class="text-sm text-gray-500">Capture d'écran de l'interface premium Echop</p>
+                            <p class="text-lg font-semibold text-red-700 mt-2">Système de fidélisation intelligent intégré</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </nav>
+        
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 scroll-indicator">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </div>
 
-    <!-- Hero Section -->
-    <main class="relative">
-        <section class="hero-gradient relative min-h-screen flex items-center justify-center overflow-hidden">
-            <!-- Shapes flottantes -->
-            <div class="floating-shapes">
-                <div class="shape"></div>
-                <div class="shape"></div>
-                <div class="shape"></div>
-                <div class="shape"></div>
-            </div>
+        <!-- Divider wave -->
+        <div class="wave-divider">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
+    </section>
 
-            <div class="relative z-10 text-center text-white px-4 max-w-6xl mx-auto">
-                <h1 class="fade-in-up text-5xl md:text-7xl font-bold mb-6 leading-tight">
-                    Bienvenue sur <span class="text-yellow-400">Echop</span>
-                </h1>
-                <p class="fade-in-up delay-1 text-xl md:text-2xl mb-8 max-w-4xl mx-auto leading-relaxed font-light">
-                    La plateforme e-commerce nouvelle génération conçue pour révolutionner votre expérience d'achat
+    <!-- Section Statistiques améliorée -->
+    <section class="section-spacing bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4 reveal">Une expérience qui fait la différence</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto reveal">
+                    Echop transforme chaque interaction en une opportunité de récompense grâce à son système de fidélisation intelligent
                 </p>
-                <div class="fade-in-up delay-2 mb-12">
-                    <a href="{% url 'accounts:products' %}" 
-                       class="inline-block bg-yellow-400 text-gray-900 px-8 py-4 rounded-full font-bold text-lg hover:bg-yellow-300 transition duration-300 btn-modern mr-4 shadow-lg">
-                        Découvrir nos produits
-                    </a>
-                    <a href="{% url 'accounts:register' %}" 
-                       class="inline-block border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-red-600 transition duration-300 btn-modern shadow-lg">
-                        Rejoindre maintenant
-                    </a>
-                </div>
-
-                <!-- Stats modernes -->
-                <div class="fade-in-up delay-3 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-2xl mx-auto">
-                    <div class="glass-card rounded-xl p-6 text-center">
-                        <div class="text-3xl font-bold text-gray-900 stats-number">1000+</div>
-                        <div class="text-sm text-gray-600 font-medium">Produits</div>
-                    </div>
-                    <div class="glass-card rounded-xl p-6 text-center">
-                        <div class="text-3xl font-bold text-gray-900 stats-number">500+</div>
-                        <div class="text-sm text-gray-600 font-medium">Clients</div>
-                    </div>
-                    <div class="glass-card rounded-xl p-6 text-center">
-                        <div class="text-3xl font-bold text-gray-900 stats-number">24/7</div>
-                        <div class="text-sm text-gray-600 font-medium">Support</div>
-                    </div>
-                    <div class="glass-card rounded-xl p-6 text-center">
-                        <div class="text-3xl font-bold text-gray-900 stats-number">100%</div>
-                        <div class="text-sm text-gray-600 font-medium">Sécurisé</div>
-                    </div>
-                </div>
             </div>
 
-            <!-- Scroll indicator -->
-            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                </svg>
+            <div class="grid stats-grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+                <div class="text-center p-8 bg-red-50 rounded-xl stat-item glow-effect">
+                    <div class="text-4xl font-bold text-red-700 mb-2" id="stat1">0</div>
+                    <div class="text-sm text-red-600 font-medium">Produits exclusifs</div>
+                </div>
+                <div class="text-center p-8 bg-amber-50 rounded-xl stat-item glow-effect">
+                    <div class="text-4xl font-bold text-amber-700 mb-2" id="stat2">0</div>
+                    <div class="text-sm text-amber-600 font-medium">Clients satisfaits</div>
+                </div>
+                <div class="text-center p-8 bg-red-50 rounded-xl stat-item glow-effect">
+                    <div class="text-4xl font-bold text-red-700 mb-2">24/7</div>
+                    <div class="text-sm text-red-600 font-medium">Support premium</div>
+                </div>
+                <div class="text-center p-8 bg-amber-50 rounded-xl stat-item glow-effect">
+                    <div class="text-4xl font-bold text-amber-700 mb-2">1:1</div>
+                    <div class="text-sm text-amber-600 font-medium">Valeur points</div>
+                </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Features Section -->
-        <section class="py-20 bg-white">
-            <div class="container mx-auto px-4">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Pourquoi choisir Echop ?</h2>
-                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                        Une expérience d'achat complète avec des fonctionnalités innovantes
+    <!-- Section Fonctionnalités améliorée -->
+    <section class="section-spacing bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4 reveal">Notre système de fidélisation intelligent</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto reveal">
+                    Gagnez des points à chaque achat, profitez d'avantages exclusifs et montez en niveau pour débloquer des récompenses exceptionnelles
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+                <div class="feature-card bg-white p-10 rounded-2xl glow-effect">
+                    <div class="icon-wrapper w-20 h-20 bg-red-100 rounded-xl flex items-center justify-center mb-6 mx-auto">
+                        <i class="fas fa-coins text-red-600 text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4 text-center">Points illimités</h3>
+                    <p class="text-gray-600 text-center">
+                        Cumulez des points sur chaque achat, sans plafond et sans date d'expiration
                     </p>
                 </div>
 
-                <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                    <div class="category-card bg-gradient-to-br from-red-50 to-red-100 p-8 rounded-2xl">
-                        <div class="w-16 h-16 bg-red-600 rounded-xl flex items-center justify-center mb-6">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Livraison Rapide</h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Recevez vos commandes en un temps record grâce à notre réseau de livraison optimisé
-                        </p>
+                <div class="feature-card bg-white p-10 rounded-2xl glow-effect">
+                    <div class="icon-wrapper w-20 h-20 bg-amber-100 rounded-xl flex items-center justify-center mb-6 mx-auto">
+                        <i class="fas fa-crown text-amber-600 text-3xl"></i>
                     </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4 text-center">Avantages exclusifs</h3>
+                    <p class="text-gray-600 text-center">
+                        Accédez à des offres personnalisées, des previews produits et des invitations événements
+                    </p>
+                </div>
 
-                    <div class="category-card bg-gradient-to-br from-yellow-50 to-yellow-100 p-8 rounded-2xl">
-                        <div class="w-16 h-16 bg-yellow-600 rounded-xl flex items-center justify-center mb-6">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Paiements Sécurisés</h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Mobile Money, QR codes et traçabilité complète pour des transactions en toute sécurité
-                        </p>
+                <div class="feature-card bg-white p-10 rounded-2xl glow-effect">
+                    <div class="icon-wrapper w-20 h-20 bg-red-100 rounded-xl flex items-center justify-center mb-6 mx-auto">
+                        <i class="fas fa-shield-alt text-red-600 text-3xl"></i>
                     </div>
-
-                    <div class="category-card bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-2xl">
-                        <div class="w-16 h-16 bg-green-600 rounded-xl flex items-center justify-center mb-6">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Programme de Fidélité</h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Gagnez des points à chaque achat et profitez de réductions exclusives
-                        </p>
-                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4 text-center">Sécurité absolue</h3>
+                    <p class="text-gray-600 text-center">
+                        Transactions cryptées et protection des données pour une expérience en toute confiance
+                    </p>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white">
-        <div class="container mx-auto px-4 py-12">
-            <div class="grid md:grid-cols-4 gap-8 mb-8">
-                <div>
-                    <div class="flex items-center space-x-2 mb-4">
-                        <div class="w-8 h-8 bg-gradient-to-br from-red-500 to-red-700 rounded-lg flex items-center justify-center">
+    <!-- Section CTA finale améliorée -->
+    <section class="py-20 bg-red-700 relative overflow-hidden morphing-background">
+        <div class="absolute inset-0 hero-pattern"></div>
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 reveal">Prêt à transformer votre expérience d'achat ?</h2>
+            <p class="text-xl text-red-100 mb-10 max-w-2xl mx-auto reveal">
+                Rejoignez Echop aujourd'hui et découvrez comment notre système de fidélisation intelligent récompense chaque interaction
+            </p>
+            <a href="{% url 'accounts:register' %}" class="inline-block btn-primary px-10 py-5 rounded-full font-bold text-xl hover:scale-110 shadow-xl reveal">
+                Commencer maintenant
+                <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer amélioré -->
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-10 mb-10">
+                <div class="reveal">
+                    <div class="flex items-center space-x-2 mb-6">
+                        <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-red-700 rounded-lg flex items-center justify-center glow-effect">
                             <span class="text-white font-bold">E</span>
                         </div>
-                        <h3 class="text-xl font-bold">Echop</h3>
+                        <h3 class="text-2xl font-bold">Echop</h3>
                     </div>
                     <p class="text-gray-400 leading-relaxed">
-                        Votre plateforme e-commerce de confiance pour une expérience d'achat exceptionnelle.
+                        Plateforme e-commerce premium avec système de fidélisation intelligent pour une expérience d'achat exceptionnelle.
                     </p>
                 </div>
                 
-                <div>
-                    <h4 class="font-semibold mb-4">Navigation</h4>
-                    <div class="space-y-2">
-                        <a href="{% url 'accounts:about' %}" class="block text-gray-400 hover:text-white transition duration-200">À propos</a>
-                        <a href="{% url 'accounts:contact' %}" class="block text-gray-400 hover:text-white transition duration-200">Contact</a>
-                        <a href="{% url 'accounts:terms' %}" class="block text-gray-400 hover:text-white transition duration-200">CGU</a>
+                <div class="reveal">
+                    <h4 class="font-semibold text-lg mb-6">Navigation</h4>
+                    <div class="space-y-3">
+                        <a href="{% url 'accounts:about' %}" class="block text-gray-400 hover:text-white transition duration-300 transform hover:translate-x-2">À propos</a>
+                        <a href="{% url 'accounts:contact' %}" class="block text-gray-400 hover:text-white transition duration-300 transform hover:translate-x-2">Contact</a>
+                        <a href="{% url 'accounts:terms' %}" class="block text-gray-400 hover:text-white transition duration-300 transform hover:translate-x-2">CGU</a>
                     </div>
                 </div>
                 
-                <div>
-                    <h4 class="font-semibold mb-4">Contact</h4>
-                    <div class="space-y-2 text-gray-400">
-                        <p>📧 support@echop.com</p>
-                        <p>📞 +237 677 24 69 00</p>
-                        <p>📍 Yaoundé, Cameroun</p>
+                <div class="reveal">
+                    <h4 class="font-semibold text-lg mb-6">Contact</h4>
+                    <div class="space-y-3 text-gray-400">
+                        <p class="flex items-center"><i class="fas fa-envelope mr-3 text-red-500"></i> support@echop.com</p>
+                        <p class="flex items-center"><i class="fas fa-phone mr-3 text-red-500"></i> +237 677 24 69 00</p>
+                        <p class="flex items-center"><i class="fas fa-map-marker-alt mr-3 text-red-500"></i> Yaoundé, Cameroun</p>
                     </div>
                 </div>
                 
-                <div>
-                    <h4 class="font-semibold mb-4">Suivez-nous</h4>
+                <div class="reveal">
+                    <h4 class="font-semibold text-lg mb-6">Suivez-nous</h4>
                     <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition duration-200">
-                            <span class="text-blue-400">f</span>
+                        <a href="#" class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition duration-300 transform hover:scale-110 glow-effect">
+                            <i class="fab fa-facebook-f text-blue-400 text-lg"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition duration-200">
-                            <span class="text-blue-400">t</span>
+                        <a href="#" class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition duration-300 transform hover:scale-110 glow-effect">
+                            <i class="fab fa-twitter text-blue-400 text-lg"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition duration-200">
-                            <span class="text-pink-400">i</span>
+                        <a href="#" class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition duration-300 transform hover:scale-110 glow-effect">
+                            <i class="fab fa-instagram text-pink-400 text-lg"></i>
                         </a>
                     </div>
                 </div>
             </div>
             
-            <div class="border-t border-gray-800 pt-8 text-center text-gray-400">
+            <div class="border-t border-gray-800 pt-10 text-center text-gray-400 reveal">
                 <p>© 2025 Echop. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
 
-    {% csrf_token %}
-    <script src="{% static 'js/cart.js' %}"></script>
     <script>
-        // Animation de la navbar au scroll
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
+        // Création des particules flottantes améliorée
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 20;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Propriétés aléatoires
+                const size = Math.random() * 25 + 10;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 10 + 8;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(particle);
             }
-        });
-
-        // Animation des compteurs
-        function animateCounter(element, target) {
-            let current = 0;
-            const increment = target / 100;
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
-                }
-                element.textContent = Math.floor(current) + (target === 100 ? '%' : '+');
-            }, 20);
         }
-
-        // Intersection Observer pour déclencher les animations
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const counters = entry.target.querySelectorAll('.stats-number');
-                    counters.forEach(counter => {
-                        const target = parseInt(counter.textContent.replace(/\D/g, ''));
-                        animateCounter(counter, target);
-                    });
-                    observer.unobserve(entry.target);
+        
+        // Animation des statistiques améliorée
+        function animateStats() {
+            const statElements = document.querySelectorAll('.stat-item');
+            statElements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add('animated');
+                }, 200 * index);
+            });
+            
+            // Animation des compteurs
+            const stat1 = document.getElementById('stat1');
+            const stat2 = document.getElementById('stat2');
+            
+            if (stat1 && stat2) {
+                animateValue(stat1, 0, 1000, 2000);
+                animateValue(stat2, 0, 500, 2000);
+            }
+        }
+        
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                element.innerHTML = Math.floor(progress * (end - start) + start) + "+";
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+        
+        // Animation au défilement améliorée
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            
+            reveals.forEach((element) => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    element.classList.add('active');
                 }
             });
-        });
-
-        // Observer les stats
-        document.addEventListener('DOMContentLoaded', () => {
-            const statsSection = document.querySelector('.delay-3');
-            if (statsSection) {
-                observer.observe(statsSection);
-            }
+        }
+        
+        function animateFeatures() {
+            const features = document.querySelectorAll('.feature-card');
+            features.forEach((feature, index) => {
+                setTimeout(() => {
+                    feature.classList.add('animated');
+                }, 300 * index);
+            });
+        }
+        
+        // Effet de parallaxe
+        function handleParallax() {
+            const parallaxElements = document.querySelectorAll('.parallax-element');
+            const scrollY = window.scrollY;
+            
+            parallaxElements.forEach(element => {
+                const speed = 0.05;
+                const yPos = -(scrollY * speed);
+                element.style.transform = `translateY(${yPos}px) perspective(1000px) rotateX(5deg) rotateY(-5deg)`;
+            });
+        }
+        
+        // Initialisation améliorée
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            animateStats();
+            animateFeatures();
+            window.addEventListener('scroll', revealOnScroll);
+            window.addEventListener('scroll', handleParallax);
+            revealOnScroll(); // Vérifier au chargement initial
+            
+            // Animation des éléments au chargement
+            const animatedElements = document.querySelectorAll('.animate-fade-in-up');
+            animatedElements.forEach(element => {
+                element.style.opacity = '0';
+            });
+            
+            setTimeout(() => {
+                animatedElements.forEach(element => {
+                    element.style.opacity = '1';
+                });
+            }, 100);
         });
     </script>
 </body>

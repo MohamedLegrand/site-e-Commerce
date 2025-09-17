@@ -31,6 +31,13 @@
         }
         .sidebar {
             background: linear-gradient(180deg, #1e3c72, #2a5298);
+            transition: transform 0.3s ease;
+        }
+        .sidebar.mobile-hidden {
+            transform: translateX(-100%);
+        }
+        .sidebar-overlay {
+            display: none;
         }
         .nav-item:hover {
             background: rgba(255,255,255,0.1);
@@ -57,6 +64,7 @@
         .animate-delay-2 { animation-delay: 0.2s; opacity: 0; }
         .animate-delay-3 { animation-delay: 0.3s; opacity: 0; }
         .animate-delay-4 { animation-delay: 0.4s; opacity: 0; }
+        
         .product-table {
             width: 100%;
             border-collapse: collapse;
@@ -65,25 +73,88 @@
         .product-table th, .product-table td {
             padding: 0.5rem;
             border: 1px solid #ddd;
+            text-align: left;
         }
         .product-table th {
             background-color: #f4f4f4;
+            font-weight: 600;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                position: fixed;
+                z-index: 50;
+                transform: translateX(-100%);
+            }
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            .sidebar-overlay {
+                display: block;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 40;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .product-table {
+                font-size: 0.875rem;
+            }
+            .product-table th, .product-table td {
+                padding: 0.375rem;
+            }
+            .stat-card {
+                padding: 1rem;
+            }
+            .stat-card .text-3xl {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .product-table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .product-table {
+                min-width: 400px;
+            }
         }
     </style>
 </head>
 <body class="bg-gray-50">
+    <!-- Mobile Overlay -->
+    <div class="sidebar-overlay lg:hidden" id="sidebarOverlay"></div>
+    
     <!-- Sidebar -->
-    <div class="fixed inset-y-0 left-0 w-64 sidebar shadow-2xl z-50">
+    <div class="fixed inset-y-0 left-0 w-64 sidebar shadow-2xl z-50" id="sidebar">
         <div class="flex flex-col h-full">
             <!-- Logo -->
-            <div class="flex items-center justify-center h-16 bg-black bg-opacity-20">
-                <h1 class="text-2xl font-bold text-white">
+            <div class="flex items-center justify-between h-16 bg-black bg-opacity-20 px-4">
+                <h1 class="text-xl lg:text-2xl font-bold text-white">
                     <i class="fas fa-shopping-bag mr-2"></i>Echop
                 </h1>
+                <!-- Close button for mobile -->
+                <button class="lg:hidden text-white text-xl" id="closeSidebar">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             
             <!-- Navigation -->
-            <nav class="flex-1 px-4 py-6 space-y-2">
+            <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
                 <a href="{% url 'accounts:manager_dashboard' %}" class="nav-item flex items-center px-4 py-3 text-white rounded-lg transition-all duration-300">
                     <i class="fas fa-tachometer-alt mr-3"></i>
                     <span>Tableau de Bord</span>
@@ -114,8 +185,8 @@
                     <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
                         <span id="userInitials">{{ manager_name|slice:":2"|upper }}</span>
                     </div>
-                    <div class="ml-3">
-                        <p class="text-sm font-medium text-white" id="userName">{{ manager_name }}</p>
+                    <div class="ml-3 min-w-0">
+                        <p class="text-sm font-medium text-white truncate" id="userName">{{ manager_name }}</p>
                         <p class="text-xs text-gray-300">Gestionnaire</p>
                     </div>
                 </div>
@@ -124,209 +195,259 @@
     </div>
 
     <!-- Main Content -->
-    <div class="ml-64 min-h-screen">
+    <div class="main-content lg:ml-64 min-h-screen">
         <!-- Top Header -->
         <header class="bg-white shadow-sm border-b">
-            <div class="flex items-center justify-between px-8 py-4">
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Tableau de Bord Gestionnaire</h2>
-                    <p class="text-gray-600">Vue d'ensemble de votre activité</p>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <button class="relative p-2 text-gray-600 hover:text-gray-800">
-                        <i class="fas fa-bell text-xl"></i>
-                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+            <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-4">
+                <div class="flex items-center">
+                    <!-- Mobile menu button -->
+                    <button class="lg:hidden mr-4 text-gray-600 hover:text-gray-800" id="openSidebar">
+                        <i class="fas fa-bars text-xl"></i>
                     </button>
-                    <button class="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                    <div>
+                        <h2 class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800">Tableau de Bord Gestionnaire</h2>
+                        <p class="text-sm sm:text-base text-gray-600 hidden sm:block">Vue d'ensemble de votre activité</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 sm:space-x-4">
+                    <button class="relative p-2 text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-bell text-lg sm:text-xl"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center">3</span>
+                    </button>
+                    <button class="flex items-center space-x-2 bg-blue-600 text-white px-3 py-2 sm:px-4 rounded-lg hover:bg-blue-700 transition">
                         <i class="fas fa-plus"></i>
-                        <span>Nouveau</span>
+                        <span class="hidden sm:inline">Nouveau</span>
                     </button>
                 </div>
             </div>
         </header>
 
         <!-- Stats Cards -->
-        <div class="p-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="stat-card rounded-xl p-6 text-white card-hover animate-fadeInUp animate-delay-1">
+        <div class="p-4 sm:p-6 lg:p-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                <div class="stat-card rounded-xl p-4 sm:p-6 text-white card-hover animate-fadeInUp animate-delay-1">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-white text-opacity-80">Utilisateurs</p>
-                            <p class="text-3xl font-bold">2,847</p>
-                            <p class="text-sm text-white text-opacity-70">+12% ce mois</p>
+                            <p class="text-white text-opacity-80 text-sm sm:text-base">Utilisateurs</p>
+                            <p class="text-2xl sm:text-3xl font-bold">2,847</p>
+                            <p class="text-xs sm:text-sm text-white text-opacity-70">+12% ce mois</p>
                         </div>
-                        <i class="fas fa-users text-4xl text-white text-opacity-60"></i>
+                        <i class="fas fa-users text-2xl sm:text-4xl text-white text-opacity-60"></i>
                     </div>
                 </div>
                 
-                <div class="stat-card-2 rounded-xl p-6 text-white card-hover animate-fadeInUp animate-delay-2">
+                <div class="stat-card-2 rounded-xl p-4 sm:p-6 text-white card-hover animate-fadeInUp animate-delay-2">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-white text-opacity-80">Produits</p>
-                            <p class="text-3xl font-bold">1,243</p>
-                            <p class="text-sm text-white text-opacity-70">+5% ce mois</p>
+                            <p class="text-white text-opacity-80 text-sm sm:text-base">Produits</p>
+                            <p class="text-2xl sm:text-3xl font-bold">1,243</p>
+                            <p class="text-xs sm:text-sm text-white text-opacity-70">+5% ce mois</p>
                         </div>
-                        <i class="fas fa-box text-4xl text-white text-opacity-60"></i>
+                        <i class="fas fa-box text-2xl sm:text-4xl text-white text-opacity-60"></i>
                     </div>
                 </div>
                 
-                <div class="stat-card-3 rounded-xl p-6 text-white card-hover animate-fadeInUp animate-delay-3">
+                <div class="stat-card-3 rounded-xl p-4 sm:p-6 text-white card-hover animate-fadeInUp animate-delay-3">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-white text-opacity-80">Commandes</p>
-                            <p class="text-3xl font-bold">847</p>
-                            <p class="text-sm text-white text-opacity-70">+23% ce mois</p>
+                            <p class="text-white text-opacity-80 text-sm sm:text-base">Commandes</p>
+                            <p class="text-2xl sm:text-3xl font-bold">847</p>
+                            <p class="text-xs sm:text-sm text-white text-opacity-70">+23% ce mois</p>
                         </div>
-                        <i class="fas fa-shopping-cart text-4xl text-white text-opacity-60"></i>
+                        <i class="fas fa-shopping-cart text-2xl sm:text-4xl text-white text-opacity-60"></i>
                     </div>
                 </div>
                 
-                <div class="stat-card-4 rounded-xl p-6 text-white card-hover animate-fadeInUp animate-delay-4">
+                <div class="stat-card-4 rounded-xl p-4 sm:p-6 text-white card-hover animate-fadeInUp animate-delay-4">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-white text-opacity-80">Revenus</p>
-                            <p class="text-3xl font-bold">€24,950</p>
-                            <p class="text-sm text-white text-opacity-70">+18% ce mois</p>
+                            <p class="text-white text-opacity-80 text-sm sm:text-base">Revenus</p>
+                            <p class="text-2xl sm:text-3xl font-bold">€24,950</p>
+                            <p class="text-xs sm:text-sm text-white text-opacity-70">+18% ce mois</p>
                         </div>
-                        <i class="fas fa-euro-sign text-4xl text-white text-opacity-60"></i>
+                        <i class="fas fa-euro-sign text-2xl sm:text-4xl text-white text-opacity-60"></i>
                     </div>
                 </div>
             </div>
 
             <!-- Charts and Tables -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
                 <!-- Recent Activity -->
-                <div class="bg-white rounded-xl p-6 shadow-lg">
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">Activité Récente</h3>
-                    <div class="space-y-4">
+                <div class="bg-white rounded-xl p-4 sm:p-6 shadow-lg">
+                    <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-4">Activité Récente</h3>
+                    <div class="space-y-3 sm:space-y-4">
                         <div class="flex items-center p-3 bg-gray-50 rounded-lg">
-                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                                <i class="fas fa-user text-blue-600"></i>
+                            <div class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-user text-blue-600 text-sm sm:text-base"></i>
                             </div>
-                            <div class="ml-4">
-                                <p class="font-medium">Nouvel utilisateur inscrit</p>
-                                <p class="text-sm text-gray-600">Marie Martin - il y a 2 minutes</p>
+                            <div class="ml-3 sm:ml-4 min-w-0">
+                                <p class="font-medium text-sm sm:text-base">Nouvel utilisateur inscrit</p>
+                                <p class="text-xs sm:text-sm text-gray-600 truncate">Marie Martin - il y a 2 minutes</p>
                             </div>
                         </div>
                         <div class="flex items-center p-3 bg-gray-50 rounded-lg">
-                            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                                <i class="fas fa-shopping-cart text-green-600"></i>
+                            <div class="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-shopping-cart text-green-600 text-sm sm:text-base"></i>
                             </div>
-                            <div class="ml-4">
-                                <p class="font-medium">Nouvelle commande #1247</p>
-                                <p class="text-sm text-gray-600">€89.99 - il y a 5 minutes</p>
+                            <div class="ml-3 sm:ml-4 min-w-0">
+                                <p class="font-medium text-sm sm:text-base">Nouvelle commande #1247</p>
+                                <p class="text-xs sm:text-sm text-gray-600 truncate">€89.99 - il y a 5 minutes</p>
                             </div>
                         </div>
                         <div class="flex items-center p-3 bg-gray-50 rounded-lg">
-                            <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
-                                <i class="fas fa-box text-yellow-600"></i>
+                            <div class="w-8 h-8 sm:w-10 sm:h-10 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-box text-yellow-600 text-sm sm:text-base"></i>
                             </div>
-                            <div class="ml-4">
-                                <p class="font-medium">Produit ajouté</p>
-                                <p class="text-sm text-gray-600">Nouveau smartphone - il y a 1 heure</p>
+                            <div class="ml-3 sm:ml-4 min-w-0">
+                                <p class="font-medium text-sm sm:text-base">Produit ajouté</p>
+                                <p class="text-xs sm:text-sm text-gray-600 truncate">Nouveau smartphone - il y a 1 heure</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Products Overview -->
-                <div class="bg-white rounded-xl p-6 shadow-lg">
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">Aperçu des Produits</h3>
-                    <table class="product-table">
-                        <thead>
-                            <tr>
-                                <th>Nom</th>
-                                <th>Prix (FCFA)</th>
-                                <th>Stock</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for product in products %}
-                            <tr>
-                                <td>{{ product.name }}</td>
-                                <td>{{ product.price }}</td>
-                                <td>{{ product.stock }}</td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="3">Aucun produit disponible.</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="bg-white rounded-xl p-4 sm:p-6 shadow-lg">
+                    <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-4">Aperçu des Produits</h3>
+                    <div class="product-table-container">
+                        <table class="product-table">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Prix (FCFA)</th>
+                                    <th>Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in products %}
+                                <tr>
+                                    <td class="truncate max-w-xs">{{ product.name }}</td>
+                                    <td>{{ product.price }}</td>
+                                    <td>{{ product.stock }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center text-gray-500">Aucun produit disponible.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
             <!-- Quick Actions -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="bg-white rounded-xl p-6 shadow-lg card-hover">
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                <div class="bg-white rounded-xl p-4 sm:p-6 shadow-lg card-hover">
                     <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-user-plus text-blue-600 text-xl"></i>
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-user-plus text-blue-600 text-lg sm:text-xl"></i>
                         </div>
-                        <h3 class="ml-4 text-lg font-bold text-gray-800">Ajouter un Utilisateur</h3>
+                        <h3 class="ml-3 sm:ml-4 text-base sm:text-lg font-bold text-gray-800">Ajouter un Utilisateur</h3>
                     </div>
-                    <p class="text-gray-600 mb-4">Créer un nouveau compte utilisateur</p>
-                    <a href="{% url 'accounts:manage_accounts' %}" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition block text-center">Créer</a>
+                    <p class="text-gray-600 mb-4 text-sm sm:text-base">Créer un nouveau compte utilisateur</p>
+                    <a href="{% url 'accounts:manage_accounts' %}" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition block text-center text-sm sm:text-base">Créer</a>
                 </div>
                 
-                <div class="bg-white rounded-xl p-6 shadow-lg card-hover">
+                <div class="bg-white rounded-xl p-4 sm:p-6 shadow-lg card-hover">
                     <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-box-open text-green-600 text-xl"></i>
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-box-open text-green-600 text-lg sm:text-xl"></i>
                         </div>
-                        <h3 class="ml-4 text-lg font-bold text-gray-800">Ajouter un Produit</h3>
+                        <h3 class="ml-3 sm:ml-4 text-base sm:text-lg font-bold text-gray-800">Ajouter un Produit</h3>
                     </div>
-                    <p class="text-gray-600 mb-4">Ajouter un nouveau produit au catalogue</p>
-                    <a href="{% url 'accounts:manage_products' %}" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition block text-center">Ajouter</a>
+                    <p class="text-gray-600 mb-4 text-sm sm:text-base">Ajouter un nouveau produit au catalogue</p>
+                    <a href="{% url 'accounts:manage_products' %}" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition block text-center text-sm sm:text-base">Ajouter</a>
                 </div>
                 
-                <div class="bg-white rounded-xl p-6 shadow-lg card-hover">
+                <div class="bg-white rounded-xl p-4 sm:p-6 shadow-lg card-hover sm:col-span-2 xl:col-span-1">
                     <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-chart-line text-purple-600 text-xl"></i>
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-chart-line text-purple-600 text-lg sm:text-xl"></i>
                         </div>
-                        <h3 class="ml-4 text-lg font-bold text-gray-800">Rapport Complet</h3>
+                        <h3 class="ml-3 sm:ml-4 text-base sm:text-lg font-bold text-gray-800">Rapport Complet</h3>
                     </div>
-                    <p class="text-gray-600 mb-4">Générer un rapport d'activité</p>
-                    <a href="#" class="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition block text-center">Générer</a>
+                    <p class="text-gray-600 mb-4 text-sm sm:text-base">Générer un rapport d'activité</p>
+                    <a href="#" class="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition block text-center text-sm sm:text-base">Générer</a>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="ml-64 bg-red-600 text-white text-center py-4">
-        <p>© 2025 Echop. Tous droits réservés.</p>
+    <footer class="main-content lg:ml-64 bg-red-600 text-white text-center py-4">
+        <p class="text-sm sm:text-base">© 2025 Echop. Tous droits réservés.</p>
     </footer>
 
     <script>
+        // Mobile sidebar functionality
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const openSidebar = document.getElementById('openSidebar');
+        const closeSidebar = document.getElementById('closeSidebar');
+
+        function toggleSidebar(show) {
+            if (show) {
+                sidebar.classList.add('mobile-open');
+                sidebarOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            } else {
+                sidebar.classList.remove('mobile-open');
+                sidebarOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        openSidebar?.addEventListener('click', () => toggleSidebar(true));
+        closeSidebar?.addEventListener('click', () => toggleSidebar(false));
+        sidebarOverlay?.addEventListener('click', () => toggleSidebar(false));
+
+        // Close sidebar on window resize if screen becomes large
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                toggleSidebar(false);
+            }
+        });
+
         // Navigation active state
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', function(e) {
-                e.preventDefault();
+                // Close mobile sidebar when navigation item is clicked
+                if (window.innerWidth < 1024) {
+                    toggleSidebar(false);
+                }
+                
                 document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('bg-white', 'bg-opacity-20'));
                 this.classList.add('bg-white', 'bg-opacity-20');
+                
                 // Redirection vers l'URL si définie
                 const href = this.getAttribute('href');
                 if (href && href !== '#') {
                     window.location.href = href;
+                } else {
+                    e.preventDefault();
                 }
             });
         });
 
         // Set first nav item as active
-        document.querySelector('.nav-item').classList.add('bg-white', 'bg-opacity-20');
+        document.querySelector('.nav-item')?.classList.add('bg-white', 'bg-opacity-20');
 
         // Load manager info from Django context
         function loadManagerInfo() {
-            // Utilise les données passées par Django (pas de simulation aléatoire)
             const managerName = "{{ manager_name|default:'Gestionnaire Echop' }}";
-            document.getElementById('userName').textContent = managerName;
+            const userNameElement = document.getElementById('userName');
+            const userInitialsElement = document.getElementById('userInitials');
+            
+            if (userNameElement) {
+                userNameElement.textContent = managerName;
+            }
 
             // Generate initials
-            const initials = managerName.split(' ').map(name => name[0]).join('').substring(0, 2).toUpperCase();
-            document.getElementById('userInitials').textContent = initials;
+            if (userInitialsElement) {
+                const initials = managerName.split(' ').map(name => name[0]).join('').substring(0, 2).toUpperCase();
+                userInitialsElement.textContent = initials;
+            }
         }
 
         // Load manager info on page load
@@ -343,6 +464,13 @@
                     });
                 }
             });
+        });
+
+        // Handle escape key to close mobile sidebar
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && window.innerWidth < 1024) {
+                toggleSidebar(false);
+            }
         });
     </script>
 </body>
