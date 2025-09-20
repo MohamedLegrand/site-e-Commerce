@@ -478,6 +478,96 @@ def snacks(request):
 def glassware(request):
     return render(request, 'accounts/glassware.html')
 
+@login_required
+def order_list(request):
+    if request.user.role != 'gestionnaire':
+        return render(request, 'accounts/access_denied.html', {'message': "Vous n'avez pas l'autorisation d'accéder à cette page."})
+    
+    # Récupérer toutes les commandes avec leurs items
+    orders = Order.objects.all().order_by('-created_at')
+    
+    # Préparer les données des commandes
+    orders_data = []
+    for order in orders:
+        order_items = order.items.all()
+        order_total = sum(float(item.price) * item.quantity for item in order_items)
+        
+        orders_data.append({
+            'order': order,
+            'items': order_items,
+            'total': order_total,
+            'status_display': order.get_status_display()
+        })
+    
+    # Récupérer les choix de statut depuis le champ du modèle
+    status_field = Order._meta.get_field('status')
+    status_choices = status_field.choices
+    
+    context = {
+        'orders': orders_data,
+        'status_choices': status_choices
+    }
+    
+    return render(request, 'accounts/order_list.html', context)
+
+
+from django.http import JsonResponse
+
+@login_required
+def order_details_api(request, order_id):
+    if request.user.role != 'gestionnaire':
+        return JsonResponse({'error': 'Accès non autorisé'}, status=403)
+    
+    try:
+        order = Order.objects.get(id=order_id)
+        order_items = order.items.all()
+        
+        data = {
+            'order_id': order.id,
+            'client_name': order.user.username,
+            'client_email': order.user.email,
+            'order_date': order.created_at.strftime('%d/%m/%Y à %H:%M'),
+            'status': order.status,
+            'status_display': order.get_status_display(),
+            'items': [
+                {
+                    'product_name': item.product.name,
+                    'quantity': item.quantity,
+                    'price': float(item.price) * item.quantity
+                }
+                for item in order_items
+            ],
+            'total': sum(float(item.price) * item.quantity for item in order_items)
+        }
+        
+        return JsonResponse(data)
+        
+    except Order.DoesNotExist:
+        return JsonResponse({'error': 'Commande non trouvée'}, status=404)
+    
+@login_required
+@require_POST
+def update_order_status(request):
+    if request.user.role != 'gestionnaire':
+        return JsonResponse({'error': 'Accès non autorisé'}, status=403)
+    
+    order_id = request.POST.get('order_id')
+    new_status = request.POST.get('status')
+    
+    try:
+        order = Order.objects.get(id=order_id)
+        order.status = new_status
+        order.save()
+        
+        messages.success(request, f"Statut de la commande #{order_id} mis à jour avec succès.")
+        return redirect('accounts:order_list')
+        
+    except Order.DoesNotExist:
+        messages.error(request, "Commande non trouvée.")
+        return redirect('accounts:order_list')
+
+
+
 
 @login_required
 def manager_dashboard(request):
@@ -486,33 +576,77 @@ def manager_dashboard(request):
     products = Product.objects.all()[:5]  # Affiche les 5 premiers produits pour un aperçu
     return render(request, 'accounts/manager_dashboard.html', {'products': products})
 
-
-
 @login_required
 def manage_accounts(request):
     if request.user.role != 'gestionnaire':
         return render(request, 'accounts/access_denied.html', {'message': "Vous n'avez pas l'autorisation d'accéder à cette page."})
-    users = CustomUser.objects.all()  # Récupère tous les utilisateurs
+    
+    users = CustomUser.objects.all()
+    
     if request.method == 'POST':
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        role = request.POST.get('role')
-        if username and email and password and role:
-            if not CustomUser.objects.filter(username=username).exists():
-                CustomUser.objects.create_user(username=username, email=email, password=make_password(password), role=role)
-                messages.success(request, "Utilisateur ajouté avec succès.")
+        action = request.POST.get('action')
+        
+        if action == 'add':
+            username = request.POST.get('username')
+            email = request.POST.get('email')
+            password = request.POST.get('password')
+            role = request.POST.get('role')
+            
+            if username and email and password and role:
+                if not CustomUser.objects.filter(username=username).exists():
+                    CustomUser.objects.create_user(
+                        username=username, 
+                        email=email, 
+                        password=make_password(password), 
+                        role=role
+                    )
+                    messages.success(request, "Utilisateur ajouté avec succès.")
+                else:
+                    messages.error(request, "Ce nom d'utilisateur existe déjà.")
             else:
-                messages.error(request, "Ce nom d'utilisateur existe déjà.")
-        else:
-            messages.error(request, "Tous les champs sont requis.")
+                messages.error(request, "Tous les champs sont requis.")
+                
+        elif action == 'edit':
+            user_id = request.POST.get('user_id')
+            username = request.POST.get('username')
+            email = request.POST.get('email')
+            password = request.POST.get('password')
+            role = request.POST.get('role')
+            
+            try:
+                user = CustomUser.objects.get(id=user_id)
+                user.username = username
+                user.email = email
+                user.role = role
+                
+                if password:  # Si un nouveau mot de passe est fourni
+                    user.set_password(password)
+                
+                user.save()
+                messages.success(request, "Utilisateur modifié avec succès.")
+            except CustomUser.DoesNotExist:
+                messages.error(request, "Utilisateur non trouvé.")
+                
+        elif action == 'delete':
+            user_id = request.POST.get('user_id')
+            
+            try:
+                user = CustomUser.objects.get(id=user_id)
+                
+                # Empêcher la suppression de l'utilisateur actuellement connecté
+                if user == request.user:
+                    messages.error(request, "Vous ne pouvez pas supprimer votre propre compte.")
+                else:
+                    user.delete()
+                    messages.success(request, "Utilisateur supprimé avec succès.")
+            except CustomUser.DoesNotExist:
+                messages.error(request, "Utilisateur non trouvé.")
+    
     return render(request, 'accounts/manage_accounts.html', {'users': users})
 
-@login_required
-def manage_products(request):
-    if request.user.role != 'gestionnaire':
-        return render(request, 'accounts/access_denied.html', {'message': "Vous n'avez pas l'autorisation d'accéder à cette page."})
-    return render(request, 'accounts/manage_products.html', {'message': 'Page de gestion des produits en cours de développement.'})
+
+
+
 
 @login_required
 def manage_rewards(request):
@@ -767,8 +901,7 @@ def clear_invoice_session(request):
     if 'qr_code_image' in request.session:
         del request.session['qr_code_image']
     if 'dernier_montant' in request.session:
-        del request.session['dernier_montant']
-    
+        del request.session['dernier_montant']    
     return JsonResponse({'status': 'success', 'message': 'Session nettoyée'})
 
 
@@ -794,16 +927,14 @@ def admin_dashboard(request):
 
 def verify_qr(request, user_id):
     # Récupérer l'utilisateur avec l'ID fourni
-    user = get_object_or_404(User, id=user_id)
-    
+    user = get_object_or_404(User, id=user_id)   
     # Préparer les données à afficher
     context = {
         'user': user,
         'username': user.username,
         'email': user.email if user.email else 'Non défini',
         'date_joined': user.date_joined.strftime('%B %Y'),
-    }
-    
+    }   
     return render(request, 'accounts/verify_qr.html', context)
 
 
@@ -866,6 +997,22 @@ def delivery_orders(request):
     return render(request, 'accounts/delivery_orders.html', context)
 
 
+<<<<<<< HEAD
+import requests
+import json
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Product, CustomUser, Cart
+
+@login_required
+def recommandations(request):
+    API_KEY = "TA_CLE_API_ICI"
+    URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+
+    products = Product.objects.all()[:10]
+    product_list = [f"{p.name} ({p.category.name if p.category else 'Sans catégorie'}, {p.price} FCFA)" for p in products]
+
+=======
 
 
 @login_required
@@ -905,6 +1052,7 @@ def delete_user(request, user_id):
         return redirect('accounts:manage_accounts')
     return redirect('accounts:manage_accounts')
 
+<<<<<<< HEAD
 
 
 # views.py
@@ -1148,3 +1296,151 @@ def purchase_history(request):
         'total_spent': total_spent
     }
     return render(request, 'accounts/purchase_history.html', context)
+=======
+@login_required
+def recommandations(request):
+    # Remplace par ta vraie clé API
+    API_KEY = "AIzaSyB_xs42vFrvhcd8vtUGR8Lqgltu605vXUo"
+    URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+
+    # Récupérer les produits (exemple : les 10 premiers)
+    products = Product.objects.all()[:10]
+    product_list = [f"{p.name} ({p.category.name if p.category else 'Sans catégorie'}, {p.price} FCFA)" for p in products]
+
+    # Historique d'achats de l'utilisateur
+    user = request.user
+    purchase_history = [item.product.name for item in Cart.objects.filter(user=user)]  # Ajuster selon ton modèle
+    if not purchase_history:
+        purchase_history = ["aucun achat récent"]
+
+    # Construire la requête pour Gemini
+    data = {
+        "contents": [
+            {
+                "parts": [
+                    {
+                        "text": f"Recommande 10 produits parmi la liste suivante en fonction des préférences d'un utilisateur qui a acheté : {', '.join(purchase_history)}. Liste des produits : {', '.join(product_list)}. Retourne uniquement les noms des produits recommandés, séparés par des virgules."
+                    }
+                ]
+            }
+        ]
+    }
+
+    # En-têtes HTTP
+    headers = {
+        "Content-Type": "application/json",
+        "X-goog-api-key": API_KEY
+    }
+
+    # Requête POST
+    try:
+        response = requests.post(URL, headers=headers, data=json.dumps(data), timeout=10)
+        response.raise_for_status()  # Lève une exception pour les codes d'erreur HTTP
+
+        result = response.json()
+        recommended_products_names = result["candidates"][0]["content"]["parts"][0]["text"].split(", ")
+        
+        # Récupérer les objets Product correspondants
+        recommended_products = Product.objects.filter(name__in=recommended_products_names)
+        
+        return render(request, 'accounts/recommandations.html', {
+            'recommended_products': recommended_products
+        })
+    except requests.exceptions.RequestException as e:
+        return render(request, 'accounts/recommandations.html', {
+            'error_message': f"Erreur lors de la génération des recommandations : {str(e)}"
+        })
+
+
+@login_required
+def recommend_products(request):
+    import requests
+    import json
+
+    API_KEY = "AIzaSyB_xs42vFrvhcd8vtUGR8Lqgltu605vXUo"
+    URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+
+    # Récupérer les produits (exemple : les 10 premiers)
+    products = Product.objects.all()[:10]
+    product_list = [f"{p.name} ({p.category.name if p.category else 'Sans catégorie'}, {p.price} FCFA)" for p in products]
+
+    # Historique d'achats de l'utilisateur
+>>>>>>> origin/master
+    user = request.user
+    purchase_history = [item.product.name for item in Cart.objects.filter(user=user)]
+    if not purchase_history:
+        purchase_history = ["aucun achat récent"]
+
+<<<<<<< HEAD
+    prompt_text = (
+        f"Recommande 3 produits parmi la liste suivante en fonction des préférences d'un utilisateur "
+        f"qui a acheté : {', '.join(purchase_history)}. "
+        f"Liste des produits : {', '.join(product_list)}. "
+        f"Retourne uniquement les noms des produits recommandés, séparés par des virgules."
+    )
+
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
+
+    data = {
+        "prompt": prompt_text,
+        "temperature": 0.7,
+        "max_output_tokens": 100
+    }
+
+    try:
+        response = requests.post(URL, headers=headers, json=data)
+        response.raise_for_status()
+        result = response.json()
+        # Selon la structure de la réponse, adapter l'accès au texte
+        recommendations = result.get('candidates', [{}])[0].get('content', '')
+        recommended_products = [p.strip() for p in recommendations.split(',')]
+    except Exception as e:
+        print(f"Erreur lors de la requête API: {e}")
+        recommended_products = []
+
+    return render(request, 'accounts/recommandations.html', {
+        'recommended_products': recommended_products
+    })
+=======
+    # Construire la requête pour Gemini
+    data = {
+        "contents": [
+            {
+                "parts": [
+                    {
+                        "text": f"Recommande 3 produits parmi la liste suivante en fonction des préférences d'un utilisateur qui a acheté : {', '.join(purchase_history)}. Liste des produits : {', '.join(product_list)}. Retourne uniquement les noms des produits recommandés, séparés par des virgules."
+                    }
+                ]
+            }
+        ]
+    }
+
+    headers = {
+        "Content-Type": "application/json",
+        "X-goog-api-key": API_KEY
+    }
+
+    try:
+        response = requests.post(URL, headers=headers, data=json.dumps(data), timeout=10)
+        response.raise_for_status()
+
+        result = response.json()
+        recommended_names = result["candidates"][0]["content"]["parts"][0]["text"].split(", ")
+
+        # Récupérer les produits recommandés et s'assurer qu'on a l'image
+        recommended_products = Product.objects.filter(name__in=recommended_names).values(
+            'id', 'name', 'price', 'category__name', 'image'
+        )
+
+        return render(request, 'accounts/recommandations.html', {
+            'recommended_products': recommended_products
+        })
+    except requests.exceptions.RequestException as e:
+        return render(request, 'accounts/recommandations.html', {
+            'error_message': f"Erreur lors de la génération des recommandations : {str(e)}"
+        })
+>>>>>>> origin/master
+>>>>>>> eb109960ddfdfa6d3dfcfeb5f620bed1d2fcf65f

@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 
 app_name = 'accounts'
 
-urlpatterns = [ 
+urlpatterns = [
     path('', views.home, name='home'),
     path('login/', views.user_login, name='login'),
     path('register/', views.register, name='register'),
@@ -14,8 +14,6 @@ urlpatterns = [
     path('checkout/', views.checkout, name='checkout'),
     path('logout/', views.user_logout, name='logout'),
     path('page_principale/', views.page_principale, name='page_principale'),
-
-
 
     path('products/', views.products, name='products'),
     path('contact/', views.contact, name='contact'),
@@ -26,61 +24,56 @@ urlpatterns = [
     # Routes pour les catégories
     path('category/cake/', views.category_cake, name='category_cake'),
     path('category/clothing/', views.category_clothing, name='category_clothing'),
-    path('category/alimentaire/', views.category_alimentaire, name='category_alimentaire'),
+    path('category/alimentaire/', views.category_alimentaire,
+         name='category_alimentaire'),
 
-
-
-    path('add_to_cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    path('add_to_cart/<int:product_id>/', views.add_to_cart,
+         name='add_to_cart'),
     path('cart/', views.cart_detail, name='cart_detail'),
 
-
-
     path('profil/', views.profil_view, name='profil'),
-   
 
-    path('product-autocomplete/', views.product_autocomplete, name='product_autocomplete'),
-    path('category/cosmetics/', views.category_cosmetics, name='category_cosmetics'),
-
+    path('product-autocomplete/', views.product_autocomplete,
+         name='product_autocomplete'),
+    path('category/cosmetics/', views.category_cosmetics,
+         name='category_cosmetics'),
 
     path('add_product/', views.add_product, name='add_product'),
-
     path('search_product/', views.search_product, name='search_product'),
-
     path('clear_cart/', views.clear_cart, name='clear_cart'),
 
     path('payer/', views.payment_page, name='payment_page'),
+    path('payment_confirmation/', views.payment_confirmation,
+         name='payment_confirmation'),
 
-    path('payment_confirmation/', views.payment_confirmation, name='payment_confirmation'),
+    # Produits spécifiques
+    path('milk/', views.milk, name='milk'),
+    path('vin/', views.vin, name='vin'),
+    path('parfum/', views.parfum, name='parfum'),
+    path('menage/', views.menage, name='menage'),
+    path('montre/', views.montre, name='montre'),
+    path('viande/', views.viande, name='viande'),
+    path('snacks/', views.snacks, name='snacks'),
+    path('glassware/', views.glassware, name='glassware'),
 
-   
-
-
-
-    path('milk', views.milk, name='milk'),
-    path('vin', views.vin, name='vin'),
-    path('parfum', views.parfum, name='parfum'),
-    path('menage', views.menage, name='menage'),
-    path('montre', views.montre, name='montre'),
-    path('viande', views.viande, name='viande'),
-    path('snacks', views.snacks, name='snacks'),
-    path('glassware', views.glassware, name='glassware'),
-
-
-    path('manager_dashboard/', views.manager_dashboard, name='manager_dashboard'),
+    # Manager
+    path('manager_dashboard/', views.manager_dashboard,
+         name='manager_dashboard'),
     path('manage_accounts/', views.manage_accounts, name='manage_accounts'),
     path('manage_products/', views.manage_products, name='manage_products'),
     path('manage_rewards/', views.manage_rewards, name='manage_rewards'),
     path('manage_questions/', views.manage_questions, name='manage_questions'),
 
-
-    path('delivery_dashboard/', views.delivery_dashboard, name='delivery_dashboard'),
-
+    # Delivery
+    path('delivery_dashboard/', views.delivery_dashboard,
+         name='delivery_dashboard'),
     path('manage_profil/', views.manage_profil, name='manage_profil'),
-
     path('invoice/', views.invoice, name='invoice'),
     path('download_invoice/', views.download_invoice, name='download_invoice'),
-    path('clear_invoice_session/', views.clear_invoice_session, name='clear_invoice_session'),
+    path('clear_invoice_session/', views.clear_invoice_session,
+         name='clear_invoice_session'),
 
+    # Admin
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('verify-qr/<int:user_id>/', views.verify_qr, name='verify_qr'),
 
@@ -88,7 +81,9 @@ urlpatterns = [
     path('delivery_orders/', views.delivery_orders, name='delivery_orders'),
     path('edit_user/<int:user_id>/', views.edit_user, name='edit_user'),  # Nouvelle URL
     path('delete_user/<int:user_id>/', views.delete_user, name='delete_user'),  # Nouvelle URL
+    path('recommandations', views.recommandations, name='recommandations'),
 
+<<<<<<< HEAD
 
     path('recommandations/', views.recommandations, name='recommandations'),
     path('purchase_history/', views.purchase_history, name='purchase_history'),
@@ -97,7 +92,14 @@ urlpatterns = [
    
 
 
+=======
+    # Autres
+    path('recommandations/', views.recommandations, name='recommandations'),
+    path('order-list/', views.order_list, name='order_list'),
+    path('api/order-details/<int:order_id>/', views.order_details_api,
+         name='order_details_api'),
+    path('update-order-status/', views.update_order_status,
+         name='update_order_status'),
+>>>>>>> eb109960ddfdfa6d3dfcfeb5f620bed1d2fcf65
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-    
+ 
