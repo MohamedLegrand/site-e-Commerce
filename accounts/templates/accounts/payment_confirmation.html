@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paiement confirmé - Echop</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Ajout de html2pdf.js pour générer le PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         /* Animation pour la modale */
         .modal {
@@ -86,6 +88,66 @@
             .no-print { display: none !important; }
             .modal-content { box-shadow: none !important; }
         }
+
+        /* Styles pour la facture PDF */
+        .invoice-container {
+            padding: 2rem;
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #dc2626;
+            padding-bottom: 1rem;
+        }
+        .invoice-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #dc2626;
+        }
+        .invoice-details {
+            text-align: right;
+        }
+        .invoice-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        .invoice-table th, .invoice-table td {
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            text-align: left;
+        }
+        .invoice-table th {
+            background-color: #f9fafb;
+            font-weight: bold;
+        }
+        .invoice-total {
+            margin-top: 1.5rem;
+            text-align: right;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .invoice-footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+        }
+        .invoice-qr {
+            text-align: center;
+            margin: 1.5rem 0;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen flex items-center justify-center p-4">
@@ -135,10 +197,11 @@
                     Retour à l'accueil
                 </a>
                 
-                <a href="{% url 'accounts:dashboard' %}" 
-                   class="w-full bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-700 transition-all duration-200 font-medium inline-block text-center">
-                    Passer une commande
+                <a href="{% url 'accounts:checkout' %}" 
+                    class="w-full bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-700 transition-all duration-200 font-medium inline-block text-center">
+                    Passer la commande
                 </a>
+
             </div>
         </div>
     </div>
@@ -187,10 +250,10 @@
 
             <!-- Actions de la modale -->
             <div class="bg-gray-50 p-6 flex space-x-4 no-print">
-                <a href="{% url 'accounts:download_invoice' %}" 
-                   class="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-center font-medium">
+                <button id="downloadInvoiceBtn" 
+                        class="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-center font-medium">
                     📄 Télécharger PDF
-                </a>
+                </button>
                 <button onclick="window.print()" 
                         class="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
                     🖨️ Imprimer
@@ -203,6 +266,9 @@
         </div>
     </div>
 
+    <!-- Conteneur caché pour générer le PDF -->
+    <div id="pdfContainer" style="position: absolute; left: -9999px;"></div>
+
     <script>
         class InvoiceModal {
             constructor() {
@@ -212,6 +278,7 @@
                 this.invoiceData = document.getElementById('invoiceData');
                 this.isLoaded = false;
                 this.invoiceContent = null;
+                this.invoiceJSON = null;
                 
                 this.initEventListeners();
                 // Charger les données initiales du contexte
@@ -237,6 +304,11 @@
                 // Bouton de retry
                 document.getElementById('retryBtn').addEventListener('click', () => {
                     this.loadInitialData();
+                });
+
+                // Bouton de téléchargement
+                document.getElementById('downloadInvoiceBtn').addEventListener('click', () => {
+                    this.downloadPDF();
                 });
 
                 // Fermeture en cliquant à l'extérieur
@@ -300,7 +372,8 @@
                 console.log("Contexte parsé:", invoiceData, qrCodeImage);
 
                 if (Object.keys(invoiceData).length > 0 && qrCodeImage) {
-                    this.renderInvoiceFromJSON({ invoice_data: invoiceData, qr_code_image: qrCodeImage });
+                    this.invoiceJSON = { invoice_data: invoiceData, qr_code_image: qrCodeImage };
+                    this.renderInvoiceFromJSON(this.invoiceJSON);
                 } else {
                     this.showError();
                     console.log("Aucune donnée de facture disponible dans le contexte:", invoiceData, qrCodeImage);
@@ -402,7 +475,106 @@
                 this.invoiceContent = invoiceHTML; // Stocker pour réutilisation
             }
 
-            // Supprimer renderInvoiceFromHTML car on n'utilise plus la requête AJAX
+            downloadPDF() {
+                if (!this.invoiceJSON) {
+                    console.error("Aucune donnée de facture disponible pour le téléchargement");
+                    return;
+                }
+
+                const { invoice_data, qr_code_image } = this.invoiceJSON;
+                
+                // Calculer le total si nécessaire
+                let total = 0;
+                if (invoice_data.products && invoice_data.products.length > 0) {
+                    invoice_data.products.forEach(product => {
+                        total += product.quantity * product.price;
+                    });
+                }
+
+                // Créer le contenu HTML pour le PDF
+                const pdfContent = `
+                    <div class="invoice-container">
+                        <div class="invoice-header">
+                            <div>
+                                <div class="invoice-logo">ECHOP</div>
+                                <div>Votre partenaire de confiance</div>
+                            </div>
+                            <div class="invoice-details">
+                                <div class="invoice-title">FACTURE</div>
+                                <div>N°: ${invoice_data.invoice_number || 'N/A'}</div>
+                                <div>Date: ${invoice_data.date}</div>
+                                <div>Heure: ${invoice_data.time}</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 1.5rem;">
+                            <strong>Client:</strong> ${invoice_data.user}
+                        </div>
+
+                        <table class="invoice-table">
+                            <thead>
+                                <tr>
+                                    <th>Produit</th>
+                                    <th>Quantité</th>
+                                    <th>Prix unitaire</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${invoice_data.products && invoice_data.products.length > 0 ? 
+                                    invoice_data.products.map(product => {
+                                        const lineTotal = product.quantity * product.price;
+                                        return `
+                                            <tr>
+                                                <td>${product.name}</td>
+                                                <td>${product.quantity}</td>
+                                                <td>${product.price.toFixed(0)} FCFA</td>
+                                                <td>${lineTotal.toFixed(0)} FCFA</td>
+                                            </tr>
+                                        `;
+                                    }).join('') : 
+                                    '<tr><td colspan="4" style="text-align: center;">Aucun produit</td></tr>'
+                                }
+                            </tbody>
+                        </table>
+
+                        <div class="invoice-total">
+                            Total: ${(invoice_data.total || total).toFixed(0)} FCFA
+                        </div>
+
+                        ${qr_code_image ? `
+                            <div class="invoice-qr">
+                                <div><strong>Code QR de vérification</strong></div>
+                                <img src="data:image/png;base64,${qr_code_image}" 
+                                     alt="QR Code" 
+                                     style="width: 120px; height: 120px;">
+                            </div>
+                        ` : ''}
+
+                        <div class="invoice-footer">
+                            <div>Merci pour votre confiance!</div>
+                            <div>Echop - Votre partenaire de confiance</div>
+                            <div>Contact: support@echop.com | Tél: +225 XX XX XX XX</div>
+                        </div>
+                    </div>
+                `;
+
+                // Mettre le contenu dans le conteneur caché
+                const pdfContainer = document.getElementById('pdfContainer');
+                pdfContainer.innerHTML = pdfContent;
+
+                // Options pour html2pdf
+                const options = {
+                    margin: 10,
+                    filename: `facture-echop-${invoice_data.invoice_number || 'N/A'}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                // Générer et télécharger le PDF
+                html2pdf().from(pdfContainer).set(options).save();
+            }
         }
 
         // Initialisation

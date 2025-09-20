@@ -4,6 +4,8 @@ import qrcode
 from io import BytesIO
 from django.core.files import File
 from django.conf import settings
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 class CustomUser(AbstractUser):
     ROLE_CHOICES = (
@@ -106,3 +108,16 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x {self.product.name} (Commande {self.order.id})"
+
+
+
+
+@login_required
+def purchase_history(request):
+    # Récupérer l'historique des commandes de l'utilisateur
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')  # adapte le champ date
+
+    context = {
+        'orders': orders
+    }
+    return render(request, 'accounts/purchase_history.html', context)

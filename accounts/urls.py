@@ -89,6 +89,14 @@ urlpatterns = [
     path('edit_user/<int:user_id>/', views.edit_user, name='edit_user'),  # Nouvelle URL
     path('delete_user/<int:user_id>/', views.delete_user, name='delete_user'),  # Nouvelle URL
 
+
+    path('recommandations/', views.recommandations, name='recommandations'),
+    path('purchase_history/', views.purchase_history, name='purchase_history'),
+    path('checkout/', views.checkout, name='checkout'),
+
+   
+
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

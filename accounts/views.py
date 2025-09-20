@@ -904,3 +904,247 @@ def delete_user(request, user_id):
         messages.success(request, "Utilisateur supprimé avec succès.")
         return redirect('accounts:manage_accounts')
     return redirect('accounts:manage_accounts')
+
+
+
+# views.py
+import os
+import requests
+import json
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from .models import Product, Order
+
+@login_required
+def recommandations(request):
+    user = request.user
+
+    # Récupérer l'historique d'achats du client (commandes livrées)
+    orders = Order.objects.filter(user=user, status='livree')
+    purchase_history = [item.product.name for order in orders for item in order.items.all()]
+    if not purchase_history:
+        purchase_history = ["aucun achat récent"]
+
+    # Liste des produits disponibles
+    products = Product.objects.all()
+    product_list = [p.name for p in products]
+
+    # Préparer la requête pour Gemini
+    API_KEY = getattr(settings, 'GEMINI_API_KEY', None)
+    if not API_KEY:
+        return render(request, 'accounts/recommandations.html', {
+            'error_message': "Clé API Gemini non configurée.",
+            'recommended_products': []
+        })
+
+    URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+
+    prompt_text = (
+        f"Tu es un assistant de recommandation de produits. "
+        f"Recommande 3 produits parmi la liste suivante en fonction des préférences d'un utilisateur "
+        f"qui a acheté : {', '.join(purchase_history)}. "
+        f"Liste des produits disponibles : {', '.join(product_list)}. "
+        f"Retourne uniquement les noms des produits recommandés, séparés par des virgules, "
+        f"sans numérotation et sans autres textes."
+    )
+
+    data = {
+        "contents": [{"parts": [{"text": prompt_text}]}],
+        "generationConfig": {
+            "temperature": 0.7,
+            "topK": 40,
+            "topP": 0.95,
+            "maxOutputTokens": 512,
+        }
+    }
+
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(f"{URL}?key={API_KEY}", headers=headers, json=data, timeout=15)
+        response.raise_for_status()
+        result = response.json()
+
+        # Extraire les recommandations
+        if "candidates" in result and result["candidates"]:
+            response_text = result["candidates"][0]["content"]["parts"][0]["text"]
+            recommended_names = [name.strip() for name in response_text.split(",")]
+
+            # Récupérer les objets Product correspondant aux noms recommandés
+            recommended_products = Product.objects.filter(name__in=recommended_names)
+
+            return render(request, 'accounts/recommandations.html', {
+                'recommended_products': recommended_products,
+                'api_response': response_text
+            })
+        else:
+            return render(request, 'accounts/recommandations.html', {
+                'error_message': "Aucune recommandation disponible pour le moment.",
+                'recommended_products': []
+            })
+
+    except requests.exceptions.RequestException as e:
+        return render(request, 'accounts/recommandations.html', {
+            'error_message': f"Erreur de connexion au service de recommandations: {str(e)}",
+            'recommended_products': []
+        })
+    except Exception as e:
+        return render(request, 'accounts/recommandations.html', {
+            'error_message': f"Erreur inattendue: {str(e)}",
+            'recommended_products': []
+        })
+
+
+
+# accounts/views.py
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+@login_required
+def purchase_history(request):
+    # Récupérer l'historique des commandes de l'utilisateur connecté
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+
+    context = {
+        'orders': orders  # ✅ on envoie "orders" au template
+    }
+    return render(request, 'accounts/purchase_history.html', context)
+
+
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from .models import Cart, Order, OrderItem
+
+@login_required
+def checkout(request):
+    cart_items = Cart.objects.filter(user=request.user)
+
+    if not cart_items.exists():
+        return redirect('accounts:purchase_history')  # panier vide
+
+    # Calcul du total
+    total = sum(item.product.price * item.quantity for item in cart_items)
+
+    # Créer une commande
+    order = Order.objects.create(
+        user=request.user,
+        total=total,
+        status='en_attente',
+        client_address=request.user.address if request.user.address else "Adresse par défaut"
+    )
+
+    # Créer les OrderItem
+    for item in cart_items:
+        OrderItem.objects.create(
+            order=order,
+            product=item.product,
+            quantity=item.quantity,
+            price=item.product.price
+        )
+
+        # Mettre à jour le stock
+        item.product.stock -= item.quantity
+        item.product.save()
+
+    # Vider le panier
+    cart_items.delete()
+
+    return redirect('accounts:purchase_history')
+
+# accounts/views.py
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test
+from .models import CustomUser, Order
+
+def is_admin(user):
+    return user.is_authenticated and (user.role == 'admin' or user.is_superuser)
+
+@login_required
+@user_passes_test(is_admin)
+def user_management(request):
+    users = CustomUser.objects.all().order_by('username')
+    edit_mode = False
+    edit_user = None
+    
+    if request.method == 'POST':
+        if 'user_id' in request.POST:  # Modification d'utilisateur
+            user_id = request.POST['user_id']
+            user = get_object_or_404(CustomUser, id=user_id)
+            user.username = request.POST['username']
+            user.email = request.POST['email']
+            user.role = request.POST['role']
+            user.phone_number = request.POST.get('phone_number', '')
+            user.address = request.POST.get('address', '')
+            user.save()
+            
+            messages.success(request, f"L'utilisateur {user.username} a été modifié avec succès.")
+            return redirect('accounts:user_management')
+            
+        else:  # Ajout d'utilisateur
+            username = request.POST['username']
+            email = request.POST['email']
+            password = request.POST['password']
+            role = request.POST['role']
+            phone_number = request.POST.get('phone_number', '')
+            address = request.POST.get('address', '')
+            
+            if CustomUser.objects.filter(username=username).exists():
+                messages.error(request, "Ce nom d'utilisateur existe déjà.")
+            elif CustomUser.objects.filter(email=email).exists():
+                messages.error(request, "Cet email est déjà utilisé.")
+            else:
+                user = CustomUser.objects.create_user(
+                    username=username, 
+                    email=email, 
+                    password=password,
+                    role=role,
+                    phone_number=phone_number,
+                    address=address
+                )
+                
+                messages.success(request, f"L'utilisateur {username} a été créé avec succès.")
+                return redirect('accounts:user_management')
+    
+    # Vérifier si on est en mode édition
+    if 'edit' in request.GET:
+        user_id = request.GET['edit']
+        edit_user = get_object_or_404(CustomUser, id=user_id)
+        edit_mode = True
+    
+    context = {
+        'users': users,
+        'edit_mode': edit_mode,
+        'edit_user': edit_user,
+    }
+    return render(request, 'accounts/user_management.html', context)
+
+@login_required
+@user_passes_test(is_admin)
+def delete_user(request, user_id):
+    if request.method == 'POST':
+        user = get_object_or_404(CustomUser, id=user_id)
+        username = user.username
+        
+        # Empêcher la suppression de soi-même
+        if user == request.user:
+            messages.error(request, "Vous ne pouvez pas supprimer votre propre compte.")
+        else:
+            user.delete()
+            messages.success(request, f"L'utilisateur {username} a été supprimé avec succès.")
+    
+    return redirect('accounts:user_management')
+
+@login_required
+def purchase_history(request):
+    # Récupérer l'historique des commandes de l'utilisateur
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    
+    # Calculer le total des dépenses
+    total_spent = orders.aggregate(total=models.Sum('total'))['total'] or 0
+    
+    context = {
+        'orders': orders,
+        'total_spent': total_spent
+    }
+    return render(request, 'accounts/purchase_history.html', context)

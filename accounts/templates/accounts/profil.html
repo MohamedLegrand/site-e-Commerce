@@ -243,9 +243,6 @@
                             <button onclick="downloadQR()" class="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300 text-sm">
                                 <i class="fas fa-download mr-2"></i>Télécharger QR
                             </button>
-                            <button onclick="shareQR()" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300 text-sm">
-                                <i class="fas fa-share mr-2"></i>Partager QR
-                            </button>
                         </div>
                     </div>
                     
@@ -482,21 +479,29 @@
         
         // Fonction pour télécharger le QR code
         function downloadQR() {
-            const qrElement = document.querySelector('#qrcode svg') || document.querySelector('#qrcode table');
-            if (qrElement) {
-                const username = document.getElementById('displayUsername').textContent || 'user';
-                html2canvas(qrElement).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = `echop-qr-${username}.png`;
-                    link.href = canvas.toDataURL();
-                    link.click();
-                    showMessage('success', 'QR Code téléchargé avec succès !');
-                });
-            } else {
-                showMessage('error', 'Aucun QR Code à télécharger.');
+            const qrContainer = document.getElementById('qrcode');
+            if (!qrContainer || !qrContainer.firstChild) {
+                showMessage('error', 'Aucun QR Code à télécharger. Veuillez attendre sa génération.');
+                return;
             }
+
+            const username = document.getElementById('displayUsername').textContent.trim() || 'user';
+            html2canvas(qrContainer, {
+                scale: 2, // Augmente la résolution pour une meilleure qualité
+                useCORS: true,
+                backgroundColor: null // Prend le fond transparent si applicable
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `echop-qr-${username}-${new Date().toISOString().replace(/[:.]/g, '-')}.png`; // Ajoute un timestamp unique
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                showMessage('success', 'QR Code téléchargé avec succès !');
+            }).catch(error => {
+                console.error('Erreur lors de la génération de l\'image :', error);
+                showMessage('error', 'Erreur lors du téléchargement du QR Code.');
+            });
         }
-        
+
         // Fonction pour partager le QR code
         async function shareQR() {
             const qrElement = document.querySelector('#qrcode svg') || document.querySelector('#qrcode table');
@@ -549,6 +554,13 @@
         // Générer le QR code au chargement de la page
         window.addEventListener('load', function() {
             generateQRCode();
+            // Vérifie si le QR code est bien généré après 500ms
+            setTimeout(() => {
+                if (!document.getElementById('qrcode').firstChild) {
+                    console.warn('Le QR code n\'a pas été généré correctement.');
+                    showMessage('error', 'Erreur lors de la génération du QR Code. Réessayez.');
+                }
+            }, 500);
         });
         
         // Régénérer le QR code si les données changent

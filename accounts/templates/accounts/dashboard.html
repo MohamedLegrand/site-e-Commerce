@@ -163,7 +163,7 @@
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: {% widthratio user.purchase_count 10 100 %}%;"></div>
                 </div>
-                <p class="text-sm text-gray-500 mt-2">{{ user.purchase_count }} sur 10 achats pour le prochain niveau</p>
+                <p class="text-sm text-gray-500 mt-2">{{ user.purchase_count }} achats dans notre plateforme </p>
             </div>
 
             <div class="stat-card">
@@ -193,7 +193,7 @@
                     <div class="ml-3">
                         <h3 class="text-sm font-medium text-yellow-800">Félicitations !</h3>
                         <div class="mt-2 text-sm text-yellow-700">
-                            <p>Vous avez droit à une réduction de 10% après 5 achats.</p>
+                            <p>Vous aurez droit à une réduction si vous continuez ainsi.</p>
                         </div>
                     </div>
                 </div>
@@ -209,7 +209,7 @@
                 {% if user.purchase_count >= 3 %}
                 <div class="achievement-badge">
                     <i class="fas fa-star"></i>
-                    <span>3 achats complétés</span>
+                    <span>achats complétés</span>
                 </div>
                 {% endif %}
                 
@@ -222,14 +222,15 @@
             </div>
         </div>
 
-        <!-- Actions rapides -->
+       <!-- Actions rapides -->
         <div class="dashboard-card p-6">
             <h2 class="text-xl font-semibold text-gray-800 mb-4">Actions rapides</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <a href="{% url 'accounts:page_principale' %}" class="bg-red-500 text-white p-4 rounded-lg flex items-center justify-center hover:bg-red-600 transition-colors">
                     <i class="fas fa-store mr-2"></i> Faire des achats
                 </a>
-                <a href="#" class="bg-gray-500 text-white p-4 rounded-lg flex items-center justify-center hover:bg-gray-600 transition-colors">
+                <!-- Modification du lien Historique -->
+                <a href="{% url 'accounts:purchase_history' %}" class="bg-gray-500 text-white p-4 rounded-lg flex items-center justify-center hover:bg-gray-600 transition-colors">
                     <i class="fas fa-history mr-2"></i> Historique
                 </a>
             </div>
